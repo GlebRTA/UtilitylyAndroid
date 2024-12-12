@@ -1,4 +1,4 @@
-package com.gvituskins.vituskinsandroid.ui.theme
+package com.gvituskins.vituskinsandroid.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,6 +1,5 @@
-package com.gvituskins.vituskinsandroid.ui.theme
+package com.gvituskins.vituskinsandroid.presentation.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
