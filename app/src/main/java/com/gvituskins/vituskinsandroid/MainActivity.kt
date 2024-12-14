@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -23,7 +26,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.gvituskins.vituskinsandroid.presentation.bottomNavBar.navigationBarRoutes
-import com.gvituskins.vituskinsandroid.presentation.navigation.Routes
+import com.gvituskins.vituskinsandroid.presentation.navigation.MainNavGraph
+import com.gvituskins.vituskinsandroid.presentation.navigation.MoreNavGraph
 import com.gvituskins.vituskinsandroid.presentation.theme.VituskinsAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -40,55 +44,93 @@ class MainActivity : ComponentActivity() {
                         val navBackStackEntry by navController.currentBackStackEntryAsState()
                         val currentDestination = navBackStackEntry?.destination
 
-                        NavigationBar {
-                            navigationBarRoutes.forEach { bottomItem ->
-                                NavigationBarItem(
-                                    selected = currentDestination?.hierarchy?.any { it.hasRoute(bottomItem.route::class) } == true,
-                                    onClick = {
-                                        navController.navigate(bottomItem.route) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
+                        val show = navigationBarRoutes
+                            .map { topLevel ->
+                                topLevel.visibleBottomBarRoutes.map { bottomBarRoute ->
+                                    bottomBarRoute::class.qualifiedName
+                                }
+                            }
+                            .flatten()
+                            .contains(navBackStackEntry?.destination?.route)
+
+                        AnimatedVisibility(
+                            visible = show,
+                            enter = slideInVertically(initialOffsetY = { it }),
+                            exit = slideOutVertically(targetOffsetY = { it })
+                        ) {
+                            NavigationBar {
+                                navigationBarRoutes.forEach { bottomItem ->
+                                    NavigationBarItem(
+                                        selected = currentDestination?.hierarchy?.any { it.hasRoute(bottomItem.graph::class) } == true,
+                                        onClick = {
+                                            navController.navigate(bottomItem.graph) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = bottomItem.icon,
-                                            contentDescription = bottomItem.name
-                                        )
-                                    },
-                                    label = { Text(text = bottomItem.name) }
-                                )
+                                        },
+                                        icon = {
+                                            Icon(
+                                                imageVector = bottomItem.icon,
+                                                contentDescription = bottomItem.name
+                                            )
+                                        },
+                                        label = { Text(text = bottomItem.name) }
+                                    )
+                                }
                             }
                         }
                     }
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = Routes.MainNavGraph,
+                        startDestination = MainNavGraph,
                         modifier = Modifier.padding(innerPadding)
                     ) {
 
-                        navigation<Routes.MainNavGraph>(startDestination = Routes.MainNavGraph.Main) {
-                            composable<Routes.MainNavGraph.Main> {
+                        navigation<MainNavGraph>(
+                            startDestination = MainNavGraph.Main
+                        ) {
+                            composable<MainNavGraph.Main> {
                                 Text(text = "Main")
+
                                 Button(
-                                    onClick = { navController.navigate(Routes.MainNavGraph.Main1) }
+                                    onClick = { navController.navigate(MainNavGraph.Main1) }
                                 ) {
                                     Text(text = "Main1")
                                 }
                             }
 
-                            composable<Routes.MainNavGraph.Main1> {
+                            composable<MainNavGraph.Main1> {
                                 Text(text = "Main1")
+
+                                Button(
+                                    onClick = { navController.navigate(MainNavGraph.Main2) }
+                                ) {
+                                    Text(text = "Main2")
+                                }
+                            }
+
+                            composable<MainNavGraph.Main2> {
+                                Text(text = "Main2")
+
+                                Button(
+                                    onClick = { navController.navigate(MoreNavGraph.More) }
+                                ) {
+                                    Text(text = "More")
+                                }
                             }
                         }
 
 
-                        composable<Routes.MoreNavGraph> {
-                            Text(text = "More")
+                        navigation<MoreNavGraph>(
+                            startDestination = MoreNavGraph.More
+                        ) {
+                            composable<MoreNavGraph.More> {
+                                Text(text = "More")
+                            }
                         }
                     }
                 }
@@ -96,3 +138,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+

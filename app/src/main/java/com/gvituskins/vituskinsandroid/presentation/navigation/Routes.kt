@@ -2,19 +2,23 @@ package com.gvituskins.vituskinsandroid.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
-interface Routes {
+
+@Serializable
+object MainNavGraph {
 
     @Serializable
-    object MainNavGraph {
-
-        @Serializable
-        data object Main
-
-        @Serializable
-        data object Main1
-    }
+    data object Main
 
     @Serializable
-    data object MoreNavGraph
+    data object Main1
 
+    @Serializable
+    data object Main2
+}
+
+@Serializable
+object MoreNavGraph {
+
+    @Serializable
+    data object More
 }
