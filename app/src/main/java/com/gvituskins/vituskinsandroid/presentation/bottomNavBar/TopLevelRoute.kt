@@ -1,30 +1,34 @@
 package com.gvituskins.vituskinsandroid.presentation.bottomNavBar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.gvituskins.vituskinsandroid.presentation.navigation.MainNavGraph
-import com.gvituskins.vituskinsandroid.presentation.navigation.MoreNavGraph
+import com.gvituskins.vituskinsandroid.presentation.main.paidUtilities.PaidNavGraph
+import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.UnpaidNavGraph
 
 data class TopLevelRoute<T : Any>(
     val name: String,
     val graph: T,
-    val visibleBottomBarRoutes: List<T>,
+    val visibleBottomBarRoutes: Set<T>,
     val icon: ImageVector,
 )
 
 val navigationBarRoutes = listOf(
     TopLevelRoute(
-        name = "Profile",
-        graph = MainNavGraph,
-        visibleBottomBarRoutes = listOf(MainNavGraph.Main, MainNavGraph.Main1),
-        icon = Icons.Default.Person
+        name = "Paid",
+        graph = PaidNavGraph,
+        visibleBottomBarRoutes = setOf(PaidNavGraph.HomePaid),
+        icon = Icons.Default.Check
     ),
     TopLevelRoute(
-        name = "Friends",
-        graph = MoreNavGraph,
-        visibleBottomBarRoutes = listOf(MoreNavGraph.More),
-        icon = Icons.Default.Call
+        name = "Unpaid",
+        graph = UnpaidNavGraph,
+        visibleBottomBarRoutes = setOf(UnpaidNavGraph.HomeUnpaid),
+        icon = Icons.Default.Close
     )
 )
+
+val visibleBottomBarRoutes = navigationBarRoutes
+    .map { it.visibleBottomBarRoutes }
+    .flatten()
