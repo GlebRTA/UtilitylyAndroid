@@ -8,31 +8,35 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.gvituskins.vituskinsandroid.BuildConfig
+import com.gvituskins.vituskinsandroid.presentation.theme.UhTheme
 import com.gvituskins.vituskinsandroid.presentation.views.UhScaffold
+import com.gvituskins.vituskinsandroid.presentation.views.topAppBars.UhDefaultTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeMoreScreen() {
+fun HomeMoreScreen(
+    navigateToSettings: () -> Unit,
+) {
     UhScaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopAppBar(title = { Text(text = "More") }) }
-    ) {
+        topBar = { UhDefaultTopAppBar(title = "More") }
+    ) { innerPaddings ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(innerPaddings)
         ) {
             ListItem(
                 headlineContent = { Text(text = "Settings") },
-                modifier = Modifier.clickable {  },
+                modifier = Modifier.clickable {
+                    navigateToSettings()
+                },
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Filled.Settings,
@@ -48,23 +52,31 @@ fun HomeMoreScreen() {
             )
             HorizontalDivider()
 
-            ListItem(
-                headlineContent = { Text(text = "Testing") },
-                modifier = Modifier.clickable {  },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Filled.Build,
-                        contentDescription = "For Testing",
-                    )
-                },
-                trailingContent = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "For Testing",
-                    )
-                }
-            )
-            HorizontalDivider()
+            if (BuildConfig.DEBUG) {
+                ListItem(
+                    headlineContent = { Text(text = "Testing (DEBUG only)") },
+                    modifier = Modifier.clickable {  },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Filled.Build,
+                            contentDescription = "For Testing",
+                        )
+                    },
+                    trailingContent = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = "For Testing",
+                        )
+                    }
+                )
+                HorizontalDivider()
+
+                Text(
+                    text = "Version: ${BuildConfig.VERSION_NAME} build ${BuildConfig.VERSION_CODE}",
+                    modifier = Modifier.padding(UhTheme.spacing.small),
+                    style = UhTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }

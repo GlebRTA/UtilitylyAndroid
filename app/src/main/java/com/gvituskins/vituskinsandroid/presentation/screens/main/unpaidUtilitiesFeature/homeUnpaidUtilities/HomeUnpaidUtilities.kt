@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.vituskinsandroid.presentation.theme.UhTheme
 import com.gvituskins.vituskinsandroid.presentation.views.UhScaffold
 import com.gvituskins.vituskinsandroid.presentation.views.listItems.UhUtilityListItem
+import com.gvituskins.vituskinsandroid.presentation.views.topAppBars.UhDefaultTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +41,7 @@ fun HomeUnpaidUtilitiesScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     UhScaffold(
-        topBar = { TopAppBar(title = { Text(text = "Unpaid Utilities") }) },
+        topBar = { UhDefaultTopAppBar(title = "Unpaid Utilities") },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { viewModel.update(HomeUnpaidEvent.ChangeAddNewBS(true)) }
@@ -68,7 +69,7 @@ fun HomeUnpaidUtilitiesScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(UhTheme.spacing.small)
                 )
                 HorizontalDivider()
             }

@@ -3,12 +3,12 @@ package com.gvituskins.vituskinsandroid.presentation.views
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.gvituskins.vituskinsandroid.presentation.theme.UhTheme
 
 @Composable
 fun UhScaffold(
@@ -18,7 +18,7 @@ fun UhScaffold(
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = MaterialTheme.colorScheme.background,
+    containerColor: Color = UhTheme.colors.background,
     contentColor: Color = contentColorFor(containerColor),
     contentWindowInsets: WindowInsets = WindowInsets(0,0, 0, 0),
     content: @Composable (PaddingValues) -> Unit

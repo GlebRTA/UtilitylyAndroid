@@ -3,21 +3,15 @@ package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitie
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.vituskinsandroid.presentation.views.topAppBars.UhDefaultTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsUnpaidScreen(
     navigateBack: () -> Unit,
@@ -27,21 +21,7 @@ fun DetailsUnpaidScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Utility Details") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navigateBack() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "navigate back"
-                        )
-                    }
-                }
-            )
-        }
+        topBar = { UhDefaultTopAppBar(title = "Utility Details", navigateBack = navigateBack) }
     ) { innerPaddings ->
         Column(
             modifier = Modifier

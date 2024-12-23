@@ -2,17 +2,24 @@ package com.gvituskins.vituskinsandroid.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.gvituskins.vituskinsandroid.domain.models.enums.ThemeType
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -90,27 +97,59 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
+object UhTheme {
+    val colors: ColorScheme
+        @Composable
+        @ReadOnlyComposable
+        get() = MaterialTheme.colorScheme
+
+    val typography: Typography
+        @Composable
+        @ReadOnlyComposable
+        get() = MaterialTheme.typography
+
+    val spacing: UhSpacing
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalSpacing.current
+
+    val shapes: UhShapes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalShapes.current
+}
+
 @Composable
 fun UtilityHelperTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeType: ThemeType,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val themeTypeState = remember(themeType) { mutableStateOf(themeType) }
+    val navHostController = rememberNavController()
+
+    CompositionLocalProvider(
+        LocalNavController provides navHostController,
+        LocalSpacing provides UhSpacing(),
+        LocalShapes provides UhShapes(),
+        LocalThemeType provides themeTypeState
+    ) {
+        val colorScheme = when (themeTypeState.value) {
+            ThemeType.SYSTEM -> {
+                val isDarkTheme = isSystemInDarkTheme()
+
+                if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val context = LocalContext.current
+                    if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+                } else {
+                    if (isDarkTheme) darkScheme else lightScheme
+                }
+            }
+            ThemeType.LIGHT -> lightScheme
+            ThemeType.DARK -> darkScheme
         }
 
-        darkTheme -> darkScheme
-        else -> lightScheme
-    }
-
-    val navHostController = rememberNavController()
-    CompositionLocalProvider(
-        LocalNavController provides navHostController
-    ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,
@@ -121,4 +160,8 @@ fun UtilityHelperTheme(
 
 val LocalNavController = compositionLocalOf<NavHostController> {
     error("NavHostController not provided!")
+}
+
+val LocalThemeType = compositionLocalOf< MutableState<ThemeType>> {
+    error("ThemeType not provided!")
 }
