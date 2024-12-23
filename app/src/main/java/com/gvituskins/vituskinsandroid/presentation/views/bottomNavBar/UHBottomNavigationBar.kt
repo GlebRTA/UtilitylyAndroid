@@ -1,4 +1,4 @@
-package com.gvituskins.vituskinsandroid.presentation.bottomNavBar
+package com.gvituskins.vituskinsandroid.presentation.views.bottomNavBar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically

@@ -1,7 +1,6 @@
 package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.detailsUnpaidUtilities
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -42,8 +41,7 @@ fun DetailsUnpaidScreen(
                     }
                 }
             )
-        },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        }
     ) { innerPaddings ->
         Column(
             modifier = Modifier

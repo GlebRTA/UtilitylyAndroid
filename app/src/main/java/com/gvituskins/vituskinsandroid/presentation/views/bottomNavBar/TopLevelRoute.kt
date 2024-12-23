@@ -1,9 +1,11 @@
-package com.gvituskins.vituskinsandroid.presentation.bottomNavBar
+package com.gvituskins.vituskinsandroid.presentation.views.bottomNavBar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.gvituskins.vituskinsandroid.presentation.main.more.MoreNavGraph
 import com.gvituskins.vituskinsandroid.presentation.main.paidUtilities.PaidNavGraph
 import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.UnpaidNavGraph
 
@@ -26,7 +28,13 @@ val navigationBarRoutes = listOf(
         graph = UnpaidNavGraph,
         visibleBottomBarRoutes = setOf(UnpaidNavGraph.HomeUnpaid),
         icon = Icons.Default.Close
-    )
+    ),
+    TopLevelRoute(
+        name = "More",
+        graph = MoreNavGraph,
+        visibleBottomBarRoutes = setOf(MoreNavGraph.HomeMore),
+        icon = Icons.Default.Menu
+    ),
 )
 
 val visibleBottomBarRoutes = navigationBarRoutes

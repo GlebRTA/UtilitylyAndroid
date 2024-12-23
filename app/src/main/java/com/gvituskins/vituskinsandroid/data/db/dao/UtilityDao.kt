@@ -5,22 +5,27 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.gvituskins.vituskinsandroid.data.db.entities.UtilityEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UtilityDao {
 
     @Query("SELECT * FROM utility WHERE isPaid == 1")
-    suspend fun getAllPaid(): List<UtilityEntity>
+    fun getAllPaid(): Flow<List<UtilityEntity>>
 
     @Query("SELECT * FROM utility WHERE isPaid == 0")
-    suspend fun getAllUnpaid(): List<UtilityEntity>
+    fun getAllUnpaid(): Flow<List<UtilityEntity>>
 
     @Query("SELECT * FROM utility WHERE id == :id")
     suspend fun getById(id: Int): UtilityEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNew(utility: UtilityEntity)
+
+    @Update
+    suspend fun updateUtility(utility: UtilityEntity)
 
     @Delete
     suspend fun delete(utility: UtilityEntity)

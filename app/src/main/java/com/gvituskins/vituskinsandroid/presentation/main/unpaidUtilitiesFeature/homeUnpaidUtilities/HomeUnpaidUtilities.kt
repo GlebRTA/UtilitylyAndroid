@@ -1,10 +1,7 @@
 package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.homeUnpaidUtilities
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +16,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -32,59 +28,56 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.vituskinsandroid.presentation.views.UhScaffold
+import com.gvituskins.vituskinsandroid.presentation.views.listItems.UhUtilityListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeUnpaidUtilitiesScreen(
     navigateToUtilityDetails: (Int) -> Unit,
-    viewModel: HomeUnpaidUtilitiesViewModel = hiltViewModel()
+    viewModel: HomeUnpaidUtilitiesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var showAddNewBottomSheet by remember {
-        mutableStateOf(false)
-    }
-
-    Scaffold(
+    UhScaffold(
         topBar = { TopAppBar(title = { Text(text = "Unpaid Utilities") }) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showAddNewBottomSheet = true }
+                onClick = { viewModel.update(HomeUnpaidEvent.ChangeAddNewBS(true)) }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add new utility")
             }
-        },
-        contentWindowInsets = WindowInsets(0,0,0,0)
+        }
     ) { innerPaddings ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPaddings)
         ) {
-            items(items = uiState.utilities) {
-                Column(
+            items(items = uiState.utilities) { utility ->
+                UhUtilityListItem(
+                    primaryText = utility.name,
+                    descriptionText = utility.description,
+                    onStartBtnClicked = {
+                        utility.id?.let(navigateToUtilityDetails)
+                    },
+                    onEndBtnClicked = {
+                        if (utility.id != null) {
+                            viewModel.update(HomeUnpaidEvent.ChangePaidStatus(utility.id))
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .defaultMinSize(minHeight = 40.dp)
-                        .clickable {
-                            if (it.id != null) {
-                                navigateToUtilityDetails(it.id)
-                            }
-                        },
-                ) {
-                    Text(text = it.name)
-                    it.description?.let { description ->
-                        Text(text = description)
-                    }
-                }
+                        .padding(8.dp)
+                )
                 HorizontalDivider()
             }
         }
     }
 
-    if (showAddNewBottomSheet) {
+    if (uiState.showAddNewBottomSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showAddNewBottomSheet = false }
+            onDismissRequest = { viewModel.update(HomeUnpaidEvent.ChangeAddNewBS(false)) }
         ) {
             var name by remember { mutableStateOf("") }
             var description by remember { mutableStateOf("") }
@@ -113,7 +106,7 @@ fun HomeUnpaidUtilitiesScreen(
                                 description = description
                             )
                         )
-                        showAddNewBottomSheet = false
+                        viewModel.update(HomeUnpaidEvent.ChangeAddNewBS(false))
                     },
                     modifier = Modifier.fillMaxWidth(0.9f)
                 ) {
