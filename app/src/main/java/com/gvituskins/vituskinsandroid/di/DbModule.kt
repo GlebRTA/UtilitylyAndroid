@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import com.gvituskins.vituskinsandroid.data.db.UHDatabase
 import com.gvituskins.vituskinsandroid.data.db.dao.UtilityDao
-import com.gvituskins.vituskinsandroid.data.repositories.UtilityRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object DbModule {
 
     @Provides
     @Singleton
@@ -32,9 +31,9 @@ object AppModule {
         return appDatabase.utilityDao()
     }
 
-    @Provides
-    @Singleton
-    fun provideUtilityRepository(utilityDao: UtilityDao): UtilityRepository {
-        return UtilityRepository(utilityDao = utilityDao)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideUtilityRepository(utilityDao: UtilityDao): UtilityRepository {
+//        return UtilityRepository(utilityDao = utilityDao)
+//    }
 }

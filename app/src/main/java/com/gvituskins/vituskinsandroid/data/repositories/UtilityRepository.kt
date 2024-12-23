@@ -1,8 +1,8 @@
 package com.gvituskins.vituskinsandroid.data.repositories
 
 import com.gvituskins.vituskinsandroid.data.db.dao.UtilityDao
-import com.gvituskins.vituskinsandroid.data.db.entities.toUtility
-import com.gvituskins.vituskinsandroid.data.db.entities.toUtilityEntity
+import com.gvituskins.vituskinsandroid.data.mappers.toUtility
+import com.gvituskins.vituskinsandroid.data.mappers.toUtilityEntity
 import com.gvituskins.vituskinsandroid.domain.models.Utility
 import javax.inject.Inject
 
