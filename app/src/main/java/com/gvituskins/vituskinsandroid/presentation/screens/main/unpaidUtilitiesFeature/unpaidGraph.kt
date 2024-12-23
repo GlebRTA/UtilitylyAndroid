@@ -1,11 +1,11 @@
-package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature
+package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.detailsUnpaidUtilities.DetailsUnpaidScreen
-import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.homeUnpaidUtilities.HomeUnpaidUtilitiesScreen
+import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.detailsUnpaidUtilities.DetailsUnpaidScreen
+import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.homeUnpaidUtilities.HomeUnpaidUtilitiesScreen
 import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.unpaidGraph(navController: NavController) {

@@ -1,9 +1,9 @@
-package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.homeUnpaidUtilities
+package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.homeUnpaidUtilities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gvituskins.vituskinsandroid.data.repositories.UtilityRepository
 import com.gvituskins.vituskinsandroid.domain.models.Utility
+import com.gvituskins.vituskinsandroid.domain.repositories.UtilityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

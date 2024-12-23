@@ -1,4 +1,4 @@
-package com.gvituskins.vituskinsandroid.presentation.main.more.homeMore
+package com.gvituskins.vituskinsandroid.presentation.screens.main.more.homeMore
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

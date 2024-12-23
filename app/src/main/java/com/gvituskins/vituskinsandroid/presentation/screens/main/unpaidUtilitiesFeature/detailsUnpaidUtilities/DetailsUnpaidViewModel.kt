@@ -1,12 +1,12 @@
-package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.detailsUnpaidUtilities
+package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.detailsUnpaidUtilities
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.gvituskins.vituskinsandroid.data.repositories.UtilityRepository
 import com.gvituskins.vituskinsandroid.domain.models.Utility
-import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.UnpaidNavGraph
+import com.gvituskins.vituskinsandroid.domain.repositories.UtilityRepository
+import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.UnpaidNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

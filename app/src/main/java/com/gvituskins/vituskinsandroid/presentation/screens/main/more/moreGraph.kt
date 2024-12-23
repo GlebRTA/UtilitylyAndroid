@@ -1,10 +1,10 @@
-package com.gvituskins.vituskinsandroid.presentation.main.more
+package com.gvituskins.vituskinsandroid.presentation.screens.main.more
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.gvituskins.vituskinsandroid.presentation.main.more.homeMore.HomeMoreScreen
+import com.gvituskins.vituskinsandroid.presentation.screens.main.more.homeMore.HomeMoreScreen
 import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.moreGraph(navController: NavController) {

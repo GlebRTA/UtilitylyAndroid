@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.gvituskins.vituskinsandroid.presentation.main.more.moreGraph
-import com.gvituskins.vituskinsandroid.presentation.main.paidUtilities.PaidNavGraph
-import com.gvituskins.vituskinsandroid.presentation.main.paidUtilities.paidGraph
-import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.unpaidGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.more.moreGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities.PaidNavGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities.paidGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.unpaidGraph
 import com.gvituskins.vituskinsandroid.presentation.theme.LocalNavController
 import com.gvituskins.vituskinsandroid.presentation.theme.UtilityHelperTheme
 import com.gvituskins.vituskinsandroid.presentation.views.UhScaffold

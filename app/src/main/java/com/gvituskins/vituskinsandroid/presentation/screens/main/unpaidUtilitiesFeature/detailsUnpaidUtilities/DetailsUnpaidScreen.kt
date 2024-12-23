@@ -1,4 +1,4 @@
-package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.detailsUnpaidUtilities
+package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.detailsUnpaidUtilities
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

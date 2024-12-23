@@ -1,4 +1,4 @@
-package com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.homeUnpaidUtilities
+package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.homeUnpaidUtilities
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.gvituskins.vituskinsandroid.presentation.main.paidUtilities
+package com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth

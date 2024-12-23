@@ -5,9 +5,9 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.gvituskins.vituskinsandroid.presentation.main.more.MoreNavGraph
-import com.gvituskins.vituskinsandroid.presentation.main.paidUtilities.PaidNavGraph
-import com.gvituskins.vituskinsandroid.presentation.main.unpaidUtilitiesFeature.UnpaidNavGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.more.MoreNavGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities.PaidNavGraph
+import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.UnpaidNavGraph
 
 data class TopLevelRoute<T : Any>(
     val name: String,

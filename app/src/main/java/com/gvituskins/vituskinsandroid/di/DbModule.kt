@@ -30,10 +30,4 @@ object DbModule {
     fun provideUtilityDao(appDatabase: UHDatabase): UtilityDao {
         return appDatabase.utilityDao()
     }
-
-//    @Provides
-//    @Singleton
-//    fun provideUtilityRepository(utilityDao: UtilityDao): UtilityRepository {
-//        return UtilityRepository(utilityDao = utilityDao)
-//    }
 }
