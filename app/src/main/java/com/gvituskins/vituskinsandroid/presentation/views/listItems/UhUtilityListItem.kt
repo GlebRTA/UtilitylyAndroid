@@ -27,7 +27,7 @@ fun UhUtilityListItem(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = primaryText,
                 style = MaterialTheme.typography.titleMedium.copy(

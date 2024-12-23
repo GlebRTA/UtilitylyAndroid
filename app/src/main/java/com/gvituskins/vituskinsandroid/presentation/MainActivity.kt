@@ -1,6 +1,5 @@
 package com.gvituskins.vituskinsandroid.presentation
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,11 +31,11 @@ class MainActivity : ComponentActivity() {
                 UhScaffold (
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = { UHBottomNavigationBar() },
-                ) {
+                ) { innerPaddings ->
                     NavHost(
                         navController = navController,
                         startDestination = PaidNavGraph,
-                        modifier = Modifier.padding(it)
+                        modifier = Modifier.padding(innerPaddings)
                     ) {
                         paidGraph(navController = navController)
                         unpaidGraph(navController = navController)

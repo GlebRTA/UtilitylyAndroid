@@ -9,7 +9,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-abstract class Repositories {
+abstract class RepositoriesModule {
 
     @Binds
     abstract fun bindUtilityRepository(impl: UtilityRepositoryImpl): UtilityRepository

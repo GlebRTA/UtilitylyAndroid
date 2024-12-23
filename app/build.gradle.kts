@@ -16,29 +16,51 @@ android {
         minSdk = 28
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isDebuggable = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+
+        debug {
+            isDebuggable = true
+            isMinifyEnabled = false
+        }
     }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("production") {
+            buildConfigField("String", "API_BASE_URL", "\"qew\"")
+        }
+
+        create("staging") {
+            applicationIdSuffix = ".staging"
+            buildConfigField("String", "API_BASE_URL", "\"qew\"")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
