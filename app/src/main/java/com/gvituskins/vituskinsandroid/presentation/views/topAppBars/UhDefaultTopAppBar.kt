@@ -1,5 +1,6 @@
 package com.gvituskins.vituskinsandroid.presentation.views.topAppBars
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +17,7 @@ fun UhDefaultTopAppBar(
     title: String,
     modifier: Modifier = Modifier,
     navigateBack: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = { Text(text = title) },
@@ -30,5 +32,6 @@ fun UhDefaultTopAppBar(
                 }
             }
         },
+        actions = actions
     )
 }

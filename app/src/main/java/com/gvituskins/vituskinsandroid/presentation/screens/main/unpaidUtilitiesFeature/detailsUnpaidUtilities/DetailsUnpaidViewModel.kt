@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.gvituskins.vituskinsandroid.domain.models.Utility
+import com.gvituskins.vituskinsandroid.domain.models.utilities.Utility
 import com.gvituskins.vituskinsandroid.domain.repositories.UtilityRepository
 import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.UnpaidNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,15 +34,13 @@ class DetailsUnpaidViewModel @Inject constructor(
         }
     }
 
-    fun update(event: DetailsUnpaidEvent) {
-        when (event) {
-            else -> {}
+    fun delete() {
+        uiState.value.utility?.id?.let { utilityId ->
+            viewModelScope.launch {
+                utilityRepository.deleteUtility(utilityId)
+            }
         }
     }
-}
-
-sealed interface DetailsUnpaidEvent {
-
 }
 
 data class DetailsUnpaidState(

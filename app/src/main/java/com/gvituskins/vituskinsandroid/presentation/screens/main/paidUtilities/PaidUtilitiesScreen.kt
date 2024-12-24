@@ -31,15 +31,13 @@ fun PaidUtilitiesScreen(
                 .fillMaxSize()
                 .padding(innerPaddings)
         ) {
-            items(items = uiState.utilities) { utility ->
+            items(items = uiState.utilities, key = { it.id }) { utility ->
                 UhUtilityListItem(
                     primaryText = utility.name,
                     descriptionText = utility.description,
-                    onStartBtnClicked = { utility.id?.let(navigateToUtilityDetails) },
+                    onStartBtnClicked = { navigateToUtilityDetails(utility.id) },
                     onEndBtnClicked = {
-                        utility.id?.let {
-                            viewModel.update(PaidUtilityEvent.ChangePaidStatus(it))
-                        }
+                        viewModel.update(PaidUtilityEvent.ChangePaidStatus(utility.id))
                     },
                     endBtnText = "Unpaid",
                     modifier = Modifier

@@ -29,4 +29,7 @@ interface UtilityDao {
 
     @Delete
     suspend fun delete(utility: UtilityEntity)
+
+    @Query("DELETE FROM utility WHERE id = :utilityId")
+    suspend fun deleteById(utilityId: Int)
 }

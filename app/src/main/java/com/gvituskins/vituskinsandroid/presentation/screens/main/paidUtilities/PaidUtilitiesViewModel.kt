@@ -2,7 +2,7 @@ package com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gvituskins.vituskinsandroid.domain.models.Utility
+import com.gvituskins.vituskinsandroid.domain.models.utilities.Utility
 import com.gvituskins.vituskinsandroid.domain.repositories.UtilityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

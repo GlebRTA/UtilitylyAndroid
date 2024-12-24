@@ -2,8 +2,10 @@ package com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gvituskins.vituskinsandroid.domain.models.Utility
+import com.gvituskins.vituskinsandroid.domain.models.utilities.CreateUtility
+import com.gvituskins.vituskinsandroid.domain.models.utilities.Utility
 import com.gvituskins.vituskinsandroid.domain.repositories.UtilityRepository
+import com.gvituskins.vituskinsandroid.presentation.utils.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +13,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,22 +38,24 @@ class HomeUnpaidUtilitiesViewModel @Inject constructor(
 
     fun update(event: HomeUnpaidEvent) {
         when (event) {
-            is HomeUnpaidEvent.CreateNewUtility -> createNewUtility(event.name, event.description)
+            is HomeUnpaidEvent.CreateNewUtility -> createNewUtility(event.name, event.description, event.amount)
             is HomeUnpaidEvent.ChangePaidStatus -> changePaidStatus(event.utilityId)
             is HomeUnpaidEvent.ChangeAddNewBS -> changeAddNewBsState(event.toVisibility)
         }
     }
 
-    private fun createNewUtility(name: String, description: String) {
-        viewModelScope.launch {
-            val newUtility = Utility(
-                name = name,
-                description = description,
-                date = Date().toLocaleString(),
-                isPaid = false
-            )
-
-            repository.addNewUtility(newUtility)
+    private fun createNewUtility(name: String, description: String, amount: String) {
+        debugLog("Amount = $amount")
+        amount.toDoubleOrNull()?.let { validAmount ->
+            viewModelScope.launch {
+                repository.addNewUtility(
+                    CreateUtility(
+                        name = name,
+                        description = description,
+                        amount = validAmount
+                    )
+                )
+            }
         }
     }
 
@@ -74,7 +77,8 @@ class HomeUnpaidUtilitiesViewModel @Inject constructor(
 sealed interface HomeUnpaidEvent {
     data class CreateNewUtility(
         val name: String,
-        val description: String
+        val description: String,
+        val amount: String,
     ): HomeUnpaidEvent
 
     data class ChangePaidStatus(val utilityId: Int) : HomeUnpaidEvent

@@ -6,8 +6,9 @@ import com.gvituskins.vituskinsandroid.data.mappers.toUtilityEntity
 import com.gvituskins.vituskinsandroid.data.network.api.NinjaApiService
 import com.gvituskins.vituskinsandroid.data.network.utils.apiCall
 import com.gvituskins.vituskinsandroid.domain.models.Fact
-import com.gvituskins.vituskinsandroid.domain.models.Utility
+import com.gvituskins.vituskinsandroid.domain.models.utilities.Utility
 import com.gvituskins.vituskinsandroid.domain.models.common.NetworkResult
+import com.gvituskins.vituskinsandroid.domain.models.utilities.CreateUtility
 import com.gvituskins.vituskinsandroid.domain.repositories.UtilityRepository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +37,7 @@ class UtilityRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addNewUtility(utility: Utility) {
+    override suspend fun addNewUtility(utility: CreateUtility) {
         utilityDao.addNew(utility.toUtilityEntity())
     }
 
@@ -44,9 +45,13 @@ class UtilityRepositoryImpl @Inject constructor(
         utilityDao.updateUtility(utility.toUtilityEntity())
     }
 
+    override suspend fun deleteUtility(utilityId: Int) {
+        utilityDao.deleteById(utilityId)
+    }
+
     override suspend fun changePaidStatus(utilityId: Int) {
         val utility = getUtilityById(utilityId)
-        addNewUtility(utility.copy(isPaid = !utility.isPaid))
+        updateUtility(utility.copy(isPaid = !utility.isPaid))
     }
 
     override suspend fun getRandomFact(): NetworkResult<Fact> {

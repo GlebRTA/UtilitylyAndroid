@@ -10,5 +10,6 @@ data class UtilityEntity(
     val name: String,
     val description: String?,
     val date: String,
-    val isPaid: Boolean
+    val isPaid: Boolean,
+    val amount: Double,
 )
