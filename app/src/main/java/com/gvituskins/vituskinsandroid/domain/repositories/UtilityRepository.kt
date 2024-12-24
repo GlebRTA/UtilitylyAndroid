@@ -1,6 +1,8 @@
 package com.gvituskins.vituskinsandroid.domain.repositories
 
+import com.gvituskins.vituskinsandroid.domain.models.Fact
 import com.gvituskins.vituskinsandroid.domain.models.Utility
+import com.gvituskins.vituskinsandroid.domain.models.common.NetworkResult
 import kotlinx.coroutines.flow.Flow
 
 interface UtilityRepository {
@@ -15,4 +17,6 @@ interface UtilityRepository {
     suspend fun updateUtility(utility: Utility)
 
     suspend fun changePaidStatus(utilityId: Int)
+
+    suspend fun getRandomFact(): NetworkResult<Fact>
 }

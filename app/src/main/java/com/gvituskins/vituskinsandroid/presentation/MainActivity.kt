@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.gvituskins.vituskinsandroid.data.preferences.UhSharedPreferences
+import com.gvituskins.vituskinsandroid.presentation.screens.main.fact.factGraph
 import com.gvituskins.vituskinsandroid.presentation.screens.main.more.moreGraph
 import com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities.PaidNavGraph
 import com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities.paidGraph
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         paidGraph(navController = navController)
                         unpaidGraph(navController = navController)
+                        factGraph(navController = navController)
                         moreGraph(navController = navController)
                     }
                 }

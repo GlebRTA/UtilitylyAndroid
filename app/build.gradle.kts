@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,14 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        localProperties.load(it)
+    }
 }
 
 android {
@@ -19,6 +29,10 @@ android {
         versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val ninjasApiKey = localProperties["NINJAS_API_KEY"].toString()
+        buildConfigField("String", "NINJA_API_KEY", ninjasApiKey)
+        buildConfigField("String", "NINJA_API_BASE_URL", "\"https://api.api-ninjas.com/\"")
     }
 
     buildTypes {
@@ -40,12 +54,11 @@ android {
     flavorDimensions += "environment"
     productFlavors {
         create("production") {
-            buildConfigField("String", "API_BASE_URL", "\"qew\"")
+
         }
 
         create("staging") {
             applicationIdSuffix = ".staging"
-            buildConfigField("String", "API_BASE_URL", "\"qew\"")
         }
     }
 

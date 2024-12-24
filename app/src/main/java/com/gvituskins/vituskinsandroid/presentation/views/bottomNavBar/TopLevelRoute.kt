@@ -4,7 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.gvituskins.vituskinsandroid.presentation.screens.main.fact.FactNavGraph
 import com.gvituskins.vituskinsandroid.presentation.screens.main.more.MoreNavGraph
 import com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities.PaidNavGraph
 import com.gvituskins.vituskinsandroid.presentation.screens.main.unpaidUtilitiesFeature.UnpaidNavGraph
@@ -28,6 +30,12 @@ val navigationBarRoutes = listOf(
         graph = UnpaidNavGraph,
         visibleBottomBarRoutes = setOf(UnpaidNavGraph.HomeUnpaid),
         icon = Icons.Default.Close
+    ),
+    TopLevelRoute(
+        name = "Random Fact",
+        graph = FactNavGraph,
+        visibleBottomBarRoutes = setOf(FactNavGraph.HomeFact),
+        icon = Icons.Default.Warning
     ),
     TopLevelRoute(
         name = "More",

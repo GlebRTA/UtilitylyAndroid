@@ -3,6 +3,7 @@ package com.gvituskins.vituskinsandroid.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.gvituskins.vituskinsandroid.BuildConfig
+import com.gvituskins.vituskinsandroid.data.network.api.NinjaApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,9 +52,17 @@ object NetworkModule {
         gson: Gson
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.API_BASE_URL)
+            .baseUrl(BuildConfig.NINJA_API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNinjaApiService(
+        retrofit: Retrofit
+    ): NinjaApiService {
+        return retrofit.create(NinjaApiService::class.java)
     }
 }
