@@ -1,5 +1,6 @@
 package com.gvituskins.vituskinsandroid.presentation.screens.main.paidUtilities
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,19 +33,21 @@ fun PaidUtilitiesScreen(
                 .padding(innerPaddings)
         ) {
             items(items = uiState.utilities, key = { it.id }) { utility ->
-                UhUtilityListItem(
-                    primaryText = utility.name,
-                    descriptionText = utility.description,
-                    onStartBtnClicked = { navigateToUtilityDetails(utility.id) },
-                    onEndBtnClicked = {
-                        viewModel.update(PaidUtilityEvent.ChangePaidStatus(utility.id))
-                    },
-                    endBtnText = "Unpaid",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(UhTheme.spacing.small)
-                )
-                HorizontalDivider()
+                Column(modifier = Modifier.animateItem()) {
+                    UhUtilityListItem(
+                        primaryText = utility.name,
+                        descriptionText = utility.description,
+                        onStartBtnClicked = { navigateToUtilityDetails(utility.id) },
+                        onEndBtnClicked = {
+                            viewModel.update(PaidUtilityEvent.ChangePaidStatus(utility.id))
+                        },
+                        endBtnText = "Unpaid",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(UhTheme.spacing.small)
+                    )
+                    HorizontalDivider()
+                }
             }
         }
     }

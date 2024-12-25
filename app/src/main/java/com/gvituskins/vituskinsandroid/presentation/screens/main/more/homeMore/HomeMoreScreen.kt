@@ -77,6 +77,12 @@ fun HomeMoreScreen(
                     style = UhTheme.typography.bodyLarge
                 )
             }
+
+            Text(
+                text = "Glebs Vituskins, 4 kurss",
+                modifier = Modifier.padding(UhTheme.spacing.small),
+                style = UhTheme.typography.bodyLarge
+            )
         }
     }
 }

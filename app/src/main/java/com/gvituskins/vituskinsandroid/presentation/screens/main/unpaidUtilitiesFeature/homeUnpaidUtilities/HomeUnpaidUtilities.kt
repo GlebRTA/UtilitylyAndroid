@@ -59,21 +59,22 @@ fun HomeUnpaidUtilitiesScreen(
                 .padding(innerPaddings)
         ) {
             items(items = uiState.utilities, key = { it.id }) { utility ->
-                UhUtilityListItem(
-                    primaryText = utility.name,
-                    descriptionText = utility.description,
-                    onStartBtnClicked = {
-                        navigateToUtilityDetails(utility.id)
-                    },
-                    onEndBtnClicked = {
-                        viewModel.update(HomeUnpaidEvent.ChangePaidStatus(utility.id))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateItem()
-                        .padding(UhTheme.spacing.small)
-                )
-                HorizontalDivider()
+                Column(modifier = Modifier.animateItem()) {
+                    UhUtilityListItem(
+                        primaryText = utility.name,
+                        descriptionText = utility.description,
+                        onStartBtnClicked = {
+                            navigateToUtilityDetails(utility.id)
+                        },
+                        onEndBtnClicked = {
+                            viewModel.update(HomeUnpaidEvent.ChangePaidStatus(utility.id))
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(UhTheme.spacing.small)
+                    )
+                    HorizontalDivider()
+                }
             }
         }
     }
