@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "VituskinsAndroid"
+rootProject.name = "UtilityHelper"
 include(":app")
  

@@ -18,11 +18,11 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.gvituskins.vituskinsandroid"
+    namespace = "com.gvituskins.utilityhelper"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.gvituskins.vituskinsandroid"
+        applicationId = "com.gvituskins.utilityhelper"
         minSdk = 28
         targetSdk = 35
         versionCode = 1
@@ -80,6 +80,7 @@ android {
 
 dependencies {
 
+    //Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -97,6 +98,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
 
     //Retrofit
     implementation(libs.okhttp)
