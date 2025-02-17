@@ -18,11 +18,11 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.gvituskins.utilityhelper"
+    namespace = "com.gvituskins.utilityly"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.gvituskins.utilityhelper"
+        applicationId = "com.gvituskins.utilityly"
         minSdk = 28
         targetSdk = 35
         versionCode = 1
