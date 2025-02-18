@@ -39,6 +39,7 @@ android {
     buildTypes {
         release {
             isDebuggable = false
+            isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -54,12 +55,12 @@ android {
 
     flavorDimensions += "environment"
     productFlavors {
-        create("production") {
-
-        }
-
         create("staging") {
             applicationIdSuffix = ".staging"
+        }
+
+        create("production") {
+
         }
     }
 
@@ -99,6 +100,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
 
     //Retrofit
     implementation(libs.okhttp)

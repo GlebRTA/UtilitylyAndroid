@@ -1,10 +1,10 @@
 package com.gvituskins.utilityly.presentation.views.bottomNavBar
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gvituskins.utilityly.presentation.screens.main.fact.FactNavGraph
 import com.gvituskins.utilityly.presentation.screens.main.more.MoreNavGraph
@@ -20,22 +20,22 @@ data class TopLevelRoute<T : Any>(
 
 val navigationBarRoutes = listOf(
     TopLevelRoute(
-        name = "Paid",
+        name = "Home",
         graph = PaidNavGraph,
         visibleBottomBarRoutes = setOf(PaidNavGraph.HomePaid),
-        icon = Icons.Default.Check
+        icon = Icons.Default.Home
     ),
     TopLevelRoute(
-        name = "Unpaid",
+        name = "Statistics",
         graph = UnpaidNavGraph,
         visibleBottomBarRoutes = setOf(UnpaidNavGraph.HomeUnpaid),
-        icon = Icons.Default.Close
+        icon = Icons.Default.BarChart
     ),
     TopLevelRoute(
-        name = "Random Fact",
+        name = "Categories",
         graph = FactNavGraph,
         visibleBottomBarRoutes = setOf(FactNavGraph.HomeFact),
-        icon = Icons.Default.Warning
+        icon = Icons.Default.Category
     ),
     TopLevelRoute(
         name = "More",
