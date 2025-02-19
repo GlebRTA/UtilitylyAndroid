@@ -2,7 +2,7 @@ package com.gvituskins.utilityly.domain.repositories
 
 import com.gvituskins.utilityly.domain.models.Fact
 import com.gvituskins.utilityly.domain.models.utilities.Utility
-import com.gvituskins.utilityly.domain.models.common.NetworkResult
+import com.gvituskins.utilityly.domain.models.common.EitherNetwork
 import com.gvituskins.utilityly.domain.models.utilities.CreateUtility
 import kotlinx.coroutines.flow.Flow
 
@@ -21,5 +21,5 @@ interface UtilityRepository {
 
     suspend fun changePaidStatus(utilityId: Int)
 
-    suspend fun getRandomFact(): NetworkResult<Fact>
+    suspend fun getRandomFact(): EitherNetwork<Fact>
 }

@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.kotlin.serialization)
+    implementation(libs.androidx.datastore)
 
     //Compose
     implementation(platform(libs.androidx.compose.bom))

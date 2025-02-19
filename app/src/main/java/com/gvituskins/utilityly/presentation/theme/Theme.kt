@@ -11,11 +11,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -122,20 +119,17 @@ object UlyTheme {
 @Composable
 fun UtilitylyTheme(
     themeType: ThemeType,
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = true, // Dynamic color is available on Android 12+
     content: @Composable () -> Unit
 ) {
-    val themeTypeState = remember(themeType) { mutableStateOf(themeType) }
     val navHostController = rememberNavController()
 
     CompositionLocalProvider(
         LocalNavController provides navHostController,
         LocalSpacing provides UlySpacing(),
         LocalShapes provides UlyShapes(),
-        LocalThemeType provides themeTypeState
     ) {
-        val colorScheme = when (themeTypeState.value) {
+        val colorScheme = when (themeType) {
             ThemeType.SYSTEM -> {
                 val isDarkTheme = isSystemInDarkTheme()
 
@@ -160,8 +154,4 @@ fun UtilitylyTheme(
 
 val LocalNavController = compositionLocalOf<NavHostController> {
     error("NavHostController not provided!")
-}
-
-val LocalThemeType = compositionLocalOf< MutableState<ThemeType>> {
-    error("ThemeType not provided!")
 }

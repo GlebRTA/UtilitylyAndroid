@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
-import com.gvituskins.utilityly.presentation.theme.LocalThemeType
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.components.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.sections.SettingsOpenableSection
@@ -30,8 +29,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val globalThemeState = LocalThemeType.current
 
     UlyScaffold(
         topBar = { UlyDefaultTopAppBar(title = "Settings", navigateBack = navigateBack) }
@@ -53,20 +50,7 @@ fun SettingsScreen(
                 ThemeSettings(
                     themeType = uiState.theme,
                     onThemeChange = { newType ->
-                        when (newType) {
-                            ThemeType.SYSTEM -> {
-                                viewModel.update(SettingsEvent.UpdateThemeType(ThemeType.SYSTEM))
-                                globalThemeState.value = ThemeType.SYSTEM
-                            }
-                            ThemeType.LIGHT -> {
-                                viewModel.update(SettingsEvent.UpdateThemeType(ThemeType.LIGHT))
-                                globalThemeState.value = ThemeType.LIGHT
-                            }
-                            ThemeType.DARK -> {
-                                viewModel.update(SettingsEvent.UpdateThemeType(ThemeType.DARK))
-                                globalThemeState.value = ThemeType.DARK
-                            }
-                        }
+                        viewModel.update(SettingsEvent.UpdateThemeType(newType))
                     },
                     modifier = Modifier
                         .fillMaxWidth()

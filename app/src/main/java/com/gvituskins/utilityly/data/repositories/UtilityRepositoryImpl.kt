@@ -6,16 +6,14 @@ import com.gvituskins.utilityly.data.mappers.toUtilityEntity
 import com.gvituskins.utilityly.data.network.api.NinjaApiService
 import com.gvituskins.utilityly.data.network.utils.apiCall
 import com.gvituskins.utilityly.domain.models.Fact
-import com.gvituskins.utilityly.domain.models.utilities.Utility
-import com.gvituskins.utilityly.domain.models.common.NetworkResult
+import com.gvituskins.utilityly.domain.models.common.EitherNetwork
 import com.gvituskins.utilityly.domain.models.utilities.CreateUtility
+import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-@ActivityRetainedScoped
 class UtilityRepositoryImpl @Inject constructor(
     private val utilityDao: UtilityDao,
     private val ninjaApiService: NinjaApiService
@@ -54,7 +52,7 @@ class UtilityRepositoryImpl @Inject constructor(
         updateUtility(utility.copy(isPaid = !utility.isPaid))
     }
 
-    override suspend fun getRandomFact(): NetworkResult<Fact> {
+    override suspend fun getRandomFact(): EitherNetwork<Fact> {
         return apiCall(
             mapper = { Fact(it.first().fact) },
             callback = { ninjaApiService.getRandomFacts() }

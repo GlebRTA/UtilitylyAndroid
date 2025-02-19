@@ -3,7 +3,7 @@ package com.gvituskins.utilityly.presentation.screens.main.fact.homeFact
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.domain.models.Fact
-import com.gvituskins.utilityly.domain.models.common.NetworkResult
+import com.gvituskins.utilityly.domain.models.common.Either
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,19 +30,19 @@ class FactViewModel @Inject constructor(
                 it.copy(isLoading = true, error = null)
             }
             when (val result = utilityRepository.getRandomFact()) {
-                is NetworkResult.Success -> {
+                is Either.Success -> {
                     _uiState.update {
                         it.copy(
-                            facts = result.data,
+                            facts = result.value,
                             isLoading = false
                         )
                     }
                 }
-                is NetworkResult.Error -> {
+                is Either.Error -> {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = "Error: ${result.message}"
+                            error = "Error: ${result.value}"
                         )
                     }
                 }
