@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.utils
+package com.gvituskins.utilityly.presentation.core.utils
 
 import android.util.Log
 

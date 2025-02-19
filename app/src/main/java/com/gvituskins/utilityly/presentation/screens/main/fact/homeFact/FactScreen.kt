@@ -16,13 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.presentation.components.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
-import com.gvituskins.utilityly.presentation.views.UlyScaffold
-import com.gvituskins.utilityly.presentation.views.topAppBars.UlyDefaultTopAppBar
 
 @Composable
 fun FactScreen(
-    viewModel: FactViewModel = hiltViewModel()
+    viewModel: FactViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -56,7 +56,9 @@ fun FactScreen(
                 Spacer(Modifier.weight(1f))
                 Button(
                     onClick = { viewModel.getRandomFact() },
-                    modifier = Modifier.fillMaxWidth(0.9f)
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .padding(bottom = UlyTheme.spacing.mediumSmall)
                 ) {
                     Text(text = "Get New Fact")
                 }

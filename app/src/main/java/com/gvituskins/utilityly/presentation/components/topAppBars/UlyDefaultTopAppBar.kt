@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.views.topAppBars
+package com.gvituskins.utilityly.presentation.components.topAppBars
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons

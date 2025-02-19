@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.domain.models.utilities.CreateUtility
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
-import com.gvituskins.utilityly.presentation.utils.debugLog
+import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

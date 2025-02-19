@@ -15,8 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
-import com.gvituskins.utilityly.presentation.views.UlyScaffold
-import com.gvituskins.utilityly.presentation.views.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.components.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.BuildConfig
 
 @Composable

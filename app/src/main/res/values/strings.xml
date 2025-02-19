@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Utilityly</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="nav_categories">Categories</string>
+    <string name="nav_more">More</string>
+
+
 </resources>

@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.views.textFields.visualTransformations
+package com.gvituskins.utilityly.presentation.components.textFields.visualTransformations
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping

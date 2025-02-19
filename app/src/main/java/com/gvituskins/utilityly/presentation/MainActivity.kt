@@ -20,7 +20,7 @@ import com.gvituskins.utilityly.presentation.screens.main.paidUtilities.paidGrap
 import com.gvituskins.utilityly.presentation.screens.main.unpaidUtilitiesFeature.unpaidGraph
 import com.gvituskins.utilityly.presentation.theme.LocalNavController
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
-import com.gvituskins.utilityly.presentation.views.bottomNavBar.UlyBNavigationSuiteScaffold
+import com.gvituskins.utilityly.presentation.components.navBar.UlyNavigationSuiteScaffold
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             UtilitylyTheme(themeType = preferences.themeType) {
                 val navController = LocalNavController.current
 
-                UlyBNavigationSuiteScaffold(modifier = Modifier.fillMaxSize()) {
+                UlyNavigationSuiteScaffold(modifier = Modifier.fillMaxSize()) {
                     NavHost(
                         navController = navController,
                         startDestination = PaidNavGraph,

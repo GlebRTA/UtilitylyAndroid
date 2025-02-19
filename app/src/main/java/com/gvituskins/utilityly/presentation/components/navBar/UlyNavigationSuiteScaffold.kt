@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.views.bottomNavBar
+package com.gvituskins.utilityly.presentation.components.navBar
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -34,7 +35,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gvituskins.utilityly.presentation.theme.LocalNavController
 
 @Composable
-fun UlyBNavigationSuiteScaffold(
+fun UlyNavigationSuiteScaffold(
     navController: NavController = LocalNavController.current,
     modifier: Modifier = Modifier,
     navigationSuiteColors: NavigationSuiteColors = NavigationSuiteDefaults.colors(),
@@ -46,9 +47,7 @@ fun UlyBNavigationSuiteScaffold(
     val currentDestination = navBackStackEntry?.destination
 
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val showNavigationBar = visibleBottomBarRoutes.any {
-        navBackStackEntry?.destination?.hasRoute(it::class) ?: false
-    } || isLandscape
+    val showNavigationBar = getVisibleRoutes(isLandscape).any { navBackStackEntry?.destination?.hasRoute(it::class) ?: false }
 
     val layoutType = if (!showNavigationBar) {
         NavigationSuiteType.None
@@ -89,11 +88,11 @@ fun UlyBNavigationSuiteScaffold(
                                     },
                                     icon = {
                                         Icon(
-                                            imageVector = bottomItem.icon,
-                                            contentDescription = bottomItem.name,
+                                            imageVector = if (isSelected) bottomItem.selectedIcon else bottomItem.unselectedIcon,
+                                            contentDescription = stringResource(bottomItem.name),
                                         )
                                     },
-                                    label = { Text(text = bottomItem.name) }
+                                    label = { Text(text =  stringResource(bottomItem.name)) }
                                 )
                             }
                         }

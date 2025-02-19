@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.views.sections
+package com.gvituskins.utilityly.presentation.components.sections
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column

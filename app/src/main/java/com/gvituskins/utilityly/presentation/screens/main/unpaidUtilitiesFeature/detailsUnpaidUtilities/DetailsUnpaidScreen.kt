@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
-import com.gvituskins.utilityly.presentation.views.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 
 @Composable
 fun DetailsUnpaidScreen(

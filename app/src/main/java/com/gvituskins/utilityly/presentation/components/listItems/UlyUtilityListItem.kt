@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.views.listItems
+package com.gvituskins.utilityly.presentation.components.listItems
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

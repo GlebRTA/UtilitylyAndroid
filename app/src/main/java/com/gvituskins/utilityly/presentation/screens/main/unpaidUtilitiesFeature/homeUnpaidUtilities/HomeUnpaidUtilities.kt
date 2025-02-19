@@ -33,9 +33,9 @@ import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
-import com.gvituskins.utilityly.presentation.views.UlyScaffold
-import com.gvituskins.utilityly.presentation.views.listItems.UlyUtilityListItem
-import com.gvituskins.utilityly.presentation.views.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.components.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.listItems.UlyUtilityListItem
+import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
