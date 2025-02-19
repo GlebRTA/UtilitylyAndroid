@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -36,13 +35,13 @@ import com.gvituskins.utilityly.presentation.theme.LocalNavController
 
 @Composable
 fun UlyNavigationSuiteScaffold(
-    navController: NavController = LocalNavController.current,
     modifier: Modifier = Modifier,
     navigationSuiteColors: NavigationSuiteColors = NavigationSuiteDefaults.colors(),
     containerColor: Color = NavigationSuiteScaffoldDefaults.containerColor,
     contentColor: Color = NavigationSuiteScaffoldDefaults.contentColor,
     content: @Composable () -> Unit = {},
 ) {
+    val navController = LocalNavController.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -102,7 +101,7 @@ fun UlyNavigationSuiteScaffold(
             layoutType = layoutType,
             content = {
                 Box(
-                    Modifier.consumeWindowInsets(
+                    modifier = Modifier.consumeWindowInsets(
                         when (layoutType) {
                             NavigationSuiteType.NavigationBar -> NavigationBarDefaults.windowInsets.only(
                                 WindowInsetsSides.Bottom

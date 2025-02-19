@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.navigation.compose.NavHost
 import com.gvituskins.utilityly.data.preferences.UlySharedPreferences
+import com.gvituskins.utilityly.presentation.components.navBar.UlyNavigationSuiteScaffold
 import com.gvituskins.utilityly.presentation.screens.main.fact.factGraph
 import com.gvituskins.utilityly.presentation.screens.main.more.moreGraph
 import com.gvituskins.utilityly.presentation.screens.main.paidUtilities.PaidNavGraph
@@ -20,7 +21,6 @@ import com.gvituskins.utilityly.presentation.screens.main.paidUtilities.paidGrap
 import com.gvituskins.utilityly.presentation.screens.main.unpaidUtilitiesFeature.unpaidGraph
 import com.gvituskins.utilityly.presentation.theme.LocalNavController
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
-import com.gvituskins.utilityly.presentation.components.navBar.UlyNavigationSuiteScaffold
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
