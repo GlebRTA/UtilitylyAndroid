@@ -36,26 +36,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewmodel.uiState
-            .onEach { state ->
-                when (state.themeType) {
-                    ThemeType.SYSTEM -> enableEdgeToEdge()
-                    ThemeType.LIGHT -> enableEdgeToEdge(
-                        statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-                        navigationBarStyle = SystemBarStyle.light(
-                            Color.TRANSPARENT,
-                            Color.TRANSPARENT
-                        )
-                    )
-
-                    ThemeType.DARK -> enableEdgeToEdge(
-                        statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
-                        navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
-                    )
-                }
-            }
-            .launchIn(lifecycleScope)
+        handleEdgeToEdgeColors()
 
         setContent {
             val currentTheme by viewmodel.uiState.collectAsStateWithLifecycle()
@@ -88,5 +69,24 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun handleEdgeToEdgeColors() {
+        viewmodel.uiState
+            .onEach { state ->
+                when (state.themeType) {
+                    ThemeType.SYSTEM -> enableEdgeToEdge()
+                    ThemeType.LIGHT -> enableEdgeToEdge(
+                        statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+                        navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                    )
+
+                    ThemeType.DARK -> enableEdgeToEdge(
+                        statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+                        navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+                    )
+                }
+            }
+            .launchIn(lifecycleScope)
     }
 }

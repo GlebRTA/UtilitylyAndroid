@@ -38,5 +38,5 @@ object MoreNavGraph : BaseNavGraph {
     object Settings
 
     override val showNavigationInPortrait = setOf(HomeMore)
-    override val showNavigationInLandscape = setOf(HomeMore)
+    override val showNavigationInLandscape = setOf(HomeMore, Settings)
 }
