@@ -41,7 +41,7 @@ fun SettingsOpenableSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
-                        .padding(horizontal = UlyTheme.spacing.mediumSmall),
+                        .padding(start = UlyTheme.spacing.mediumSmall),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {

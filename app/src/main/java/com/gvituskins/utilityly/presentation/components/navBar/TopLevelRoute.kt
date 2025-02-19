@@ -6,10 +6,12 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.InsertChart
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.InsertChart
 import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gvituskins.utilityly.R
@@ -30,12 +32,12 @@ data class TopLevelRoute<T : Any>(
 
 val navigationBarRoutes = listOf(
     TopLevelRoute(
-        name = R.string.nav_home,
+        name = R.string.nav_utilities,
         graph = PaidNavGraph,
         visibleNavInPortrait = PaidNavGraph.showNavigationInPortrait,
         visibleNavInLandscape = PaidNavGraph.showNavigationInLandscape,
-        selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Home
+        selectedIcon = Icons.Filled.Payments,
+        unselectedIcon = Icons.Outlined.Payments
     ),
     TopLevelRoute(
         name = R.string.nav_statistics,
