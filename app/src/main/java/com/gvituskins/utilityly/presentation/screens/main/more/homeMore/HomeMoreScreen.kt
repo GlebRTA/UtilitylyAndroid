@@ -69,6 +69,7 @@ fun HomeMoreScreen(
                         )
                     }
                 )
+
                 HorizontalDivider()
 
                 Text(
@@ -77,12 +78,6 @@ fun HomeMoreScreen(
                     style = UlyTheme.typography.bodyLarge
                 )
             }
-
-            Text(
-                text = "Glebs Vituskins, 4 kurss",
-                modifier = Modifier.padding(UlyTheme.spacing.small),
-                style = UlyTheme.typography.bodyLarge
-            )
         }
     }
 }
