@@ -2,7 +2,10 @@ package com.gvituskins.utilityly.presentation.components.navBar
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,7 +25,11 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -48,12 +55,14 @@ fun UlyNavigationSuiteScaffold(
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val showNavigationBar = getVisibleRoutes(isLandscape).any { navBackStackEntry?.destination?.hasRoute(it::class) ?: false }
 
-    val layoutType = if (!showNavigationBar) {
-        NavigationSuiteType.None
-    } else if (isLandscape) {
+    val layoutType = if (isLandscape) {
         NavigationSuiteType.NavigationRail
     } else {
         NavigationSuiteType.NavigationBar
+    }
+
+    var resultLayoutType by remember(showNavigationBar) {
+        mutableStateOf(layoutType)
     }
 
     Surface(
@@ -65,11 +74,35 @@ fun UlyNavigationSuiteScaffold(
             navigationSuite = {
                 AnimatedVisibility(
                     visible = showNavigationBar,
-                    enter = slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it })
+                    enter = if (isLandscape) {
+                        slideInHorizontally(
+                            animationSpec = tween(300),
+                            initialOffsetX = { -it }
+                        )
+                    } else {
+                        slideInVertically(
+                            animationSpec = tween(300),
+                            initialOffsetY = { it }
+                        )
+                    },
+                    exit = if (isLandscape) {
+                        slideOutHorizontally(
+                            animationSpec = tween(300),
+                            targetOffsetX = { -it }
+                        )
+                    } else {
+                        slideOutVertically(
+                            animationSpec = tween(300),
+                            targetOffsetY = { it }
+                        )
+                    }
                 ) {
+                    DisposableEffect(Unit) {
+                        onDispose { resultLayoutType = NavigationSuiteType.None }
+                    }
+
                     NavigationSuite(
-                        layoutType = layoutType,
+                        layoutType = resultLayoutType,
                         colors = navigationSuiteColors,
                         content = {
                             navigationBarRoutes.forEach { bottomItem ->
@@ -98,11 +131,11 @@ fun UlyNavigationSuiteScaffold(
                     )
                 }
             },
-            layoutType = layoutType,
+            layoutType = resultLayoutType,
             content = {
                 Box(
                     modifier = Modifier.consumeWindowInsets(
-                        when (layoutType) {
+                        when (resultLayoutType) {
                             NavigationSuiteType.NavigationBar -> NavigationBarDefaults.windowInsets.only(
                                 WindowInsetsSides.Bottom
                             )
