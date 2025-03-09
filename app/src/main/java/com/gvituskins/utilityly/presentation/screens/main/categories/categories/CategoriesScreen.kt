@@ -49,6 +49,7 @@ import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
 fun CategoriesScreen(
+    navigateToAddCategory: () -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,7 +69,7 @@ fun CategoriesScreen(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                FloatingActionButton(onClick = { }) {
+                FloatingActionButton(onClick = navigateToAddCategory) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add new category"

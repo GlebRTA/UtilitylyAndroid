@@ -2,10 +2,12 @@ package com.gvituskins.utilityly.presentation.screens.main.categories
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.gvituskins.utilityly.presentation.core.navigation.BaseNavGraph
 import com.gvituskins.utilityly.presentation.core.navigation.routeComposable
 import com.gvituskins.utilityly.presentation.screens.main.categories.categories.CategoriesScreen
+import com.gvituskins.utilityly.presentation.screens.main.categories.manageCategory.ManageCategoryScreen
 import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.categoriesGraph(navController: NavController) {
@@ -13,7 +15,17 @@ fun NavGraphBuilder.categoriesGraph(navController: NavController) {
         startDestination = CategoriesNavGraph.Categories
     ) {
         routeComposable<CategoriesNavGraph.Categories> {
-            CategoriesScreen()
+            CategoriesScreen(
+                navigateToAddCategory = {
+                    navController.navigate(CategoriesNavGraph.ManageCategory)
+                }
+            )
+        }
+
+        composable<CategoriesNavGraph.ManageCategory> {
+            ManageCategoryScreen(
+                navigateBack = { navController.navigateUp() }
+            )
         }
     }
 }
@@ -24,6 +36,9 @@ object CategoriesNavGraph : BaseNavGraph {
     @Serializable
     object Categories
 
+    @Serializable
+    object ManageCategory
+
     override val showNavigationInPortrait = setOf(Categories)
-    override val showNavigationInLandscape = setOf(Categories)
+    override val showNavigationInLandscape = setOf(Categories, ManageCategory)
 }
