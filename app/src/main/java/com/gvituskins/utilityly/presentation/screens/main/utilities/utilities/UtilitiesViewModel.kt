@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.paidUtilities
+package com.gvituskins.utilityly.presentation.screens.main.utilities.utilities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PaidUtilitiesViewModel @Inject constructor(
+class UtilitiesViewModel @Inject constructor(
     private val utilityRepository: UtilityRepository
 ) : ViewModel() {
 

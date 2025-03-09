@@ -30,9 +30,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val ninjasApiKey = localProperties["NINJAS_API_KEY"].toString()
-        buildConfigField("String", "NINJA_API_KEY", ninjasApiKey)
-        buildConfigField("String", "NINJA_API_BASE_URL", "\"https://api.api-ninjas.com/\"")
         signingConfig = signingConfigs.getByName("debug")
     }
 

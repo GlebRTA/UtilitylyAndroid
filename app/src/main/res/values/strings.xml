@@ -6,5 +6,9 @@
     <string name="nav_categories">Categories</string>
     <string name="nav_more">More</string>
 
+    <string name="app_theme">App Theme:</string>
+    <string name="locations">Locations</string>
+    <string name="companies">Companies</string>
+
 
 </resources>

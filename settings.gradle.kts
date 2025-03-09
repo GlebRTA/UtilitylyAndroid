@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UtilityHelper"
+rootProject.name = "Utilityly"
 include(":app")
  

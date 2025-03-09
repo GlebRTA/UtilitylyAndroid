@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.settings
+package com.gvituskins.utilityly.presentation.screens.main.more.more
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
+class MoreViewModel @Inject constructor(
     private val dataStore: DataStoreUtil
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
-        SettingsState()
+        MoreState()
     )
     val uiState = _uiState.asStateFlow()
 
@@ -33,13 +33,15 @@ class SettingsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun update(event: SettingsEvent) {
-        when (event) {
-            is SettingsEvent.UpdateThemeType -> updateTheme(event.type)
+    fun changeThemeSection(isOpened: Boolean) {
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                themSectionOpened = isOpened
+            )
         }
     }
 
-    private fun updateTheme(type: ThemeType) {
+    fun updateTheme(type: ThemeType) {
         viewModelScope.launch {
             dataStore.changeTheme(type)
             _uiState.update { currentUiState ->
@@ -51,10 +53,7 @@ class SettingsViewModel @Inject constructor(
     }
 }
 
-sealed interface SettingsEvent {
-    data class UpdateThemeType(val type: ThemeType) : SettingsEvent
-}
-
-data class SettingsState(
-    val theme: ThemeType = ThemeType.SYSTEM
+data class MoreState(
+    val themSectionOpened: Boolean = false,
+    val theme: ThemeType = ThemeType.SYSTEM,
 )

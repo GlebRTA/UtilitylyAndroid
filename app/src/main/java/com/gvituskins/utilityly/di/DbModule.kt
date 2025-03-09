@@ -3,6 +3,7 @@ package com.gvituskins.utilityly.di
 import android.content.Context
 import androidx.room.Room
 import com.gvituskins.utilityly.data.db.UlyDatabase
+import com.gvituskins.utilityly.data.db.dao.CategoryDao
 import com.gvituskins.utilityly.data.db.dao.UtilityDao
 import dagger.Module
 import dagger.Provides
@@ -29,5 +30,11 @@ object DbModule {
     @Singleton
     fun provideUtilityDao(appDatabase: UlyDatabase): UtilityDao {
         return appDatabase.utilityDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryDao(appDatabase: UlyDatabase): CategoryDao {
+        return appDatabase.categoryDao()
     }
 }

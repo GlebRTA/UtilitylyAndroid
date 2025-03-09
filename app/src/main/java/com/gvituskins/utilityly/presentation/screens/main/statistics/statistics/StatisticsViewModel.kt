@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.unpaidUtilitiesFeature.homeUnpaidUtilities
+package com.gvituskins.utilityly.presentation.screens.main.statistics.statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

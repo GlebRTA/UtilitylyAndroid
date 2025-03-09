@@ -13,10 +13,10 @@ import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gvituskins.utilityly.R
-import com.gvituskins.utilityly.presentation.screens.main.fact.FactNavGraph
+import com.gvituskins.utilityly.presentation.screens.main.categories.CategoriesNavGraph
 import com.gvituskins.utilityly.presentation.screens.main.more.MoreNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.paidUtilities.PaidNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.unpaidUtilitiesFeature.UnpaidNavGraph
+import com.gvituskins.utilityly.presentation.screens.main.utilities.UtilitiesNavGraph
+import com.gvituskins.utilityly.presentation.screens.main.statistics.StatisticsNavGraph
 
 @Immutable
 data class TopLevelRoute<T : Any>(
@@ -31,25 +31,25 @@ data class TopLevelRoute<T : Any>(
 val navigationBarRoutes = listOf(
     TopLevelRoute(
         name = R.string.nav_utilities,
-        graph = PaidNavGraph,
-        visibleNavInPortrait = PaidNavGraph.showNavigationInPortrait,
-        visibleNavInLandscape = PaidNavGraph.showNavigationInLandscape,
+        graph = UtilitiesNavGraph,
+        visibleNavInPortrait = UtilitiesNavGraph.showNavigationInPortrait,
+        visibleNavInLandscape = UtilitiesNavGraph.showNavigationInLandscape,
         selectedIcon = Icons.Filled.Payments,
         unselectedIcon = Icons.Outlined.Payments
     ),
     TopLevelRoute(
         name = R.string.nav_statistics,
-        graph = UnpaidNavGraph,
-        visibleNavInPortrait = UnpaidNavGraph.showNavigationInPortrait,
-        visibleNavInLandscape = UnpaidNavGraph.showNavigationInLandscape,
+        graph = StatisticsNavGraph,
+        visibleNavInPortrait = StatisticsNavGraph.showNavigationInPortrait,
+        visibleNavInLandscape = StatisticsNavGraph.showNavigationInLandscape,
         selectedIcon = Icons.Filled.InsertChart,
         unselectedIcon = Icons.Outlined.InsertChart,
     ),
     TopLevelRoute(
         name = R.string.nav_categories,
-        graph = FactNavGraph,
-        visibleNavInPortrait =  FactNavGraph.showNavigationInPortrait,
-        visibleNavInLandscape = FactNavGraph.showNavigationInLandscape,
+        graph = CategoriesNavGraph,
+        visibleNavInPortrait =  CategoriesNavGraph.showNavigationInPortrait,
+        visibleNavInLandscape = CategoriesNavGraph.showNavigationInLandscape,
         selectedIcon = Icons.Filled.Category,
         unselectedIcon = Icons.Outlined.Category,
     ),

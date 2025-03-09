@@ -19,11 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
 import com.gvituskins.utilityly.presentation.components.navBar.UlyNavigationSuiteScaffold
-import com.gvituskins.utilityly.presentation.screens.main.fact.factGraph
+import com.gvituskins.utilityly.presentation.screens.main.categories.categoriesGraph
 import com.gvituskins.utilityly.presentation.screens.main.more.moreGraph
-import com.gvituskins.utilityly.presentation.screens.main.paidUtilities.PaidNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.paidUtilities.paidGraph
-import com.gvituskins.utilityly.presentation.screens.main.unpaidUtilitiesFeature.unpaidGraph
+import com.gvituskins.utilityly.presentation.screens.main.utilities.UtilitiesNavGraph
+import com.gvituskins.utilityly.presentation.screens.main.utilities.utilitiesGraph
+import com.gvituskins.utilityly.presentation.screens.main.statistics.statisticsGraph
 import com.gvituskins.utilityly.presentation.theme.LocalNavController
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 UlyNavigationSuiteScaffold(modifier = Modifier.fillMaxSize()) {
                     NavHost(
                         navController = navController,
-                        startDestination = PaidNavGraph,
+                        startDestination = UtilitiesNavGraph,
                         enterTransition = { EnterTransition.None },
                         exitTransition = { ExitTransition.None },
                         popExitTransition = {
@@ -61,9 +61,9 @@ class MainActivity : ComponentActivity() {
                         },
                         popEnterTransition = { EnterTransition.None },
                     ) {
-                        paidGraph(navController = navController)
-                        unpaidGraph(navController = navController)
-                        factGraph(navController = navController)
+                        utilitiesGraph(navController = navController)
+                        statisticsGraph(navController = navController)
+                        categoriesGraph(navController = navController)
                         moreGraph(navController = navController)
                     }
                 }

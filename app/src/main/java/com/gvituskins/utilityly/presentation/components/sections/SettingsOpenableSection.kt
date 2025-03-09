@@ -1,6 +1,7 @@
 package com.gvituskins.utilityly.presentation.components.sections
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
 fun SettingsOpenableSection(
+    title: String,
     isOpened: Boolean,
     onOpen: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -41,11 +43,15 @@ fun SettingsOpenableSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
-                        .padding(start = UlyTheme.spacing.mediumSmall),
+                        .clickable { onOpen(!isOpened) }
+                        .padding(
+                            start = UlyTheme.spacing.mediumSmall,
+                            end = UlyTheme.spacing.xSmall
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Theme")
+                    Text(text = title)
 
                     IconButton(onClick = { onOpen(!isOpened) }) {
                         Icon(
