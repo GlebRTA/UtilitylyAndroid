@@ -25,11 +25,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -55,14 +51,12 @@ fun UlyNavigationSuiteScaffold(
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val showNavigationBar = getVisibleRoutes(isLandscape).any { navBackStackEntry?.destination?.hasRoute(it::class) ?: false }
 
-    val layoutType = if (isLandscape) {
+    val layoutType = if (!showNavigationBar) {
+        NavigationSuiteType.None
+    } else if (isLandscape) {
         NavigationSuiteType.NavigationRail
     } else {
         NavigationSuiteType.NavigationBar
-    }
-
-    var resultLayoutType by remember(showNavigationBar) {
-        mutableStateOf(layoutType)
     }
 
     Surface(
@@ -97,12 +91,8 @@ fun UlyNavigationSuiteScaffold(
                         )
                     }
                 ) {
-                    DisposableEffect(Unit) {
-                        onDispose { resultLayoutType = NavigationSuiteType.None }
-                    }
-
                     NavigationSuite(
-                        layoutType = resultLayoutType,
+                        layoutType = layoutType,
                         colors = navigationSuiteColors,
                         content = {
                             navigationBarRoutes.forEach { bottomItem ->
@@ -131,11 +121,11 @@ fun UlyNavigationSuiteScaffold(
                     )
                 }
             },
-            layoutType = resultLayoutType,
+            layoutType = layoutType,
             content = {
                 Box(
                     modifier = Modifier.consumeWindowInsets(
-                        when (resultLayoutType) {
+                        when (layoutType) {
                             NavigationSuiteType.NavigationBar -> NavigationBarDefaults.windowInsets.only(
                                 WindowInsetsSides.Bottom
                             )
