@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,19 +22,33 @@ class CategoriesViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        categoryRepository.getAllUtilities()
+        categoryRepository.getAllCategories()
             .onEach { categories ->
                 _uiState.update { currentUiState ->
-                    currentUiState.copy(
-                        categories = categories
-                    )
+                    currentUiState.copy(categories = categories)
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    fun deleteCategory(categoryToDelete: Category) {
+        viewModelScope.launch {
+            categoryRepository.deleteCategory(categoryToDelete)
+            _uiState.update { currentUiState ->
+                currentUiState.copy(deleteCategory = null)
+            }
+        }
+    }
+
+    fun updateDeleteDialogVisibility(category: Category?) {
+        _uiState.update { currentUiState ->
+            currentUiState.copy(deleteCategory = category)
+        }
     }
 
 }
 
 data class CategoriesState(
     val categories: List<Category> = emptyList(),
+    val deleteCategory: Category? = null,
 )

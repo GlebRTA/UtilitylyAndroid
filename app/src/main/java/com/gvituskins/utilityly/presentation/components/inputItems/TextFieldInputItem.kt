@@ -11,6 +11,8 @@ import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTe
 fun TextFieldInputItem(
     title: String?,
     textFiledState: TextFieldState,
+    isError: Boolean = false,
+    errorText: String? = null,
     placeholderText: String? = null,
     lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
     modifier: Modifier = Modifier
@@ -26,7 +28,13 @@ fun TextFieldInputItem(
                     Text(text = it)
                 }
             },
-            lineLimits = lineLimits
+            lineLimits = lineLimits,
+            isError = isError,
+            supportingText = {
+                if (isError && errorText != null) {
+                    Text(text = errorText)
+                }
+            }
         )
     }
 }

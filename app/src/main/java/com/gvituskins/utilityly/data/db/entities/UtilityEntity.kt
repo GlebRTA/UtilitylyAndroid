@@ -1,7 +1,9 @@
 package com.gvituskins.utilityly.data.db.entities
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
 import java.util.Date
@@ -20,4 +22,13 @@ data class UtilityEntity(
     val dueDate: Date?,
     val datePaid: Date?,
     val previousUtilityId: Int,
+)
+
+data class CategoryWithUtility(
+    @Embedded val category: CategoryEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "categoryId"
+    )
+    val utilities: List<UtilityEntity>
 )

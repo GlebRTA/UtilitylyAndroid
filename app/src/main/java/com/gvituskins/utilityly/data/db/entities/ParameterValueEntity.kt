@@ -3,11 +3,11 @@ package com.gvituskins.utilityly.data.db.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "category")
-data class CategoryEntity(
+@Entity(tableName = "parameter_category")
+data class ParameterValueEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String,
-    val description: String?,
-    val iconUrl: String?
+    val categoryParameterId: Int,
+    val value: String,
+    val utilityId: Int
 )

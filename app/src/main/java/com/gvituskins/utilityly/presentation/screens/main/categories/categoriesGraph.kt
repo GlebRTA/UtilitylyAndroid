@@ -17,7 +17,10 @@ fun NavGraphBuilder.categoriesGraph(navController: NavController) {
         routeComposable<CategoriesNavGraph.Categories> {
             CategoriesScreen(
                 navigateToAddCategory = {
-                    navController.navigate(CategoriesNavGraph.ManageCategory)
+                    navController.navigate(CategoriesNavGraph.ManageCategory(null))
+                },
+                navigateToEditCategory = { categoryId ->
+                    navController.navigate(CategoriesNavGraph.ManageCategory(categoryId))
                 }
             )
         }
@@ -37,8 +40,8 @@ object CategoriesNavGraph : BaseNavGraph {
     object Categories
 
     @Serializable
-    object ManageCategory
+    data class ManageCategory(val categoryId: Int?)
 
     override val showNavigationInPortrait = setOf(Categories)
-    override val showNavigationInLandscape = setOf(Categories, ManageCategory)
+    override val showNavigationInLandscape = setOf(Categories, ManageCategory(-1))
 }

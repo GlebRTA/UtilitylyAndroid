@@ -10,15 +10,16 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -38,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
@@ -47,6 +49,7 @@ import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.modalBottomSheet.UlyModalBottomSheet
 import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTextFiled
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 
@@ -59,20 +62,29 @@ fun ManageCategoryScreen(
     var showm3 by remember {
         mutableStateOf(false)
     }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    viewModel.label.collectAsOneTimeEvent { event ->
+        when (event) {
+            ManageCategoryOneTime.NavigateBack -> navigateBack()
+        }
+    }
+
     UlyScaffold(
         topBar = {
             UlyDefaultTopAppBar(
-                title = stringResource(R.string.title_add_category),
+                title = stringResource(if (uiState.isAddMode) R.string.title_add_category else R.string.title_edit_category),
                 navigateBack = navigateBack
             )
-        }
+        },
     ) { innerPadding ->
-        val b = rememberTextFieldState()
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .imePadding()
         ) {
             Column(
                 modifier = Modifier
@@ -80,29 +92,31 @@ fun ManageCategoryScreen(
                     .padding(UlyTheme.spacing.mediumSmall)
             ) {
                 TextFieldInputItem(
-                    title = "Name",
-                    textFiledState = b,
-                    placeholderText = "Add Category Name"
+                    title = stringResource(R.string.name),
+                    textFiledState = uiState.name,
+                    placeholderText = stringResource(R.string.category_name),
+                    isError = uiState.nameIsError,
+                    errorText = "Category name should not be empty"
                 )
 
                 VerticalSpacer(UlyTheme.spacing.mediumLarge)
 
                 TextFieldInputItem(
-                    title = "Description",
-                    textFiledState = b,
-                    placeholderText = "Add Category Description",
+                    title = stringResource(R.string.description),
+                    textFiledState = uiState.description,
+                    placeholderText = stringResource(R.string.category_description),
                     lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 3)
                 )
 
                 VerticalSpacer(UlyTheme.spacing.mediumLarge)
 
-                TextInputItem(title = "Parameters") {
+                TextInputItem(title = stringResource(R.string.icon)) {
                     Box(
                         modifier = Modifier
                             .size(140.dp)
                             .border(
                                 1.dp,
-                                UlyTheme.colors.primary.copy(alpha = .4f),
+                                UlyTheme.colors.outline,
                                 UlyTheme.shapes.small
                             )
                             .clickable {
@@ -110,19 +124,19 @@ fun ManageCategoryScreen(
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Add Icon")
+                        Text(text = stringResource(R.string.category_icon))
                     }
                 }
 
                 VerticalSpacer(UlyTheme.spacing.mediumLarge)
 
-                TextInputItem(title = "Parameters") {
+                TextInputItem(title = stringResource(R.string.parameters)) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.xSmall),
                         modifier = Modifier.width(IntrinsicSize.Min)
                     ) {
                         UlyOutlinedTextFiled(
-                            state = b,
+                            state = uiState.name,
                             label = {
                                 Text(text = "Kitchen Hot Water")
                             },
@@ -137,7 +151,7 @@ fun ManageCategoryScreen(
                         )
 
                         UlyOutlinedTextFiled(
-                            state = b,
+                            state = uiState.name,
                             label = {
                                 Text(text = "Kitchen Cold Water")
                             },
@@ -155,7 +169,7 @@ fun ManageCategoryScreen(
                             onClick = {},
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(text = "Add Parameter")
+                            Text(text = stringResource(R.string.add_parameter))
                         }
                     }
                 }
@@ -164,13 +178,14 @@ fun ManageCategoryScreen(
             }
 
             UlyFilledTonalButton(
-                onClick = {},
+                onClick = { viewModel.manageCategory() },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(horizontal = UlyTheme.spacing.mediumSmall),
+                enabled = uiState.isValidToManage
             ) {
-                Text(text = "Add")
+                Text(text = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit))
             }
         }
     }

@@ -11,3 +11,12 @@ fun CategoryEntity.toCategory(): Category {
         iconUrl = iconUrl
     )
 }
+
+fun Category.toCategoryEntity(): CategoryEntity {
+    return CategoryEntity(
+        id = id,
+        name = name,
+        description = description,
+        iconUrl = iconUrl
+    )
+}

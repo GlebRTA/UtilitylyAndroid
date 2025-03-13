@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,6 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.WaterDrop
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -44,12 +44,14 @@ import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
+import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
 fun CategoriesScreen(
     navigateToAddCategory: () -> Unit,
+    navigateToEditCategory: (Int) -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -72,21 +74,17 @@ fun CategoriesScreen(
                 FloatingActionButton(onClick = navigateToAddCategory) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Add new category"
+                        contentDescription = stringResource(R.string.add_new_category)
                     )
                 }
             }
         }
     ) { innerPadding ->
         if (uiState.categories.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize()
-                    .padding(innerPadding),
-            ) {
-                Text(text = "There is no category added")
-            }
+            EmptyStub(
+                text = stringResource(R.string.there_is_no_category_added),
+                paddings = innerPadding
+            )
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -96,12 +94,12 @@ fun CategoriesScreen(
                 items(items = uiState.categories, key = { it.id }) { category ->
                     CategoryItem(
                         title = category.name,
-                        description = category.description ?: "",
-                        onDeleteClick = {  },
+                        description = category.description,
+                        onDeleteClick = { viewModel.updateDeleteDialogVisibility(category)  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .clickable { }
+                            .clickable { navigateToEditCategory(category.id) }
                             .padding(
                                 horizontal = UlyTheme.spacing.small,
                                 vertical = UlyTheme.spacing.xSmall
@@ -114,12 +112,32 @@ fun CategoriesScreen(
             }
         }
     }
+
+    uiState.deleteCategory?.let { categoryToDelete ->
+        AlertDialog(
+            onDismissRequest = { viewModel.updateDeleteDialogVisibility(null) },
+            confirmButton = {
+                Button(onClick = { viewModel.deleteCategory(categoryToDelete) }) {
+                    Text(text = "Delete")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { viewModel.updateDeleteDialogVisibility(null) }) {
+                    Text(text = "Cancel")
+                }
+            },
+            title = {
+                Text(text = "Do you want delete category ${categoryToDelete.name}?")
+            },
+            shape = UlyTheme.shapes.medium
+        )
+    }
 }
 
 @Composable
 private fun CategoryItem(
     title: String,
-    description: String,
+    description: String?,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -155,16 +173,18 @@ private fun CategoryItem(
                 IconButton(onClick = onDeleteClick) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete Category"
+                        contentDescription = stringResource(R.string.delete_category)
                     )
                 }
             }
 
-            Text(
-                text = description,
-                style = UlyTheme.typography.bodyMedium,
-                overflow = TextOverflow.Ellipsis,
-            )
+            description?.let {
+                Text(
+                    text = description,
+                    style = UlyTheme.typography.bodyMedium,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
