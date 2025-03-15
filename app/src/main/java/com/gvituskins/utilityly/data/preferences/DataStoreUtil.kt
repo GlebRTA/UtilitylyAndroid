@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -25,6 +26,21 @@ class DataStoreUtil @Inject constructor(private val context: Context) {
     suspend fun changeTheme(type: ThemeType) {
         context.dataStore.edit { preferences ->
             preferences[CURRENT_THEME_KEY] = type.ordinal
+        }
+    }
+
+    private val CURRENT_LOCATION_ID_KEY = intPreferencesKey("CURRENT_LOCATION_ID")
+
+    fun locationId(): Flow<Int> = context.dataStore.data
+        .map { preferences ->
+            preferences[CURRENT_LOCATION_ID_KEY] ?: 0
+        }
+
+    suspend fun getLastLocationId(): Int = locationId().last()
+
+    suspend fun changeLocationId(id: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[CURRENT_LOCATION_ID_KEY] = id
         }
     }
 }

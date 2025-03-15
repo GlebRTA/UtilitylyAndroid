@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.gvituskins.utilityly.data.db.entities.CategoryEntity
 import com.gvituskins.utilityly.data.db.entities.CategoryWithParameterCategory
+import com.gvituskins.utilityly.data.db.entities.ParameterCategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,6 +31,9 @@ interface CategoryDao {
     suspend fun deleteCategory(category: CategoryEntity)
 
     @Transaction
-    @Query("SELECT * FROM category")
-    fun getCategoryParameters(): List<CategoryWithParameterCategory>
+    @Query("SELECT * FROM category WHERE id = :categoryId")
+    suspend fun getCategoryParameters(categoryId: Int): CategoryWithParameterCategory
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addCategoryParameter(parameter: ParameterCategoryEntity)
 }

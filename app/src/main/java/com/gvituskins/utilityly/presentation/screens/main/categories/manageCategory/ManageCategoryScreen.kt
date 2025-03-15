@@ -18,8 +18,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -135,39 +137,29 @@ fun ManageCategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.xSmall),
                         modifier = Modifier.width(IntrinsicSize.Min)
                     ) {
-                        UlyOutlinedTextFiled(
-                            state = uiState.name,
-                            label = {
-                                Text(text = "Kitchen Hot Water")
-                            },
-                            trailingIcon = {
-                                IconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = null
-                                    )
+                        uiState.editCategory?.parameters?.forEach { parameter ->
+                            UlyOutlinedTextFiled(
+                                state = TextFieldState(),
+                                enabled = false,
+                                label = {
+                                    Text(text = parameter.name)
+                                },
+                                trailingIcon = {
+                                    IconButton(onClick = {}) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
-                            }
-                        )
-
-                        UlyOutlinedTextFiled(
-                            state = uiState.name,
-                            label = {
-                                Text(text = "Kitchen Cold Water")
-                            },
-                            trailingIcon = {
-                                IconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        )
+                            )
+                        }
 
                         UlyFilledTonalButton(
-                            onClick = {},
-                            modifier = Modifier.fillMaxWidth()
+                            onClick = { viewModel.updateAddParameterDialog(true) },
+                            modifier = Modifier
+                                .widthIn(min = 220.dp)
+                                .fillMaxWidth()
                         ) {
                             Text(text = stringResource(R.string.add_parameter))
                         }
@@ -187,6 +179,38 @@ fun ManageCategoryScreen(
             ) {
                 Text(text = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit))
             }
+        }
+    }
+
+    if (uiState.showAddParameter) {
+        UlyModalBottomSheet(
+            onDismissRequest = { viewModel.updateAddParameterDialog(false) }
+        ) {
+            val name = remember { TextFieldState() }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = UlyTheme.spacing.mediumSmall)
+            ) {
+                TextFieldInputItem(
+                    title = "Name",
+                    textFiledState = name,
+                    isError = name.text.isEmpty(),
+                    errorText = "Parameter name should not be empty"
+                )
+
+                VerticalSpacer(UlyTheme.spacing.xxLarge)
+                UlyFilledTonalButton(
+                    onClick = { viewModel.addLocalParameter(name.text.toString()) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    Text(text = stringResource(R.string.add))
+                }
+            }
+
         }
     }
 

@@ -41,6 +41,7 @@ fun UlyModalBottomSheet(
             isAppearanceLightStatusBars = contentColor.isDark(),
             isAppearanceLightNavigationBars = contentColor.isDark()
         ),
+    showNavigationBarPadding: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
@@ -59,11 +60,13 @@ fun UlyModalBottomSheet(
         properties = properties,
     ) {
         content()
-        Spacer(
-            Modifier.windowInsetsBottomHeight(
-                WindowInsets.navigationBarsIgnoringVisibility
+        if (showNavigationBarPadding) {
+            Spacer(
+                Modifier.windowInsetsBottomHeight(
+                    WindowInsets.navigationBarsIgnoringVisibility
+                )
             )
-        )
+        }
     }
 }
 

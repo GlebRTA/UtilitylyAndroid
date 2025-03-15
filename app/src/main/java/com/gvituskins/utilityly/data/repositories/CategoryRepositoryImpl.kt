@@ -3,7 +3,9 @@ package com.gvituskins.utilityly.data.repositories
 import com.gvituskins.utilityly.data.db.dao.CategoryDao
 import com.gvituskins.utilityly.data.mappers.toCategory
 import com.gvituskins.utilityly.data.mappers.toCategoryEntity
+import com.gvituskins.utilityly.data.mappers.toCategoryParameterEntity
 import com.gvituskins.utilityly.domain.models.categories.Category
+import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import kotlinx.coroutines.flow.Flow
@@ -16,12 +18,13 @@ class CategoryRepositoryImpl @Inject constructor(
 
     override fun getAllCategories(): Flow<List<Category>> {
         return categoryDao.getAllCategories().map { categories ->
-            categories.map { it.toCategory() }
+            categories.map { it.toCategory(emptyList()) }
         }
     }
 
     override suspend fun getCategoryById(id: Int): Category {
-        return categoryDao.getCategoryById(id).toCategory()
+        val categoryParameters = categoryDao.getCategoryParameters(id)
+        return categoryDao.getCategoryById(id).toCategory(categoryParameters.parameters)
     }
 
     override suspend fun addNewCategory(category: Category) {
@@ -36,7 +39,10 @@ class CategoryRepositoryImpl @Inject constructor(
         categoryDao.updateCategory(category.toCategoryEntity())
     }
 
-    fun getAllCategoryParameters() {
-        debugLog(categoryDao.getCategoryParameters().toString())
+    override suspend fun addCategoryParameter(
+        categoryId: Int,
+        parameter: CategoryParameter
+    ) {
+        categoryDao.addCategoryParameter(parameter.toCategoryParameterEntity(categoryId))
     }
 }

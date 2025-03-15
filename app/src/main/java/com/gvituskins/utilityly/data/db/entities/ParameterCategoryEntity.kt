@@ -14,10 +14,10 @@ data class ParameterCategoryEntity(
 )
 
 data class CategoryWithParameterCategory(
-    @Embedded val parameter: ParameterCategoryEntity,
+    @Embedded val category: CategoryEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "categoryId"
     )
-    val categories: List<CategoryEntity>
+    val parameters: List<ParameterCategoryEntity>
 )

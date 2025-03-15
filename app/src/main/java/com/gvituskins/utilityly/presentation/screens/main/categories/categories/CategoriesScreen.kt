@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.WaterDrop
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -44,6 +42,7 @@ import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
+import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
@@ -114,22 +113,16 @@ fun CategoriesScreen(
     }
 
     uiState.deleteCategory?.let { categoryToDelete ->
-        AlertDialog(
-            onDismissRequest = { viewModel.updateDeleteDialogVisibility(null) },
-            confirmButton = {
-                Button(onClick = { viewModel.deleteCategory(categoryToDelete) }) {
-                    Text(text = "Delete")
-                }
+        UlyAlertDialog(
+            onDismissRequest = {
+                viewModel.updateDeleteDialogVisibility(null)
             },
-            dismissButton = {
-                Button(onClick = { viewModel.updateDeleteDialogVisibility(null) }) {
-                    Text(text = "Cancel")
-                }
+            titleText = "Do you want delete category ${categoryToDelete.name}?",
+            confirmText = "Delete",
+            onConfirmClicked = {
+                viewModel.deleteCategory(categoryToDelete)
             },
-            title = {
-                Text(text = "Do you want delete category ${categoryToDelete.name}?")
-            },
-            shape = UlyTheme.shapes.medium
+            dismissText = "Cancel"
         )
     }
 }

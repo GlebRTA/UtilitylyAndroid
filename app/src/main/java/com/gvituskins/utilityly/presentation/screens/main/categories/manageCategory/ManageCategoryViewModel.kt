@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.categories.Category
+import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.presentation.screens.main.categories.CategoriesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +40,8 @@ class ManageCategoryViewModel @Inject constructor(
                         editCategory = initCategory,
                         name = TextFieldState(initCategory.name),
                         description = TextFieldState(initCategory.description ?: ""),
+
+                        localParameters = initCategory.parameters,
                     )
                 }
             }
@@ -53,7 +56,8 @@ class ManageCategoryViewModel @Inject constructor(
                         id = 0,
                         name = uiState.value.name.text.toString(),
                         description = uiState.value.description.text.toString(),
-                        iconUrl = null
+                        iconUrl = null,
+                        parameters = emptyList()
                     )
                 )
             } else {
@@ -70,6 +74,22 @@ class ManageCategoryViewModel @Inject constructor(
             _label.send(ManageCategoryOneTime.NavigateBack)
         }
     }
+
+    fun addLocalParameter(name: String) {
+        _uiState.update {
+            it.copy(
+                localParameters = it.localParameters.plus(CategoryParameter(name = name))
+            )
+        }
+    }
+
+    fun updateAddParameterDialog(newState: Boolean) {
+        _uiState.update {
+            it.copy(
+                showAddParameter = newState
+            )
+        }
+    }
 }
 
 sealed interface ManageCategoryOneTime {
@@ -81,6 +101,9 @@ data class ManageCategoryState(
 
     val name: TextFieldState = TextFieldState(),
     val description: TextFieldState = TextFieldState(),
+
+    val showAddParameter: Boolean = false,
+    val localParameters: List<CategoryParameter> = emptyList(),
 ) {
     val nameIsError: Boolean
         get() = name.text.isEmpty()
