@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.gvituskins.utilityly.data.db.UlyDatabase
 import com.gvituskins.utilityly.data.db.dao.CategoryDao
+import com.gvituskins.utilityly.data.db.dao.CompanyDao
 import com.gvituskins.utilityly.data.db.dao.LocationDao
 import com.gvituskins.utilityly.data.db.dao.UtilityDao
 import dagger.Module
@@ -43,5 +44,11 @@ object DbModule {
     @Singleton
     fun provideLocationDao(appDatabase: UlyDatabase): LocationDao {
         return appDatabase.locationDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCompanyDao(appDatabase: UlyDatabase): CompanyDao {
+        return appDatabase.companyDao()
     }
 }
