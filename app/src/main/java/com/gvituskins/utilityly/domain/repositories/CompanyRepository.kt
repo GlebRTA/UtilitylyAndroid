@@ -7,6 +7,8 @@ interface CompanyRepository {
 
     fun getAllCompanies(): Flow<List<Company>>
 
+    suspend fun getCompanyById(id: Int): Company
+
     suspend fun addCompany(company: Company)
 
     suspend fun updateCompany(company: Company)

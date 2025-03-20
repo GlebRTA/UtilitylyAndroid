@@ -18,6 +18,10 @@ class CompanyRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCompanyById(id: Int): Company {
+        return companyDao.getCompanyById(id).toCompany()
+    }
+
     override suspend fun addCompany(company: Company) {
         companyDao.addCompany(company.toCompanyEntity())
     }

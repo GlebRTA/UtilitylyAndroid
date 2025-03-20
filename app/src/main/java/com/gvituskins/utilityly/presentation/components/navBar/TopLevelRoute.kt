@@ -13,10 +13,10 @@ import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.gvituskins.utilityly.R
-import com.gvituskins.utilityly.presentation.screens.main.categories.CategoriesNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.more.MoreNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.utilities.UtilitiesNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.statistics.StatisticsNavGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.CategoriesNavGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.MoreNavGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.StatisticsNavGraph
 
 @Immutable
 data class TopLevelRoute<T : Any>(

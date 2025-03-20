@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.locations
+package com.gvituskins.utilityly.presentation.screens.main.locations
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
-import com.gvituskins.utilityly.presentation.components.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog

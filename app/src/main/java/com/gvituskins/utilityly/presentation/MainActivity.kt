@@ -19,11 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
 import com.gvituskins.utilityly.presentation.components.navBar.UlyNavigationSuiteScaffold
-import com.gvituskins.utilityly.presentation.screens.main.categories.categoriesGraph
-import com.gvituskins.utilityly.presentation.screens.main.more.moreGraph
-import com.gvituskins.utilityly.presentation.screens.main.utilities.UtilitiesNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.utilities.utilitiesGraph
-import com.gvituskins.utilityly.presentation.screens.main.statistics.statisticsGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.categoriesGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.moreGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.utilitiesGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.statisticsGraph
 import com.gvituskins.utilityly.presentation.theme.LocalNavController
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.companies
+package com.gvituskins.utilityly.presentation.screens.main.companies
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gvituskins.utilityly.presentation.components.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 
@@ -27,7 +27,7 @@ fun CompaniesScreen(
     navigateBack: () -> Unit,
     navigateToAddCompany: () -> Unit,
     navigateToEditCompany: (Int) -> Unit,
-    viewModel: CompaniesViewModel = hiltViewModel()
+    viewModel: CompaniesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -55,10 +55,9 @@ fun CompaniesScreen(
             items(items = uiState.companies, key = { it.id }) { company ->
                 ListItem(
                     headlineContent = { Text(text = company.name) },
-                    modifier = Modifier
-                        .clickable {
-                            navigateToEditCompany(company.id)
-                        },
+                    modifier = Modifier.clickable {
+                        navigateToEditCompany(company.id)
+                    },
                     trailingContent = {
                         IconButton(
                             onClick = {
@@ -92,6 +91,7 @@ fun CompaniesScreen(
                 dismissText = "Cancel",
             )
         }
+
         CompanyModal.None -> {}
     }
 }

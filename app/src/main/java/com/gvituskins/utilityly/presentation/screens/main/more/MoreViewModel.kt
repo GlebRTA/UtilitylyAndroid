@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.more
+package com.gvituskins.utilityly.presentation.screens.main.more
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

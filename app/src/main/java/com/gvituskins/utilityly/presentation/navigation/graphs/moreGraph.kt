@@ -1,14 +1,15 @@
-package com.gvituskins.utilityly.presentation.screens.main.more
+package com.gvituskins.utilityly.presentation.navigation.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.gvituskins.utilityly.presentation.core.navigation.BaseNavGraph
-import com.gvituskins.utilityly.presentation.core.navigation.routeComposable
-import com.gvituskins.utilityly.presentation.screens.main.more.companies.CompaniesScreen
-import com.gvituskins.utilityly.presentation.screens.main.more.locations.LocationsScreen
-import com.gvituskins.utilityly.presentation.screens.main.more.more.MoreScreen
+import com.gvituskins.utilityly.presentation.navigation.BaseNavGraph
+import com.gvituskins.utilityly.presentation.navigation.routeComposable
+import com.gvituskins.utilityly.presentation.screens.main.companies.CompaniesScreen
+import com.gvituskins.utilityly.presentation.screens.main.companies.manageCompany.ManageCompanyScreen
+import com.gvituskins.utilityly.presentation.screens.main.locations.LocationsScreen
+import com.gvituskins.utilityly.presentation.screens.main.more.MoreScreen
 import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.moreGraph(navController: NavController) {
@@ -29,8 +30,16 @@ fun NavGraphBuilder.moreGraph(navController: NavController) {
         composable<MoreNavGraph.Companies> {
             CompaniesScreen(
                 navigateBack = { navController.navigateUp() },
-                navigateToAddCompany = {},
-                navigateToEditCompany = {}
+                navigateToAddCompany = { navController.navigate(MoreNavGraph.ManageCompany(null)) },
+                navigateToEditCompany = { companyId ->
+                    navController.navigate(MoreNavGraph.ManageCompany(companyId))
+                }
+            )
+        }
+
+        composable<MoreNavGraph.ManageCompany> {
+            ManageCompanyScreen(
+                navigateBack = { navController.navigateUp() }
             )
         }
     }
@@ -47,6 +56,9 @@ object MoreNavGraph : BaseNavGraph {
 
     @Serializable
     object Companies
+
+    @Serializable
+    data class ManageCompany(val companyId: Int?)
 
     override val showNavigationInPortrait = setOf(HomeMore)
     override val showNavigationInLandscape = setOf(HomeMore)

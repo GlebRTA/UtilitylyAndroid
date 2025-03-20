@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.more
+package com.gvituskins.utilityly.presentation.screens.main.more
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.BuildConfig
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
-import com.gvituskins.utilityly.presentation.components.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.sections.SettingsOpenableSection
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.theme.UlyTheme

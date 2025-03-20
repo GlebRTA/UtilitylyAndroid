@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.core.navigation
+package com.gvituskins.utilityly.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope

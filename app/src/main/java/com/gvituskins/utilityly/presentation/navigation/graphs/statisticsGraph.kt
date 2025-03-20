@@ -1,11 +1,11 @@
-package com.gvituskins.utilityly.presentation.screens.main.statistics
+package com.gvituskins.utilityly.presentation.navigation.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
-import com.gvituskins.utilityly.presentation.core.navigation.BaseNavGraph
-import com.gvituskins.utilityly.presentation.core.navigation.routeComposable
-import com.gvituskins.utilityly.presentation.screens.main.statistics.statistics.StatisticsScreen
+import com.gvituskins.utilityly.presentation.navigation.BaseNavGraph
+import com.gvituskins.utilityly.presentation.navigation.routeComposable
+import com.gvituskins.utilityly.presentation.screens.main.statistics.StatisticsScreen
 import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.statisticsGraph(navController: NavController) {

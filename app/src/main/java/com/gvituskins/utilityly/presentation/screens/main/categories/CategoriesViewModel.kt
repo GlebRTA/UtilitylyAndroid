@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.categories.categories
+package com.gvituskins.utilityly.presentation.screens.main.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.components
+package com.gvituskins.utilityly.presentation.components.containers
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets

@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.core.navigation
+package com.gvituskins.utilityly.presentation.navigation
 
 interface BaseNavGraph {
 

@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.locations
+package com.gvituskins.utilityly.presentation.screens.main.locations
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel

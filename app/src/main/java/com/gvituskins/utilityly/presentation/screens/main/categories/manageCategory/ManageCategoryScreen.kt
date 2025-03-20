@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,14 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
-import com.gvituskins.utilityly.presentation.components.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
+import com.gvituskins.utilityly.presentation.components.containers.ManageContainer
 import com.gvituskins.utilityly.presentation.components.inputItems.TextFieldInputItem
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.modalBottomSheet.UlyModalBottomSheet
 import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTextFiled
-import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
@@ -59,7 +56,7 @@ import com.gvituskins.utilityly.presentation.theme.UlyTheme
 @Composable
 fun ManageCategoryScreen(
     navigateBack: () -> Unit,
-    viewModel: ManageCategoryViewModel = hiltViewModel()
+    viewModel: ManageCategoryViewModel = hiltViewModel(),
 ) {
     var showm3 by remember {
         mutableStateOf(false)
@@ -73,113 +70,87 @@ fun ManageCategoryScreen(
         }
     }
 
-    UlyScaffold(
-        topBar = {
-            UlyDefaultTopAppBar(
-                title = stringResource(if (uiState.isAddMode) R.string.title_add_category else R.string.title_edit_category),
-                navigateBack = navigateBack
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-                .imePadding()
+    ManageContainer(
+        navigateBack = navigateBack,
+        titleText = stringResource(if (uiState.isAddMode) R.string.title_add_category else R.string.title_edit_category),
+        buttonText = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit),
+        onButtonClick = { viewModel.manageCategory() },
+        isButtonEnabled = uiState.isValidToManage
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.mediumLarge)
         ) {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(state = rememberScrollState())
-                    .padding(UlyTheme.spacing.mediumSmall)
-            ) {
-                TextFieldInputItem(
-                    title = stringResource(R.string.name),
-                    textFiledState = uiState.name,
-                    placeholderText = stringResource(R.string.category_name),
-                    isError = uiState.nameIsError,
-                    errorText = "Category name should not be empty"
-                )
+            TextFieldInputItem(
+                title = stringResource(R.string.name),
+                textFiledState = uiState.name,
+                placeholderText = stringResource(R.string.category_name),
+                isError = uiState.nameIsError,
+                errorText = "Category name should not be empty"
+            )
 
-                VerticalSpacer(UlyTheme.spacing.mediumLarge)
+            TextFieldInputItem(
+                title = stringResource(R.string.description),
+                textFiledState = uiState.description,
+                placeholderText = stringResource(R.string.category_description),
+                lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 3)
+            )
 
-                TextFieldInputItem(
-                    title = stringResource(R.string.description),
-                    textFiledState = uiState.description,
-                    placeholderText = stringResource(R.string.category_description),
-                    lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 3)
-                )
-
-                VerticalSpacer(UlyTheme.spacing.mediumLarge)
-
-                TextInputItem(title = stringResource(R.string.icon)) {
-                    Box(
-                        modifier = Modifier
-                            .size(140.dp)
-                            .border(
-                                1.dp,
-                                UlyTheme.colors.outline,
-                                UlyTheme.shapes.small
-                            )
-                            .clickable {
-                                showm3 = true
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = stringResource(R.string.category_icon))
-                    }
+            TextInputItem(title = stringResource(R.string.icon)) {
+                Box(
+                    modifier = Modifier
+                        .size(140.dp)
+                        .border(
+                            1.dp,
+                            UlyTheme.colors.outline,
+                            UlyTheme.shapes.small
+                        )
+                        .clickable {
+                            showm3 = true
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = stringResource(R.string.category_icon))
                 }
-
-                VerticalSpacer(UlyTheme.spacing.mediumLarge)
-
-                TextInputItem(title = stringResource(R.string.parameters)) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.xSmall),
-                        modifier = Modifier.width(IntrinsicSize.Min)
-                    ) {
-                        uiState.editCategory?.parameters?.forEach { parameter ->
-                            UlyOutlinedTextFiled(
-                                state = TextFieldState(),
-                                enabled = false,
-                                label = {
-                                    Text(text = parameter.name)
-                                },
-                                trailingIcon = {
-                                    IconButton(onClick = {}) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            )
-                        }
-
-                        UlyFilledTonalButton(
-                            onClick = { viewModel.updateAddParameterDialog(true) },
-                            modifier = Modifier
-                                .widthIn(min = 220.dp)
-                                .fillMaxWidth()
-                        ) {
-                            Text(text = stringResource(R.string.add_parameter))
-                        }
-                    }
-                }
-
-                VerticalSpacer(ButtonDefaults.MinHeight * 2)
             }
 
-            UlyFilledTonalButton(
-                onClick = { viewModel.manageCategory() },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = UlyTheme.spacing.mediumSmall),
-                enabled = uiState.isValidToManage
-            ) {
-                Text(text = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit))
+
+            TextInputItem(title = stringResource(R.string.parameters)) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.xSmall),
+                    modifier = Modifier.width(IntrinsicSize.Min)
+                ) {
+                    uiState.editCategory?.parameters?.forEach { parameter ->
+                        UlyOutlinedTextFiled(
+                            state = TextFieldState(),
+                            enabled = false,
+                            label = {
+                                Text(text = parameter.name)
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = {}) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        )
+                    }
+
+                    UlyFilledTonalButton(
+                        onClick = { viewModel.updateAddParameterDialog(true) },
+                        modifier = Modifier
+                            .widthIn(min = 220.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.add_parameter))
+                    }
+                }
             }
         }
+
+        VerticalSpacer(ButtonDefaults.MinHeight * 2)
     }
 
     if (uiState.showAddParameter) {

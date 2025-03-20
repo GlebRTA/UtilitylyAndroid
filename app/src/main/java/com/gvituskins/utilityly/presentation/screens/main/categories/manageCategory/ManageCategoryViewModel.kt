@@ -8,7 +8,7 @@ import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
-import com.gvituskins.utilityly.presentation.screens.main.categories.CategoriesNavGraph
+import com.gvituskins.utilityly.presentation.navigation.graphs.CategoriesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,8 +35,8 @@ class ManageCategoryViewModel @Inject constructor(
         manageCategory.categoryId?.let { initCategoryId ->
             viewModelScope.launch {
                 val initCategory = categoryRepository.getCategoryById(initCategoryId)
-                _uiState.update {
-                    it.copy(
+                _uiState.update { currentUiState ->
+                    currentUiState.copy(
                         editCategory = initCategory,
                         name = TextFieldState(initCategory.name),
                         description = TextFieldState(initCategory.description ?: ""),
@@ -50,28 +50,30 @@ class ManageCategoryViewModel @Inject constructor(
 
     fun manageCategory() {
         viewModelScope.launch {
-            if (uiState.value.isAddMode) {
-                categoryRepository.addNewCategory(
-                    Category(
-                        id = 0,
-                        name = uiState.value.name.text.toString(),
-                        description = uiState.value.description.text.toString(),
-                        iconUrl = null,
-                        parameters = emptyList()
-                    )
-                )
-            } else {
-                uiState.value.editCategory?.let { categoryToEdit ->
-                    categoryRepository.updateCategory(
-                        categoryToEdit.copy(
-                            name = uiState.value.name.text.toString(),
-                            description = uiState.value.description.text.toString(),
-                        )
-                    )
-                }
-            }
-
+            if (uiState.value.isAddMode) addCategory() else editCategory()
             _label.send(ManageCategoryOneTime.NavigateBack)
+        }
+    }
+
+    private suspend fun addCategory() {
+        categoryRepository.addNewCategory(
+            Category(
+                name = uiState.value.name.text.toString(),
+                description = uiState.value.description.text.toString(),
+                iconUrl = null,
+                parameters = emptyList()
+            )
+        )
+    }
+
+    private suspend fun editCategory() {
+        uiState.value.editCategory?.let { categoryToEdit ->
+            categoryRepository.updateCategory(
+                categoryToEdit.copy(
+                    name = uiState.value.name.text.toString(),
+                    description = uiState.value.description.text.toString(),
+                )
+            )
         }
     }
 

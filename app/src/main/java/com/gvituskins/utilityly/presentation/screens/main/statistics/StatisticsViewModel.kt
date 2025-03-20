@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.statistics.statistics
+package com.gvituskins.utilityly.presentation.screens.main.statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

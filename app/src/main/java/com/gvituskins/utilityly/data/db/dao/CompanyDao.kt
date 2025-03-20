@@ -15,6 +15,9 @@ interface CompanyDao {
     @Query("SELECT * FROM company")
     fun getAllCompanies(): Flow<List<CompanyEntity>>
 
+    @Query("SELECT * FROM company WHERE id = :id")
+    suspend fun getCompanyById(id: Int): CompanyEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCompany(company: CompanyEntity)
 

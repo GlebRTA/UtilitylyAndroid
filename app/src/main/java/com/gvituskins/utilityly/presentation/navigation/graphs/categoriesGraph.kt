@@ -1,12 +1,12 @@
-package com.gvituskins.utilityly.presentation.screens.main.categories
+package com.gvituskins.utilityly.presentation.navigation.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.gvituskins.utilityly.presentation.core.navigation.BaseNavGraph
-import com.gvituskins.utilityly.presentation.core.navigation.routeComposable
-import com.gvituskins.utilityly.presentation.screens.main.categories.categories.CategoriesScreen
+import com.gvituskins.utilityly.presentation.navigation.BaseNavGraph
+import com.gvituskins.utilityly.presentation.navigation.routeComposable
+import com.gvituskins.utilityly.presentation.screens.main.categories.CategoriesScreen
 import com.gvituskins.utilityly.presentation.screens.main.categories.manageCategory.ManageCategoryScreen
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.more.companies
+package com.gvituskins.utilityly.presentation.screens.main.companies
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
