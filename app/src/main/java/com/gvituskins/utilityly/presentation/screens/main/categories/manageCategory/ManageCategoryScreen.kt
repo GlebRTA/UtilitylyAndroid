@@ -101,7 +101,7 @@ fun ManageCategoryScreen(
                     modifier = Modifier
                         .size(140.dp)
                         .border(
-                            1.dp,
+                            UlyTheme.spacing.border,
                             UlyTheme.colors.outline,
                             UlyTheme.shapes.small
                         )

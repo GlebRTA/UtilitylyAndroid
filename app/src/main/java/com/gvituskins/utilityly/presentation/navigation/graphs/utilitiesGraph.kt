@@ -12,7 +12,7 @@ fun NavGraphBuilder.utilitiesGraph(navController: NavController) {
     navigation<UtilitiesNavGraph>(startDestination = UtilitiesNavGraph.Utilities) {
         routeComposable<UtilitiesNavGraph.Utilities> {
             UtilitiesScreen(
-                navigateToUtilityDetails = {}
+                navigateToAddUtility = {}
             )
         }
     }

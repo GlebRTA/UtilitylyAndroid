@@ -118,7 +118,7 @@ object UlyTheme {
 
 @Composable
 fun UtilitylyTheme(
-    themeType: ThemeType,
+    themeType: ThemeType = ThemeType.LIGHT,
     dynamicColor: Boolean = true, // Dynamic color is available on Android 12+
     content: @Composable () -> Unit
 ) {
