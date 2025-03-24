@@ -39,7 +39,7 @@ fun UtilityListCard(
         shape = UlyTheme.shapes.small,
         border = BorderStroke(
             width = UlyTheme.spacing.border,
-            color = UlyTheme.colors.onBackground
+            color = UlyTheme.colors.outline
         ),
         colors = CardDefaults.cardColors(
             containerColor = UlyTheme.colors.background
