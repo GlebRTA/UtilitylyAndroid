@@ -120,7 +120,7 @@ fun Day(
             .takeIf(isSelected) {
                 Modifier.border(
                     width = UlyTheme.spacing.border,
-                    color = UlyTheme.colors.onBackground,
+                    color = UlyTheme.colors.outline,
                     shape = UlyTheme.shapes.circle
                 )
             }
