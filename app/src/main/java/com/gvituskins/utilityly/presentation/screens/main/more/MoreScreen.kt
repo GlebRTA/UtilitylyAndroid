@@ -28,6 +28,7 @@ import com.gvituskins.utilityly.BuildConfig
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.navBar.UlyBottomNavigationBar
 import com.gvituskins.utilityly.presentation.components.sections.SettingsOpenableSection
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
@@ -42,7 +43,8 @@ fun MoreScreen(
 
     UlyScaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { UlyDefaultTopAppBar(title = stringResource(R.string.nav_more)) }
+        topBar = { UlyDefaultTopAppBar(title = stringResource(R.string.nav_more)) },
+        bottomBar = { UlyBottomNavigationBar() },
     ) { innerPaddings ->
         Column(
             modifier = Modifier

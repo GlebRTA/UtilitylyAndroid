@@ -21,7 +21,7 @@ fun ParameterCategoryEntity.toCategoryParameter(): CategoryParameter {
     )
 }
 
-fun CategoryParameter.toCategoryParameterEntity(categoryId: Int): ParameterCategoryEntity {
+fun CategoryParameter.toCategoryParameterEntity(categoryId: Int = 0): ParameterCategoryEntity {
     return ParameterCategoryEntity(
         categoryId = categoryId,
         name = name,

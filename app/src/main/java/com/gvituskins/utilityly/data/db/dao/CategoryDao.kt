@@ -22,7 +22,7 @@ interface CategoryDao {
     suspend fun getCategoryById(id: Int): CategoryEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addNewCategory(category: CategoryEntity)
+    suspend fun addNewCategory(category: CategoryEntity): Long
 
     @Update
     suspend fun updateCategory(category: CategoryEntity)
@@ -36,4 +36,18 @@ interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCategoryParameter(parameter: ParameterCategoryEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertParameters(parameters: List<ParameterCategoryEntity>)
+
+    @Transaction
+    suspend fun addCategoryWithParameters(
+        category: CategoryEntity,
+        parameters: List<ParameterCategoryEntity>
+    ) {
+        val categoryId = addNewCategory(category)
+
+        val updatedParameters = parameters.map { it.copy(categoryId = categoryId.toInt()) }
+        insertParameters(updatedParameters)
+    }
 }

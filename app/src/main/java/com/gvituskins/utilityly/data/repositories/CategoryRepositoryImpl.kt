@@ -28,7 +28,10 @@ class CategoryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addNewCategory(category: Category) {
-        categoryDao.addNewCategory(category.toCategoryEntity())
+        categoryDao.addCategoryWithParameters(
+            category = category.toCategoryEntity(),
+            parameters = category.parameters.map { it.toCategoryParameterEntity() }
+        )
     }
 
     override suspend fun deleteCategory(category: Category) {

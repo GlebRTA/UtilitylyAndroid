@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -120,26 +121,39 @@ fun ManageCategoryScreen(
                     verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.xSmall),
                     modifier = Modifier.width(IntrinsicSize.Min)
                 ) {
-                    uiState.editCategory?.parameters?.forEach { parameter ->
+                    uiState.localParameters.forEach { parameter ->
                         UlyOutlinedTextFiled(
                             state = TextFieldState(),
-                            enabled = false,
-                            label = {
-                                Text(text = parameter.name)
-                            },
+                            readOnly = true,
+                            placeholder = { Text(text = parameter.name) },
                             trailingIcon = {
-                                IconButton(onClick = {}) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = null
-                                    )
+                                Row {
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.updateParameterSheet(
+                                                newState = ManageCategoryModal.Parameter(parameter)
+                                            )
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Edit,
+                                            contentDescription = null
+                                        )
+                                    }
+
+                                    IconButton(onClick = { viewModel.deleteLocalParameter(parameter) }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
-                            }
+                            },
                         )
                     }
 
                     UlyFilledTonalButton(
-                        onClick = { viewModel.updateAddParameterDialog(true) },
+                        onClick = { viewModel.updateParameterSheet(ManageCategoryModal.Parameter(null)) },
                         modifier = Modifier
                             .widthIn(min = 220.dp)
                             .fillMaxWidth()
@@ -153,36 +167,39 @@ fun ManageCategoryScreen(
         VerticalSpacer(ButtonDefaults.MinHeight * 2)
     }
 
-    if (uiState.showAddParameter) {
-        UlyModalBottomSheet(
-            onDismissRequest = { viewModel.updateAddParameterDialog(false) }
-        ) {
-            val name = remember { TextFieldState() }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = UlyTheme.spacing.mediumSmall)
+    when (val modalInfo = uiState.currentModal) {
+        is ManageCategoryModal.Parameter -> {
+            UlyModalBottomSheet(
+                onDismissRequest = { viewModel.updateParameterSheet(ManageCategoryModal.None) }
             ) {
-                TextFieldInputItem(
-                    title = "Name",
-                    textFiledState = name,
-                    isError = name.text.isEmpty(),
-                    errorText = "Parameter name should not be empty"
-                )
+                val name = remember { TextFieldState(modalInfo.parameter?.name ?: "") }
 
-                VerticalSpacer(UlyTheme.spacing.xxLarge)
-                UlyFilledTonalButton(
-                    onClick = { viewModel.addLocalParameter(name.text.toString()) },
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = UlyTheme.spacing.mediumSmall)
                 ) {
-                    Text(text = stringResource(R.string.add))
-                }
-            }
+                    TextFieldInputItem(
+                        title = "Name",
+                        textFiledState = name,
+                        isError = name.text.isEmpty(),
+                        errorText = "Parameter name should not be empty"
+                    )
 
+                    VerticalSpacer(UlyTheme.spacing.xxLarge)
+                    UlyFilledTonalButton(
+                        onClick = { viewModel.addLocalParameter(name.text.toString()) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(text = stringResource(R.string.add))
+                    }
+                }
+
+            }
         }
+        ManageCategoryModal.None -> {  }
     }
 
     if (showm3) {
