@@ -121,7 +121,7 @@ fun ManageCategoryScreen(
                     verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.xSmall),
                     modifier = Modifier.width(IntrinsicSize.Min)
                 ) {
-                    uiState.localParameters.forEach { parameter ->
+                    uiState.localParameters.forEachIndexed { index, parameter ->
                         UlyOutlinedTextFiled(
                             state = TextFieldState(),
                             readOnly = true,
@@ -141,7 +141,7 @@ fun ManageCategoryScreen(
                                         )
                                     }
 
-                                    IconButton(onClick = { viewModel.deleteLocalParameter(parameter) }) {
+                                    IconButton(onClick = { viewModel.deleteLocalParameter(index) }) {
                                         Icon(
                                             imageVector = Icons.Default.Delete,
                                             contentDescription = null
