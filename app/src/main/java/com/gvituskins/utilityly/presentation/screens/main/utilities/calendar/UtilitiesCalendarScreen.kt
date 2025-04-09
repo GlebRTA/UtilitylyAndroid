@@ -38,6 +38,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun UtilitiesCalendarScreen(
+    navigateToUtilityDetails: () -> Unit,
     viewModel: UtilitiesCalendarViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -97,7 +98,7 @@ fun UtilitiesCalendarScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = UlyTheme.spacing.small)
-                                    .clickable { }
+                                    .clickable { navigateToUtilityDetails() }
                             )
                         }
                     }

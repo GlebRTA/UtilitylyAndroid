@@ -39,6 +39,7 @@ enum class UtilitiesPagerScreens {
 @Composable
 fun UtilitiesScreen(
     navigateToAddUtility: () -> Unit,
+    navigateToUtilityDetails: () -> Unit,
     viewModel: UtilitiesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -109,10 +110,14 @@ fun UtilitiesScreen(
             ) { page ->
                 when (UtilitiesPagerScreens.entries[page]) {
                     UtilitiesPagerScreens.CALENDAR -> {
-                        UtilitiesCalendarScreen()
+                        UtilitiesCalendarScreen(
+                            navigateToUtilityDetails = navigateToUtilityDetails
+                        )
                     }
                     UtilitiesPagerScreens.GRID -> {
-                        UtilitiesGridScreen()
+                        UtilitiesGridScreen(
+                            navigateToUtilityDetails = navigateToUtilityDetails
+                        )
                     }
                 }
             }

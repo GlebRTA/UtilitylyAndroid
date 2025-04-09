@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 
 @Immutable
 data class UlySpacing(
-    val border: Dp = 2.dp,
+    val border: Dp = 1.dp,
     val xxSmall: Dp = 2.dp,
     val xSmall: Dp = 4.dp,
     val small: Dp = 8.dp,

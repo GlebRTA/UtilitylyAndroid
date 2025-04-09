@@ -1,0 +1,339 @@
+package com.gvituskins.utilityly.presentation.screens.main.utilities.utilityDetails
+
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
+import com.gvituskins.utilityly.presentation.components.VerticalSpacer
+import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
+import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
+import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.theme.UlyTheme
+import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
+import kotlinx.coroutines.launch
+
+@Composable
+fun UtilityDetailsScreen(
+    navigateBack: () -> Unit
+) {
+    UlyScaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            UlyDefaultTopAppBar(
+                title = "Utility",
+                navigateBack = navigateBack
+            )
+        }
+    ) { innerPaddings ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState())
+                .padding(innerPaddings)
+                .padding(UlyTheme.spacing.medium)
+        ) {
+            TitleCard()
+
+            VerticalSpacer(UlyTheme.spacing.xLarge)
+
+            DetailsSection()
+
+            VerticalSpacer(UlyTheme.spacing.xLarge)
+
+            CategoryParametersTable()
+        }
+    }
+}
+
+@Composable
+private fun CategoryParametersTable() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = UlyTheme.spacing.border,
+                color = UlyTheme.colors.outline,
+                shape = UlyTheme.shapes.xSmall
+            )
+    ) {
+        ProvideTextStyle(LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)) {
+            TableRow(
+                name = "Name",
+                previous = "Previous",
+                current = "Current",
+                background = UlyTheme.colors.outline.copy(alpha = 0.3f),
+            )
+        }
+        HorizontalDivider()
+        TableRow(
+            name = "Kitchen Hot Water",
+            previous = "120",
+            current = "123"
+        )
+        HorizontalDivider()
+        TableRow(
+            name = "Kitchen Cold Water",
+            previous = "97",
+            current = "102"
+        )
+        HorizontalDivider()
+        TableRow(
+            name = "Bathroom Hot Water",
+            previous = "990",
+            current = "1231"
+        )
+    }
+}
+
+@Composable
+private fun TableRow(
+    name: String,
+    previous: String,
+    current: String,
+    background: Color = Color.Transparent
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .background(background)
+            .padding(
+                vertical = UlyTheme.spacing.small,
+                horizontal = UlyTheme.spacing.medium,
+            )
+    ) {
+        Text(
+            text = name,
+            modifier = Modifier.weight(2f)
+        )
+
+        VerticalDivider()
+
+        Text(
+            text = previous,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center
+        )
+
+        VerticalDivider()
+
+        Text(
+            text = current,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun TitleCard() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = UlyTheme.spacing.border,
+                color = UlyTheme.colors.outline,
+                shape = UlyTheme.shapes.xSmall
+            )
+            .padding(UlyTheme.spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Apartment Water",
+            style = UlyTheme.typography.displaySmall,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic
+        )
+
+        VerticalSpacer(UlyTheme.spacing.large)
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "February",
+                style = UlyTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Italic
+            )
+            Text(
+                text = "Due in 2 days",
+                fontStyle = FontStyle.Italic
+            )
+        }
+
+        VerticalSpacer(UlyTheme.spacing.medium)
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "Rezekne Water",
+                style = UlyTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Italic
+            )
+            Text(
+                text = "$100",
+                style = UlyTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Italic
+            )
+        }
+
+        VerticalSpacer(UlyTheme.spacing.xLarge)
+
+        UlyFilledTonalButton(
+            onClick = {},
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(text = "Make as paid")
+        }
+    }
+}
+
+@Composable
+private fun DetailsSection() {
+    val coastAnimProgress = remember {
+        Animatable(0f)
+    }
+
+    val compareAnimProgress = remember {
+        Animatable(0f)
+    }
+
+    LaunchedEffect(Unit) {
+        launch {
+            coastAnimProgress.animateTo(0.42f, tween(1000))
+        }
+
+        launch {
+            compareAnimProgress.animateTo(0.77f, tween(1000))
+        }
+    }
+
+    TextInputItem(
+        title = "Details",
+        titleStyle = UlyTheme.typography.displaySmall
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = UlyTheme.spacing.border,
+                    color = UlyTheme.colors.outline,
+                    shape = UlyTheme.shapes.xSmall
+                )
+                .padding(UlyTheme.spacing.medium)
+        ) {
+            DetailsInfoRow(
+                startText = "Coast",
+                endText = "42%",
+                progress = { coastAnimProgress.value },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            VerticalSpacer(UlyTheme.spacing.medium)
+
+            DetailsInfoRow(
+                startText = "Compare with last payment",
+                endText = "-13%",
+                progress = { compareAnimProgress.value },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun DetailsInfoRow(
+    startText: String,
+    endText: String,
+    progress: () -> Float,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = startText,
+            style = UlyTheme.typography.titleMedium,
+            lineHeight = 20.sp,
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizontalSpacer(UlyTheme.spacing.xSmall)
+
+        Box(
+            modifier = Modifier
+                .height(12.dp)
+                .width(120.dp)
+                .weight(2f)
+                .clip(UlyTheme.shapes.xSmall)
+                .border(
+                    width = 0.5.dp,
+                    color = UlyTheme.colors.outline,
+                    shape = UlyTheme.shapes.xSmall
+                )
+                .drawBehind {
+                    drawRect(
+                        color = Color.Red,
+                        size = size.copy(width = size.width * progress())
+                    )
+                }
+        )
+
+        HorizontalSpacer(UlyTheme.spacing.mediumLarge)
+
+        Text(
+            text = endText,
+            fontStyle = FontStyle.Italic
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun UtilityDetailsScreenPreview() {
+    UtilitylyTheme {
+        UtilityDetailsScreen(navigateBack = {})
+    }
+}
