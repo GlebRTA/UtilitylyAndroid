@@ -73,7 +73,10 @@ fun UtilitiesScreen(
             SingleChoiceSegmentedButtonRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = UlyTheme.spacing.mediumSmall)
+                    .padding(
+                        horizontal = UlyTheme.spacing.mediumSmall,
+                        vertical = UlyTheme.spacing.xSmall
+                    )
             ) {
                 SegmentedButton(
                     selected = pagerState.currentPage == UtilitiesPagerScreens.CALENDAR.ordinal,

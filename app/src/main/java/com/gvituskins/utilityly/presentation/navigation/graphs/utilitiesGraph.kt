@@ -7,6 +7,7 @@ import androidx.navigation.navigation
 import com.gvituskins.utilityly.presentation.navigation.BaseNavGraph
 import com.gvituskins.utilityly.presentation.navigation.routeComposable
 import com.gvituskins.utilityly.presentation.screens.main.utilities.UtilitiesScreen
+import com.gvituskins.utilityly.presentation.screens.main.utilities.manageUtility.ManageUtilityScreen
 import com.gvituskins.utilityly.presentation.screens.main.utilities.utilityDetails.UtilityDetailsScreen
 import kotlinx.serialization.Serializable
 
@@ -14,13 +15,19 @@ fun NavGraphBuilder.utilitiesGraph(navController: NavController) {
     navigation<UtilitiesNavGraph>(startDestination = UtilitiesNavGraph.Utilities) {
         routeComposable<UtilitiesNavGraph.Utilities> {
             UtilitiesScreen(
-                navigateToAddUtility = {},
+                navigateToAddUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility) },
                 navigateToUtilityDetails = { navController.navigate(UtilitiesNavGraph.UtilityDetails) }
             )
         }
 
         composable<UtilitiesNavGraph.UtilityDetails> {
             UtilityDetailsScreen(
+                navigateBack = { navController.navigateUp() }
+            )
+        }
+
+        composable<UtilitiesNavGraph.ManageUtility> {
+            ManageUtilityScreen(
                 navigateBack = { navController.navigateUp() }
             )
         }
@@ -35,6 +42,9 @@ object UtilitiesNavGraph : BaseNavGraph {
 
     @Serializable
     data object UtilityDetails
+
+    @Serializable
+    data object ManageUtility
 
     override val showNavigationInPortrait = setOf(Utilities)
     override val showNavigationInLandscape = setOf(Utilities)
