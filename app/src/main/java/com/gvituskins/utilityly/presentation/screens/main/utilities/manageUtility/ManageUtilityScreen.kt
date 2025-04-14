@@ -1,30 +1,32 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.manageUtility
 
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.presentation.components.VerticalSpacer
+import com.gvituskins.utilityly.presentation.components.buttons.UlyOutlinedButton
 import com.gvituskins.utilityly.presentation.components.containers.ManageContainer
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
+import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
+import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageUtilityScreen(
     navigateBack: () -> Unit,
+    navigateToAddCategory: () -> Unit,
+    navigateToAddCompany: () -> Unit,
     viewModel: ManageUtilityViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ManageContainer(
         navigateBack = navigateBack,
@@ -32,49 +34,48 @@ fun ManageUtilityScreen(
         buttonText = "Edit",
         onButtonClick = {}
     ) {
-        var isCategoryExpanded by remember {
-            mutableStateOf(false)
-        }
-
-        var categoryValue by remember {
-            mutableStateOf("tet")
-        }
-
         TextInputItem(title = "Category") {
-            ExposedDropdownMenuBox(
-                expanded = isCategoryExpanded,
-                onExpandedChange = { isCategoryExpanded = it }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.height(IntrinsicSize.Min)
             ) {
-                OutlinedTextField(
-                    modifier = Modifier.menuAnchor(
-                        type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                    ),
-                    value = categoryValue,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = isCategoryExpanded)
-                    },
+                UlyDropDownTextField(
+                    state = uiState.categoryDropState,
+                    modifier = Modifier.weight(1.8f)
                 )
 
-                ExposedDropdownMenu(
-                    expanded = isCategoryExpanded,
-                    onDismissRequest = { isCategoryExpanded = false },
+                UlyOutlinedButton(
+                    onClick = { navigateToAddCategory() },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f)
+                        .padding(horizontal = UlyTheme.spacing.mediumSmall)
                 ) {
-                    DropdownMenuItem(
-                        text = { Text(text = "Electrum") },
-                        onClick = {
-                            categoryValue = "Electrum"
-                            isCategoryExpanded = false
-                        },
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "Tet") },
-                        onClick = {
-                            categoryValue = "Tet"
-                            isCategoryExpanded = false
-                        }
-                    )
+                    Text(text = "Add new category")
+                }
+            }
+        }
+
+        VerticalSpacer(UlyTheme.spacing.large)
+
+        TextInputItem(title = "Company Name") {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.height(IntrinsicSize.Min)
+            ) {
+                UlyDropDownTextField(
+                    state = uiState.companyDropState,
+                    modifier = Modifier.weight(1.8f)
+                )
+
+                UlyOutlinedButton(
+                    onClick = { navigateToAddCompany() },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(1f)
+                        .padding(horizontal = UlyTheme.spacing.mediumSmall)
+                ) {
+                    Text(text = "Add new company")
                 }
             }
         }

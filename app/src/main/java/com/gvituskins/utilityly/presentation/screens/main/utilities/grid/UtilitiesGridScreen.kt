@@ -23,7 +23,8 @@ import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
 fun UtilitiesGridScreen(
-    navigateToUtilityDetails: () -> Unit,
+    onUtilityClicked: (Int) -> Unit,
+    onEditClicked: (Int) -> Unit,
     viewModel: UtilitiesGridViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,11 +42,12 @@ fun UtilitiesGridScreen(
                 )
             }
 
-            items(13) {
+            items(13) { index ->
                 UtilityGridCard(
+                    onEditClicked = { onEditClicked(index) },
                     modifier = Modifier
                         .padding(UlyTheme.spacing.small)
-                        .clickable { navigateToUtilityDetails() }
+                        .clickable { onUtilityClicked(index) }
                 )
             }
         }

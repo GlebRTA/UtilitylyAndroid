@@ -38,7 +38,8 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun UtilitiesCalendarScreen(
-    navigateToUtilityDetails: () -> Unit,
+    onUtilityClicked: (Int) -> Unit,
+    onEditClicked: (Int) -> Unit,
     viewModel: UtilitiesCalendarViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -89,16 +90,16 @@ fun UtilitiesCalendarScreen(
                         contentPadding = PaddingValues(vertical = UlyTheme.spacing.mediumSmall),
                         verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.mediumSmall),
                     ) {
-                        items(3) {
+                        items(3) { index ->
                             UtilityListCard(
                                 name = "Water paid",
                                 amount = "10.00$",
                                 isPaid = true,
-                                onActionClicked = {},
+                                onActionClicked = { onEditClicked(index) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = UlyTheme.spacing.small)
-                                    .clickable { navigateToUtilityDetails() }
+                                    .clickable { onUtilityClicked(index) }
                             )
                         }
                     }

@@ -27,6 +27,7 @@ import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 
 @Composable
 fun UtilityGridCard(
+    onEditClicked: () -> Unit,
     modifier: Modifier = Modifier,
     innerPaddings: PaddingValues = PaddingValues(UlyTheme.spacing.mediumSmall)
 ) {
@@ -75,7 +76,7 @@ fun UtilityGridCard(
             ) {
                 Text(text = "Water")
 
-                IconButton(onClick = {}) {
+                IconButton(onClick = onEditClicked) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit utility")
                 }
             }
@@ -87,6 +88,6 @@ fun UtilityGridCard(
 @Preview
 private fun UtilityGridCardPreview() {
     UtilitylyTheme {
-        UtilityGridCard()
+        UtilityGridCard(onEditClicked = {})
     }
 }

@@ -2,10 +2,12 @@ package com.gvituskins.utilityly.presentation.screens.main.locations
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -32,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
-import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
+import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.inputItems.TextFieldInputItem
 import com.gvituskins.utilityly.presentation.components.modalBottomSheet.ModalBottomSheetContainer
@@ -78,43 +80,13 @@ fun LocationsScreen(
                     if (uiState.selectedLocationId == location.id) Color.Yellow.copy(alpha = .4f) else UlyTheme.colors.background
                 )
 
-                ListItem(
-                    headlineContent = { Text(text = location.name) },
-                    modifier = Modifier
-                        .clickable {
-                            viewModel.changeSelectedLocation(location.id)
-                        },
-                    trailingContent = {
-                        Row {
-                            IconButton(
-                                onClick = {
-                                    viewModel.updateLocationModal(LocationsModal.Edit(location))
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = "Edit location"
-                                )
-                            }
-
-                            IconButton(
-                                onClick = {
-                                    viewModel.updateLocationModal(LocationsModal.Delete(location))
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = "Delete location"
-                                )
-                            }
-                        }
-                    },
-                    colors = ListItemDefaults.colors(
-                        containerColor = color.value
-                    )
+                LocationListItem(
+                    name = location.name,
+                    onClick = { viewModel.changeSelectedLocation(location.id) },
+                    onEditClick = { viewModel.updateLocationModal(LocationsModal.Edit(location)) },
+                    onDeleteClick = { viewModel.updateLocationModal(LocationsModal.Delete(location)) },
+                    containerColor = color.value
                 )
-
-                HorizontalDivider()
             }
 
             item { VerticalSpacer(84.dp) }
@@ -189,5 +161,44 @@ private fun ManageLocationContent(
         ) {
             Text(text = buttonText)
         }
+    }
+}
+
+@Composable
+private fun LazyItemScope.LocationListItem(
+    name: String,
+    onClick: () -> Unit,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+    containerColor: Color
+) {
+    Column(modifier = Modifier.animateItem()) {
+        ListItem(
+            headlineContent = { Text(text = name) },
+            modifier = Modifier
+                .clickable { onClick() },
+            trailingContent = {
+                Row {
+                    IconButton(onClick = { onEditClick() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Edit location"
+                        )
+                    }
+
+                    IconButton(onClick = { onDeleteClick() }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete location"
+                        )
+                    }
+                }
+            },
+            colors = ListItemDefaults.colors(
+                containerColor = containerColor
+            )
+        )
+
+        HorizontalDivider()
     }
 }

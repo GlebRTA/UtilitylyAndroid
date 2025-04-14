@@ -25,8 +25,8 @@ class CompaniesViewModel @Inject constructor(
     init {
         companyRepository.getAllCompanies()
             .onEach { newCompanies ->
-                _uiState.update {
-                    it.copy(
+                _uiState.update { currentUiState ->
+                    currentUiState.copy(
                         companies = newCompanies
                     )
                 }
@@ -37,12 +37,13 @@ class CompaniesViewModel @Inject constructor(
     fun deleteCompany(company: Company) {
         viewModelScope.launch {
             companyRepository.deleteCompany(company)
+            updateModal(CompanyModal.None)
         }
     }
 
     fun updateModal(newState: CompanyModal) {
-        _uiState.update {
-            it.copy(currentModal = newState)
+        _uiState.update { currentUiState ->
+            currentUiState.copy(currentModal = newState)
         }
     }
 }

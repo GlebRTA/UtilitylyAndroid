@@ -16,7 +16,8 @@ fun NavGraphBuilder.utilitiesGraph(navController: NavController) {
         routeComposable<UtilitiesNavGraph.Utilities> {
             UtilitiesScreen(
                 navigateToAddUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility) },
-                navigateToUtilityDetails = { navController.navigate(UtilitiesNavGraph.UtilityDetails) }
+                navigateToUtilityDetails = { navController.navigate(UtilitiesNavGraph.UtilityDetails) },
+                navigateToEditUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility) }
             )
         }
 
@@ -28,7 +29,9 @@ fun NavGraphBuilder.utilitiesGraph(navController: NavController) {
 
         composable<UtilitiesNavGraph.ManageUtility> {
             ManageUtilityScreen(
-                navigateBack = { navController.navigateUp() }
+                navigateBack = { navController.navigateUp() },
+                navigateToAddCategory = { navController.navigate(CategoriesNavGraph.ManageCategory(null)) },
+                navigateToAddCompany = { navController.navigate(MoreNavGraph.ManageCompany(null)) }
             )
         }
     }
