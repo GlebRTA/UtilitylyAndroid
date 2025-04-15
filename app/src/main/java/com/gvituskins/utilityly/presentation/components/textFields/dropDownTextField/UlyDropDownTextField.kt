@@ -12,8 +12,9 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UlyDropDownTextField(
-    state: DropDownTextFieldState,
+fun <T> UlyDropDownTextField(
+    state: DropDownTextFieldState<T>,
+    textBuilder: (T) -> String,
     modifier: Modifier = Modifier
 ) {
     ExposedDropdownMenuBox(
@@ -25,8 +26,8 @@ fun UlyDropDownTextField(
             modifier = Modifier.menuAnchor(
                 type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
             ),
-            value = state.value,
-            onValueChange = {},
+            value = textBuilder(state.value),
+            onValueChange = {  },
             readOnly = true,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.isExpanded)
@@ -39,7 +40,7 @@ fun UlyDropDownTextField(
         ) {
             state.options.forEach { textValue ->
                 DropdownMenuItem(
-                    text = { Text(text = textValue) },
+                    text = { Text(text = textBuilder(textValue)) },
                     onClick = {
                         state.updateValue(textValue)
                         state.updateExpand(false)

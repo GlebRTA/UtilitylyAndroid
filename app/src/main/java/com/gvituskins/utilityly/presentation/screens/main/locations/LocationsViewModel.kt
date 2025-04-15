@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.locations.Location
 import com.gvituskins.utilityly.domain.repositories.LocationRepository
-import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +27,6 @@ class LocationsViewModel @Inject constructor(
     init {
         preferences.locationId()
             .onEach { newLocationId ->
-                debugLog("new = $newLocationId")
                 _uiState.update { currentUiState ->
                     currentUiState.copy(selectedLocationId = newLocationId)
                 }

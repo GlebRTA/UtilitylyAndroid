@@ -8,10 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
-import com.gvituskins.utilityly.domain.models.locations.Location
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.presentation.navigation.graphs.CategoriesNavGraph
-import com.gvituskins.utilityly.presentation.screens.main.locations.LocationsModal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -99,13 +97,14 @@ class ManageCategoryViewModel @Inject constructor(
         }
     }
 
-    fun editLocalParameter(index: Int, newName: String) {
+    fun editLocalParameter(parameter: CategoryParameter, newName: String) {
         _uiState.update { currentUiState ->
-            val newElement = currentUiState.localParameters.elementAt(index).copy(name = newName)
-            currentUiState.copy(
-                localParameters = currentUiState.localParameters,
-                currentModal = ManageCategoryModal.None
-            )
+            currentUiState.localParameters.find { it == parameter }?.copy(name = newName)?.let { newParameter ->
+                currentUiState.copy(
+                    localParameters = currentUiState.localParameters.map { if (it == parameter) newParameter else it },
+                    currentModal = ManageCategoryModal.None
+                )
+            } ?: currentUiState
         }
     }
 

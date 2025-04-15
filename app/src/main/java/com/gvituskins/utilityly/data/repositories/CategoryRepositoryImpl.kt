@@ -7,7 +7,6 @@ import com.gvituskins.utilityly.data.mappers.toCategoryParameterEntity
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
-import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -18,7 +17,10 @@ class CategoryRepositoryImpl @Inject constructor(
 
     override fun getAllCategories(): Flow<List<Category>> {
         return categoryDao.getAllCategories().map { categories ->
-            categories.map { it.toCategory(emptyList()) }
+            categories.map { category ->
+                val categoryWithParameters = categoryDao.getCategoryParameters(category.id)
+                categoryWithParameters.category.toCategory(categoryWithParameters.parameters)
+            }
         }
     }
 

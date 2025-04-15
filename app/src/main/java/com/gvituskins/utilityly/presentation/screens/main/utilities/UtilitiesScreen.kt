@@ -6,24 +6,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
+import com.gvituskins.utilityly.presentation.components.buttons.segmented.EndSegmentedButton
+import com.gvituskins.utilityly.presentation.components.buttons.segmented.StartSegmentedButton
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.navBar.UlyBottomNavigationBar
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
@@ -79,31 +77,27 @@ fun UtilitiesScreen(
                         vertical = UlyTheme.spacing.xSmall
                     )
             ) {
-                SegmentedButton(
+                StartSegmentedButton(
                     selected = pagerState.currentPage == UtilitiesPagerScreens.CALENDAR.ordinal,
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(UtilitiesPagerScreens.CALENDAR.ordinal)
                         }
                     },
-                    shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
+                    text = "Calendar",
                     modifier = Modifier.weight(1f)
-                ) {
-                    Text(text = "Calendar")
-                }
+                )
 
-                SegmentedButton(
+                EndSegmentedButton(
                     selected = pagerState.currentPage == UtilitiesPagerScreens.GRID.ordinal,
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(UtilitiesPagerScreens.GRID.ordinal)
                         }
                     },
-                    shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(text = "Grid")
-                }
+                    text = "Grid",
+                    modifier = Modifier.weight(1f),
+                )
             }
 
             VerticalSpacer(UlyTheme.spacing.small)

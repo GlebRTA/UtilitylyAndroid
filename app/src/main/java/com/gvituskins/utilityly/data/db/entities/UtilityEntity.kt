@@ -14,21 +14,30 @@ data class UtilityEntity(
     val id: Int = 0,
     val categoryId: Int,
     val companyId: Int?,
-    val repeat: UtilityRepeat,
+    val repeat: UtilityRepeat?,
     val amount: Double,
     val locationId: Int,
-    val dateCreated: Date?,
+    val dateCreated: Date,
     val paidStatus: PaidStatus,
     val dueDate: Date?,
     val datePaid: Date?,
-    val previousUtilityId: Int,
+    val previousUtilityId: Int?,
 )
 
-data class CategoryWithUtility(
+data class CategoryWithUtilities(
     @Embedded val category: CategoryEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "categoryId"
+    )
+    val utilities: List<UtilityEntity>
+)
+
+data class CompanyWithUtilities(
+    @Embedded val category: CompanyEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "companyId"
     )
     val utilities: List<UtilityEntity>
 )

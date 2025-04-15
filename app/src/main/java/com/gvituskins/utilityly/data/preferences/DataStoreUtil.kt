@@ -36,7 +36,7 @@ class DataStoreUtil @Inject constructor(private val context: Context) {
             preferences[CURRENT_LOCATION_ID_KEY] ?: 0
         }
 
-    suspend fun getLastLocationId(): Int = locationId().last()
+    suspend fun getCurrentLocationId(): Int = locationId().last()
 
     suspend fun changeLocationId(id: Int) {
         context.dataStore.edit { preferences ->

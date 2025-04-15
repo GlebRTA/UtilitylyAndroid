@@ -30,4 +30,7 @@ interface UtilityDao {
 
     @Query("DELETE FROM utility WHERE id = :utilityId")
     suspend fun deleteById(utilityId: Int)
+
+    @Query("SELECT * FROM utility WHERE categoryId = :categoryId AND paidStatus = 'PAID' ORDER BY dueDate DESC LIMIT 1")
+    suspend fun getLastPaidUtilityByCategory(categoryId: Int): UtilityEntity?
 }

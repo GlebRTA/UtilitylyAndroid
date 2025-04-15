@@ -8,14 +8,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
-fun rememberDropDownTextFieldSate(initialValue: String, options: List<String>): DropDownTextFieldState {
+fun <T> rememberDropDownTextFieldSate(initialValue: T, options: List<T>): DropDownTextFieldState<T> {
     return remember { DropDownTextFieldState(initialValue = initialValue, options = options) }
 }
 
 @Stable
-class DropDownTextFieldState(
-    initialValue: String,
-    options: List<String>
+class DropDownTextFieldState<T>(
+    initialValue: T,
+    options: List<T>,
 ) {
 
     var value by mutableStateOf(initialValue)
@@ -31,11 +31,11 @@ class DropDownTextFieldState(
         isExpanded = expanded
     }
 
-    fun updateValue(newValue: String) {
+    fun updateValue(newValue: T) {
         value = newValue
     }
 
-    fun updateOptions(newOptions: List<String>) {
+    fun updateOptions(newOptions: List<T>) {
         options = newOptions
     }
 }

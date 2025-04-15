@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -172,7 +173,7 @@ fun ManageCategoryScreen(
             UlyModalBottomSheet(
                 onDismissRequest = { viewModel.updateParameterSheet(ManageCategoryModal.None) }
             ) {
-                val name = remember { TextFieldState(modalInfo.parameter?.name ?: "") }
+                val name = rememberTextFieldState(modalInfo.parameter?.name ?: "")
 
                 Column(
                     modifier = Modifier
@@ -188,12 +189,21 @@ fun ManageCategoryScreen(
 
                     VerticalSpacer(UlyTheme.spacing.xxLarge)
                     UlyFilledTonalButton(
-                        onClick = { viewModel.addLocalParameter(name.text.toString()) },
+                        onClick = {
+                            if (modalInfo.parameter != null) {
+                                viewModel.editLocalParameter(
+                                    parameter = modalInfo.parameter,
+                                    newName = name.text.toString()
+                                )
+                            } else {
+                                viewModel.addLocalParameter(name.text.toString())
+                            }
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        Text(text = stringResource(R.string.add))
+                        Text(text = stringResource(if (modalInfo.parameter != null) R.string.add else R.string.edit))
                     }
                 }
 

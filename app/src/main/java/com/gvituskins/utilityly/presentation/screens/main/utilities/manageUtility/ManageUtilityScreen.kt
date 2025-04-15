@@ -1,23 +1,54 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.manageUtility
 
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyOutlinedButton
+import com.gvituskins.utilityly.presentation.components.buttons.segmented.CenterSegmentedButton
+import com.gvituskins.utilityly.presentation.components.buttons.segmented.EndSegmentedButton
+import com.gvituskins.utilityly.presentation.components.buttons.segmented.StartSegmentedButton
 import com.gvituskins.utilityly.presentation.components.containers.ManageContainer
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
+import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTextFiled
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
+import java.text.SimpleDateFormat
 
 @Composable
 fun ManageUtilityScreen(
@@ -27,6 +58,10 @@ fun ManageUtilityScreen(
     viewModel: ManageUtilityViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.categoryDropState.value) {
+        viewModel.updateCategoryParameters(uiState.categoryDropState.value)
+    }
 
     ManageContainer(
         navigateBack = navigateBack,
@@ -41,6 +76,7 @@ fun ManageUtilityScreen(
             ) {
                 UlyDropDownTextField(
                     state = uiState.categoryDropState,
+                    textBuilder = { it?.name ?: "" },
                     modifier = Modifier.weight(1.8f)
                 )
 
@@ -65,6 +101,7 @@ fun ManageUtilityScreen(
             ) {
                 UlyDropDownTextField(
                     state = uiState.companyDropState,
+                    textBuilder = { it?.name ?: "" },
                     modifier = Modifier.weight(1.8f)
                 )
 
@@ -79,5 +116,127 @@ fun ManageUtilityScreen(
                 }
             }
         }
+
+        VerticalSpacer(UlyTheme.spacing.large)
+
+        TextInputItem(title = "Due Date") {
+            var showModal by remember { mutableStateOf(false) }
+            val formatter = remember { SimpleDateFormat("dd/MM/YYYY") }
+
+            OutlinedTextField(
+                value = uiState.dueDate?.let { formatter.format(uiState.dueDate) } ?: "",
+                onValueChange = {},
+                readOnly = true,
+                placeholder = { Text("DD/MM/YYYY") },
+                trailingIcon = {
+                    Icon(imageVector = Icons.Default.DateRange, contentDescription = "Select date")
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.65f)
+                    .pointerInput(uiState.dueDate) {
+                        awaitEachGesture {
+                            awaitFirstDown(pass = PointerEventPass.Initial)
+                            val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                            if (upEvent != null) {
+                                showModal = true
+                            }
+                        }
+                    }
+            )
+
+            if (showModal) {
+                DatePickerModal(
+                    onDateSelected = { timeMils ->
+                        viewModel.updateDueDate(timeMils)
+                    },
+                    onDismiss = { showModal = false },
+                    initialDate = uiState.dueDate
+                )
+            }
+        }
+
+        VerticalSpacer(UlyTheme.spacing.large)
+
+        TextInputItem(title = "Repeat") {
+            SingleChoiceSegmentedButtonRow {
+                val selectedButton = uiState.repeat
+
+                StartSegmentedButton(
+                    selected = selectedButton == UtilityRepeat.WEEKLY,
+                    onClick = { viewModel.updateRepeat(UtilityRepeat.WEEKLY) },
+                    text = "Weekly"
+                )
+
+                CenterSegmentedButton(
+                    selected = selectedButton == UtilityRepeat.MONTHLY,
+                    onClick = { viewModel.updateRepeat(UtilityRepeat.MONTHLY) },
+                    text = "Monthly"
+                )
+
+                EndSegmentedButton(
+                    selected = selectedButton == UtilityRepeat.ANNUALLY,
+                    onClick = { viewModel.updateRepeat(UtilityRepeat.ANNUALLY) },
+                    text = "Annual"
+                )
+            }
+        }
+
+        VerticalSpacer(UlyTheme.spacing.large)
+
+        val amountState = rememberTextFieldState()
+        TextInputItem(title = "Amount to pay") {
+            UlyOutlinedTextFiled(
+                state = amountState,
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.AttachMoney, contentDescription = null)
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
+            )
+        }
+
+        uiState.categoryParameters.forEach { parameter ->
+            val textFieldState = rememberTextFieldState(parameter.name)
+            VerticalSpacer(UlyTheme.spacing.large)
+            TextInputItem(title = parameter.name) {
+                UlyOutlinedTextFiled(
+                    state = textFieldState
+                )
+            }
+        }
+
+        VerticalSpacer(400.dp)
+    }
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerModal(
+    onDateSelected: (Long?) -> Unit,
+    onDismiss: () -> Unit,
+    initialDate: Long? = null
+) {
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDate)
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                onDateSelected(datePickerState.selectedDateMillis)
+                onDismiss()
+            }) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    ) {
+        DatePicker(state = datePickerState)
     }
 }
