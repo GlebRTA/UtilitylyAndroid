@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class DataStoreUtil @Inject constructor(private val context: Context) {
             preferences[CURRENT_LOCATION_ID_KEY] ?: 0
         }
 
-    suspend fun getCurrentLocationId(): Int = locationId().last()
+    suspend fun getCurrentLocationId(): Int = locationId().first()
 
     suspend fun changeLocationId(id: Int) {
         context.dataStore.edit { preferences ->

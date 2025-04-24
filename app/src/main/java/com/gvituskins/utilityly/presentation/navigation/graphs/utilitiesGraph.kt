@@ -15,9 +15,9 @@ fun NavGraphBuilder.utilitiesGraph(navController: NavController) {
     navigation<UtilitiesNavGraph>(startDestination = UtilitiesNavGraph.Utilities) {
         routeComposable<UtilitiesNavGraph.Utilities> {
             UtilitiesScreen(
-                navigateToAddUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility) },
+                navigateToAddUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility()) },
                 navigateToUtilityDetails = { navController.navigate(UtilitiesNavGraph.UtilityDetails) },
-                navigateToEditUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility) }
+                navigateToEditUtility = { navController.navigate(UtilitiesNavGraph.ManageUtility(it)) }
             )
         }
 
@@ -47,7 +47,7 @@ object UtilitiesNavGraph : BaseNavGraph {
     data object UtilityDetails
 
     @Serializable
-    data object ManageUtility
+    data class ManageUtility(val utilityId: Int? = null)
 
     override val showNavigationInPortrait = setOf(Utilities)
     override val showNavigationInLandscape = setOf(Utilities)

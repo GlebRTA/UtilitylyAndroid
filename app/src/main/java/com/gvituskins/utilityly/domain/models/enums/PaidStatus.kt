@@ -9,4 +9,7 @@ enum class PaidStatus {
             UNPAID -> PAID
         }
     }
+
+    val isPaid: Boolean
+        get() = this == PAID
 }

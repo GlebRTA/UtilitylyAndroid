@@ -1,13 +1,18 @@
 package com.gvituskins.utilityly.data.mappers
 
+import com.gvituskins.utilityly.data.db.entities.CategoryWithParameterCategory
+import com.gvituskins.utilityly.data.db.entities.CompanyEntity
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 
-fun UtilityEntity.toUtility(): Utility {
+fun UtilityEntity.toUtility(
+    categoryWithParameters: CategoryWithParameterCategory,
+    company: CompanyEntity?,
+): Utility {
     return Utility(
         id = id,
-        categoryId = categoryId,
-        companyId = companyId,
+        category = categoryWithParameters.category.toCategory(categoryWithParameters.parameters),
+        company = company?.toCompany(),
         repeat = repeat,
         amount = amount,
         locationId = locationId,
@@ -22,8 +27,8 @@ fun UtilityEntity.toUtility(): Utility {
 fun Utility.toUtilityEntity(): UtilityEntity {
     return UtilityEntity(
         id = id,
-        categoryId = categoryId,
-        companyId = companyId,
+        categoryId = category.id,
+        companyId = company?.id,
         repeat = repeat,
         amount = amount,
         locationId = locationId,

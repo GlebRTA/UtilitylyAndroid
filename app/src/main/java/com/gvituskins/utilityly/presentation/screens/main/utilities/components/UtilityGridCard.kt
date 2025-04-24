@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
@@ -27,9 +28,13 @@ import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 
 @Composable
 fun UtilityGridCard(
+    amount: String,
+    category: String,
+    isPaid: Boolean,
     onEditClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    innerPaddings: PaddingValues = PaddingValues(UlyTheme.spacing.mediumSmall)
+    icon: ImageVector = Icons.Default.WaterDrop,
+    innerPaddings: PaddingValues = PaddingValues(UlyTheme.spacing.mediumSmall),
 ) {
     Card(
         modifier = modifier,
@@ -51,13 +56,13 @@ fun UtilityGridCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Default.WaterDrop,
+                    imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier.size(36.dp)
                 )
 
                 CheckedIcon(
-                    isChecked = false,
+                    isChecked = isPaid,
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -65,7 +70,7 @@ fun UtilityGridCard(
             VerticalSpacer(UlyTheme.spacing.medium)
 
             Text(
-                text = "10.00$",
+                text = amount,
                 style = UlyTheme.typography.titleLarge
             )
 
@@ -74,7 +79,7 @@ fun UtilityGridCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Water")
+                Text(text = category)
 
                 IconButton(onClick = onEditClicked) {
                     Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit utility")
@@ -88,6 +93,13 @@ fun UtilityGridCard(
 @Preview
 private fun UtilityGridCardPreview() {
     UtilitylyTheme {
-        UtilityGridCard(onEditClicked = {})
+        UtilityGridCard(
+            onEditClicked = {},
+            amount = "$10:00",
+            category = "Water",
+            isPaid = false,
+            modifier = Modifier,
+            icon = Icons.Default.WaterDrop,
+        )
     }
 }

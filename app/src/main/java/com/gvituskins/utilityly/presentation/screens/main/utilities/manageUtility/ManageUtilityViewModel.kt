@@ -1,7 +1,11 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.manageUtility
 
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
@@ -13,6 +17,7 @@ import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.domain.repositories.CompanyRepository
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.DropDownTextFieldState
+import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,16 +30,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ManageUtilityViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     categoryRepository: CategoryRepository,
     companyRepository: CompanyRepository,
     private val utilityRepository: UtilityRepository,
     private val preferences: DataStoreUtil
 ) : ViewModel() {
+    private val manageUtility = savedStateHandle.toRoute<UtilitiesNavGraph.ManageUtility>()
 
     private val _uiState = MutableStateFlow(ManageUtilityState())
     val uiState = _uiState.asStateFlow()
 
     init {
+        manageUtility.utilityId?.let { initUtilityId ->
+            viewModelScope.launch {
+                val initUtility = utilityRepository.getUtilityById(initUtilityId)
+                _uiState.update { currentUiState ->
+                    currentUiState.copy(
+                        editUtility = initUtility,
+                        dueDate = initUtility.dueDate.time,
+                        repeat = initUtility.repeat,
+                    )
+                }
+
+                uiState.value.categoryDropState.updateValue(initUtility.category)
+                initUtility.company?.let { uiState.value.companyDropState.updateValue(it) }
+
+                uiState.value.amount.setTextAndPlaceCursorAtEnd(initUtility.amount.toString())
+            }
+        }
+
         categoryRepository.getAllCategories()
             .onEach { categories ->
                 uiState.value.categoryDropState.updateOptions(categories)
@@ -72,23 +97,23 @@ class ManageUtilityViewModel @Inject constructor(
     }
 
     fun addUtility() {
-        val categoryId = uiState.value.categoryDropState.value?.id ?: return
-        val companyId = uiState.value.companyDropState.value?.id ?: return
+        val category = uiState.value.categoryDropState.value ?: return
+        val company = uiState.value.companyDropState.value
 
         viewModelScope.launch {
             utilityRepository.addNewUtility(
                 Utility(
                     id = 0,
-                    categoryId = categoryId,
-                    companyId = companyId,
+                    category = category,
+                    company = company,
                     repeat = uiState.value.repeat,
-                    amount = uiState.value.amountToPay,
+                    amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
                     locationId = preferences.getCurrentLocationId(),
                     dateCreated = Date(),
                     paidStatus = PaidStatus.UNPAID,
-                    dueDate = uiState.value.dueDate?.let { Date(it) },
+                    dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
                     datePaid = null,
-                    previousUtilityId = utilityRepository.getPreviousUtility(categoryId)?.id
+                    previousUtilityId = utilityRepository.getPreviousUtility(category.id)?.id
                 )
             )
         }
@@ -97,12 +122,14 @@ class ManageUtilityViewModel @Inject constructor(
 }
 
 data class ManageUtilityState(
-    val categoryParameters: List<CategoryParameter> = listOf(),
+    val editUtility: Utility? = null,
+
     val categoryDropState: DropDownTextFieldState<Category?> = DropDownTextFieldState(initialValue = null, listOf()),
+    val categoryParameters: List<CategoryParameter> = listOf(),
 
     val companyDropState: DropDownTextFieldState<Company?> = DropDownTextFieldState(initialValue = null, listOf()),
 
     val dueDate: Long? = null,
     val repeat: UtilityRepeat? = null,
-    val amountToPay: Double = 0.0,
+    val amount: TextFieldState = TextFieldState()
 )

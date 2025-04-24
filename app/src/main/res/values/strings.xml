@@ -30,6 +30,14 @@
     <string name="edit">Edit</string>
     <string name="description">Description</string>
     <string name="address">Address</string>
+    <string name="amount_to_pay">Amount to pay</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="annual">Annual</string>
+    <string name="due_date">Due Date</string>
+    <string name="add_new_company">Add new company</string>
+    <string name="category">Category</string>
+    <string name="edit_utility">Edit Utility</string>
 
 
 </resources>

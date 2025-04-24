@@ -19,7 +19,7 @@ data class UtilityEntity(
     val locationId: Int,
     val dateCreated: Date,
     val paidStatus: PaidStatus,
-    val dueDate: Date?,
+    val dueDate: Date,
     val datePaid: Date?,
     val previousUtilityId: Int?,
 )

@@ -13,8 +13,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UtilityDao {
 
+    @Query("SELECT * FROM utility")
+    fun getAllUtilities(): Flow<List<UtilityEntity>>
+
     @Query("SELECT * FROM utility WHERE paidStatus == :status")
-    fun getAllPaid(status: PaidStatus): Flow<List<UtilityEntity>>
+    fun getUtilitiesByPaidStatus(status: PaidStatus): Flow<List<UtilityEntity>>
 
     @Query("SELECT * FROM utility WHERE id == :id")
     suspend fun getById(id: Int): UtilityEntity

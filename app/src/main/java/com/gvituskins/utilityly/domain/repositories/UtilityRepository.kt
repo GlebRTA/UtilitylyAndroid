@@ -10,6 +10,10 @@ interface UtilityRepository {
 
     fun getAllPaidUtilities(): Flow<List<Utility>>
 
+    fun getAllUtilities(): Flow<List<Utility>>
+
+    suspend fun getAllUtilitiesInMonth(month: Int, year: Int): List<Utility>
+
     suspend fun addNewUtility(utility: Utility)
 
     suspend fun updateUtility(utility: Utility)
