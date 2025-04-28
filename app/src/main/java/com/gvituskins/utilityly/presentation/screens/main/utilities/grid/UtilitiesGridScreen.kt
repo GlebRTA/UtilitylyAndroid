@@ -66,7 +66,7 @@ fun UtilitiesGridScreen(
 
                     Text(text = uiState.currentMont.toString())
 
-                    IconButton(onClick = { viewModel.nextMonth() },) {
+                    IconButton(onClick = { viewModel.nextMonth() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = null
@@ -93,6 +93,7 @@ fun UtilitiesGridScreen(
                     modifier = Modifier
                         .padding(UlyTheme.spacing.small)
                         .clickable { onUtilityClicked(utility.id) }
+                        .animateItem()
                 )
             }
         }

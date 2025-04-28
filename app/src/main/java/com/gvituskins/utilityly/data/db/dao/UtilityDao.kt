@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
-import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,9 +14,6 @@ interface UtilityDao {
 
     @Query("SELECT * FROM utility")
     fun getAllUtilities(): Flow<List<UtilityEntity>>
-
-    @Query("SELECT * FROM utility WHERE paidStatus == :status")
-    fun getUtilitiesByPaidStatus(status: PaidStatus): Flow<List<UtilityEntity>>
 
     @Query("SELECT * FROM utility WHERE id == :id")
     suspend fun getById(id: Int): UtilityEntity

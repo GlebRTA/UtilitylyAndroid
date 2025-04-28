@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
@@ -31,6 +32,7 @@ fun UtilityListCard(
     name: String,
     amount: String,
     isPaid: Boolean,
+    icon: ImageVector,
     onActionClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -61,7 +63,7 @@ fun UtilityListCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.WaterDrop,
+                        imageVector = icon,
                         contentDescription = null,
                         modifier = Modifier.size(36.dp)
                     )
@@ -110,6 +112,7 @@ private fun UtilityListCardPreview() {
             name = "Water",
             amount = "10.00$",
             isPaid = false,
+            icon = Icons.Default.WaterDrop,
             onActionClicked = {},
         )
     }

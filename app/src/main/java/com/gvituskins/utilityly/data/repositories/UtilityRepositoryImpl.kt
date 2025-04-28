@@ -6,7 +6,6 @@ import com.gvituskins.utilityly.data.db.dao.UtilityDao
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
 import com.gvituskins.utilityly.data.mappers.toUtility
 import com.gvituskins.utilityly.data.mappers.toUtilityEntity
-import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import kotlinx.coroutines.flow.Flow
@@ -29,27 +28,24 @@ class UtilityRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getAllUnpaidUtilities(): Flow<List<Utility>> {
-        return utilityDao.getUtilitiesByPaidStatus(PaidStatus.UNPAID).map { utilitiesDb ->
-            utilitiesDb.toUtilities()
-        }
-    }
-
-    override fun getAllPaidUtilities(): Flow<List<Utility>> {
-        return utilityDao.getUtilitiesByPaidStatus(PaidStatus.PAID).map { utilitiesDb ->
-            utilitiesDb.toUtilities()
-        }
-    }
-
     override fun getAllUtilities(): Flow<List<Utility>> {
         return utilityDao.getAllUtilities().map { utilitiesDb -> utilitiesDb.toUtilities() }
     }
 
-    override suspend fun getAllUtilitiesInMonth(month: Int, year: Int): List<Utility> {
+    override suspend fun getAllUtilitiesByMonth(month: Int, year: Int): List<Utility> {
         return utilityDao.getAllUtilities()
             .first()
             .filter {
                 (it.dueDate.year + 1900) == year && (it.dueDate.month + 1) == month
+            }
+            .toUtilities()
+    }
+
+    override suspend fun getAllUtilitiesByDay(day: Int, month: Int, year: Int): List<Utility> {
+        return utilityDao.getAllUtilities()
+            .first()
+            .filter {
+                (it.dueDate.year + 1900) == year && (it.dueDate.month + 1) == month && it.dueDate.date == day
             }
             .toUtilities()
     }

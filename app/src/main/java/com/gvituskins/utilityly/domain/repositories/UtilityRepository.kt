@@ -6,13 +6,11 @@ import kotlinx.coroutines.flow.Flow
 interface UtilityRepository {
     suspend fun getUtilityById(id: Int): Utility
 
-    fun getAllUnpaidUtilities(): Flow<List<Utility>>
-
-    fun getAllPaidUtilities(): Flow<List<Utility>>
-
     fun getAllUtilities(): Flow<List<Utility>>
 
-    suspend fun getAllUtilitiesInMonth(month: Int, year: Int): List<Utility>
+    suspend fun getAllUtilitiesByMonth(month: Int, year: Int): List<Utility>
+
+    suspend fun getAllUtilitiesByDay(day: Int, month: Int, year: Int): List<Utility>
 
     suspend fun addNewUtility(utility: Utility)
 

@@ -9,8 +9,6 @@ import com.kizitonwose.calendar.core.CalendarDay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,18 +21,6 @@ class UtilitiesCalendarViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UtilitiesCalendarState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        utilityRepository.getAllPaidUtilities()
-            .onEach { updatedList ->
-                _uiState.update { currentUiState ->
-                    currentUiState.copy(
-                        utilities = updatedList
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     fun update(event: PaidUtilityEvent) {
         when (event) {
             is PaidUtilityEvent.ChangePaidStatus -> changeUtilityPaidStatus(event.utilityId)
@@ -45,6 +31,7 @@ class UtilitiesCalendarViewModel @Inject constructor(
         _uiState.update { currentUiState ->
             currentUiState.copy(selectedDay = newDay)
         }
+        updateDay()
     }
 
     private fun changeUtilityPaidStatus(id: Int) {
@@ -52,12 +39,36 @@ class UtilitiesCalendarViewModel @Inject constructor(
             utilityRepository.changePaidStatus(id)
         }
     }
+
+    private fun updateDay() {
+        viewModelScope.launch {
+            val date = uiState.value.selectedDay?.date
+            val day = date?.dayOfMonth
+            val month = date?.monthValue
+            val year = date?.year
+
+            val utilities = if (day == null || month == null || year == null) {
+                listOf()
+            } else {
+                utilityRepository.getAllUtilitiesByDay(
+                    day = date.dayOfMonth,
+                    month = date.monthValue,
+                    year = date.year,
+                )
+            }
+
+            _uiState.update { currentUiState ->
+                currentUiState.copy(
+                    utilities = utilities
+                )
+            }
+        }
+    }
 }
 
 
 data class UtilitiesCalendarState(
     val selectedDay: CalendarDay? = null,
-    val selectedMonth: CalendarDay? = null,
 
     val utilities: List<Utility> = listOf(),
 )

@@ -48,7 +48,7 @@ class UtilitiesGridViewModel @Inject constructor(
 
     private fun updateMonth() {
         viewModelScope.launch {
-            val newUtils = utilityRepository.getAllUtilitiesInMonth(
+            val newUtils = utilityRepository.getAllUtilitiesByMonth(
                 month = uiState.value.currentMont.monthValue,
                 year = uiState.value.currentMont.year,
             )
