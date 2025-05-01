@@ -14,6 +14,9 @@ interface LocationDao {
     @Query("SELECT * FROM location")
     fun getAllLocations(): Flow<List<LocationEntity>>
 
+    @Query("SELECT * FROM location WHERE id = :id")
+    suspend fun getLocationById(id: Int): LocationEntity
+
     @Insert
     suspend fun addLocation(location: LocationEntity)
 

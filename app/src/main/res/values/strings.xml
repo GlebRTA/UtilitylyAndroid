@@ -38,6 +38,7 @@
     <string name="add_new_company">Add new company</string>
     <string name="category">Category</string>
     <string name="edit_utility">Edit Utility</string>
+    <string name="add_utility">Add Utility</string>
 
 
 </resources>

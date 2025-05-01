@@ -12,6 +12,7 @@ import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.models.companies.Company
 import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
+import com.gvituskins.utilityly.domain.models.locations.Location
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.domain.repositories.CompanyRepository
@@ -108,7 +109,7 @@ class ManageUtilityViewModel @Inject constructor(
                     company = company,
                     repeat = uiState.value.repeat,
                     amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
-                    locationId = preferences.getCurrentLocationId(),
+                    location = Location(id = preferences.getCurrentLocationId(), name = ""),
                     dateCreated = Date(),
                     paidStatus = PaidStatus.UNPAID,
                     dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
@@ -132,4 +133,7 @@ data class ManageUtilityState(
     val dueDate: Long? = null,
     val repeat: UtilityRepeat? = null,
     val amount: TextFieldState = TextFieldState()
-)
+) {
+    val isAddMode: Boolean
+        get() = editUtility == null
+}

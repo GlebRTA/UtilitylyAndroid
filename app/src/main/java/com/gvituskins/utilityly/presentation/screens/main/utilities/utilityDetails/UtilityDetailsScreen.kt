@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
@@ -44,11 +47,18 @@ import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTop
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 @Composable
 fun UtilityDetailsScreen(
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    viewModel: UtilityDetailsViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     UlyScaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -65,7 +75,26 @@ fun UtilityDetailsScreen(
                 .padding(innerPaddings)
                 .padding(UlyTheme.spacing.medium)
         ) {
-            TitleCard()
+            TitleCard(
+                title = "${uiState.utility?.location?.name ?: ""} ${uiState.utility?.category?.name ?: ""}",
+                month = SimpleDateFormat("MMMM").format(uiState.utility?.dueDate?.time ?: 0),
+                due = uiState.utility?.dueDate?.time?.let { dueDate ->
+                    val difInMils = dueDate - Date().time
+                    val dif = TimeUnit.MILLISECONDS.toDays(difInMils)
+                    val uiDif = abs(dif)
+                    if (dif > 0) {
+                        "due in $uiDif days"
+                    } else if (dif == 0L) {
+                        "Today"
+                    } else {
+                        "overdue by $uiDif days"
+                    }
+                } ?: "-",
+                company = uiState.utility?.company?.name ?: "-",
+                amount = uiState.utility?.amount?.toString() ?: "-",
+                isPaid = uiState.utility?.paidStatus?.isPaid ?: false,
+                onPaidClick = { viewModel.changePaidStatus() }
+            )
 
             VerticalSpacer(UlyTheme.spacing.xLarge)
 
@@ -159,7 +188,15 @@ private fun TableRow(
 }
 
 @Composable
-private fun TitleCard() {
+private fun TitleCard(
+    title: String,
+    month: String,
+    due: String,
+    company: String,
+    amount: String,
+    isPaid: Boolean,
+    onPaidClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -172,7 +209,7 @@ private fun TitleCard() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Apartment Water",
+            text = title,
             style = UlyTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Italic
@@ -186,13 +223,13 @@ private fun TitleCard() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "February",
+                text = month,
                 style = UlyTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
             Text(
-                text = "Due in 2 days",
+                text = due,
                 fontStyle = FontStyle.Italic
             )
         }
@@ -205,13 +242,13 @@ private fun TitleCard() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Rezekne Water",
+                text = company,
                 style = UlyTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
             Text(
-                text = "$100",
+                text = amount,
                 style = UlyTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
@@ -221,10 +258,10 @@ private fun TitleCard() {
         VerticalSpacer(UlyTheme.spacing.xLarge)
 
         UlyFilledTonalButton(
-            onClick = {},
+            onClick = onPaidClick,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = "Make as paid")
+            Text(text = if (isPaid) "Make as unpaid" else "Make as paid")
         }
     }
 }

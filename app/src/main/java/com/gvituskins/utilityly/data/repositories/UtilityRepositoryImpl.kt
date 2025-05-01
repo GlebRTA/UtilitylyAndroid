@@ -2,10 +2,12 @@ package com.gvituskins.utilityly.data.repositories
 
 import com.gvituskins.utilityly.data.db.dao.CategoryDao
 import com.gvituskins.utilityly.data.db.dao.CompanyDao
+import com.gvituskins.utilityly.data.db.dao.LocationDao
 import com.gvituskins.utilityly.data.db.dao.UtilityDao
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
 import com.gvituskins.utilityly.data.mappers.toUtility
 import com.gvituskins.utilityly.data.mappers.toUtilityEntity
+import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import kotlinx.coroutines.flow.Flow
@@ -17,13 +19,16 @@ class UtilityRepositoryImpl @Inject constructor(
     private val utilityDao: UtilityDao,
     private val categoryDao: CategoryDao,
     private val companyDao: CompanyDao,
+    private val locationDao: LocationDao,
+    private val preferences: DataStoreUtil
 ) : UtilityRepository {
 
     override suspend fun getUtilityById(id: Int): Utility {
         return utilityDao.getById(id).let { utilityDb ->
             utilityDb.toUtility(
                 categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
-                company = utilityDb.companyId?.let { companyDao.getCompanyById(it) }
+                company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
+                location = locationDao.getLocationById(preferences.getCurrentLocationId())
             )
         }
     }
@@ -54,7 +59,8 @@ class UtilityRepositoryImpl @Inject constructor(
         return map { utilityEntity ->
             utilityEntity.toUtility(
                 categoryWithParameters = categoryDao.getCategoryParameters(utilityEntity.categoryId),
-                company = utilityEntity.companyId?.let { companyDao.getCompanyById(it) }
+                company = utilityEntity.companyId?.let { companyDao.getCompanyById(it) },
+                location = locationDao.getLocationById(preferences.getCurrentLocationId())
             )
         }
     }
@@ -80,7 +86,8 @@ class UtilityRepositoryImpl @Inject constructor(
         return utilityDao.getLastPaidUtilityByCategory(categoryId)?.let { utilityDb ->
             utilityDb.toUtility(
                 categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
-                company = utilityDb.companyId?.let { companyDao.getCompanyById(it) }
+                company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
+                location = locationDao.getLocationById(preferences.getCurrentLocationId())
             )
         }
     }

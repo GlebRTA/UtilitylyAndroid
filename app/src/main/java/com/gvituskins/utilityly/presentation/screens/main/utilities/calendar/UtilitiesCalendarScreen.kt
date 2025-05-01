@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,12 +20,14 @@ import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,13 +68,25 @@ fun UtilitiesCalendarScreen(
             firstDayOfWeek = firstDayOfWeek
         )
 
+        LaunchedEffect(state.firstVisibleMonth, state.isScrollInProgress) {
+            if (!state.isScrollInProgress) {
+                viewModel.updateMonth(state.firstVisibleMonth)
+            }
+        }
+
         HorizontalCalendar(
             state = state,
             dayContent = { day ->
                 Day(
                     day = day,
                     isSelected = day == uiState.selectedDay,
-                    onClick = { viewModel.updateSelectedDay(day) }
+                    onClick = { viewModel.updateSelectedDay(day) },
+                    utilities = uiState.cachedMonthUtilities
+                        .filter { utility ->
+                            val date = utility.dueDate
+                            (date.year + 1900) == day.date.year && (date.month + 1) == day.date.monthValue && date.date == day.date.dayOfMonth
+                        }
+                        .map { it.paidStatus.isPaid }
                 )
             },
             monthHeader = { month ->
@@ -113,7 +129,7 @@ fun UtilitiesCalendarScreen(
                             contentPadding = PaddingValues(vertical = UlyTheme.spacing.mediumSmall),
                             verticalArrangement = Arrangement.spacedBy(UlyTheme.spacing.mediumSmall),
                         ) {
-                            items(items = uiState.utilities, key = { it.id }) { utility ->
+                            items(items = uiState.dayUtilities, key = { it.id }) { utility ->
                                 UtilityListCard(
                                     name = utility.category.name,
                                     amount = utility.amount.toString(),
@@ -135,13 +151,15 @@ fun UtilitiesCalendarScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Day(
     day: CalendarDay,
     isSelected: Boolean,
     onClick: () -> Unit,
+    utilities: List<Boolean>
 ) {
-    Box(
+    Column(
         modifier = Modifier
             .size(56.dp)
             .padding(UlyTheme.spacing.small)
@@ -157,7 +175,8 @@ fun Day(
                 enabled = day.position == DayPosition.MonthDate,
                 onClick = onClick
             ),
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = day.date.dayOfMonth.toString(),
@@ -165,5 +184,22 @@ fun Day(
                 alpha = 0.4f
             )
         )
+
+        if (utilities.isNotEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                utilities.forEach { isPaid ->
+                    Box(
+                        modifier = Modifier
+                            .size(5.dp)
+                            .clip(UlyTheme.shapes.circle)
+                            .background(if (isPaid) Color.Green else Color.Red)
+                    )
+                }
+            }
+        }
     }
 }
+

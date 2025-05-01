@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
-import com.gvituskins.utilityly.presentation.screens.main.utilities.PaidUtilityEvent
 import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.CalendarMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +21,25 @@ class UtilitiesCalendarViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UtilitiesCalendarState())
     val uiState = _uiState.asStateFlow()
 
-    fun update(event: PaidUtilityEvent) {
-        when (event) {
-            is PaidUtilityEvent.ChangePaidStatus -> changeUtilityPaidStatus(event.utilityId)
+
+    fun updateMonth(newMonth: CalendarMonth) {
+        viewModelScope.launch {
+            updateCachedUtilities(newMonth)
+        }
+    }
+
+    private suspend fun updateCachedUtilities(month: CalendarMonth) {
+        val day = month.yearMonth.monthValue
+        val year = month.yearMonth.year
+
+        val prevMonth = utilityRepository.getAllUtilitiesByMonth(day - 1, year)
+        val currentMonth = utilityRepository.getAllUtilitiesByMonth(day, year)
+        val nextMonth = utilityRepository.getAllUtilitiesByMonth(day + 1, year)
+
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                cachedMonthUtilities = listOf(prevMonth, currentMonth, nextMonth).flatten()
+            )
         }
     }
 
@@ -32,12 +48,6 @@ class UtilitiesCalendarViewModel @Inject constructor(
             currentUiState.copy(selectedDay = newDay)
         }
         updateDay()
-    }
-
-    private fun changeUtilityPaidStatus(id: Int) {
-        viewModelScope.launch {
-            utilityRepository.changePaidStatus(id)
-        }
     }
 
     private fun updateDay() {
@@ -50,16 +60,16 @@ class UtilitiesCalendarViewModel @Inject constructor(
             val utilities = if (day == null || month == null || year == null) {
                 listOf()
             } else {
-                utilityRepository.getAllUtilitiesByDay(
-                    day = date.dayOfMonth,
-                    month = date.monthValue,
-                    year = date.year,
-                )
+                uiState.value.cachedMonthUtilities
+                    .filter { utility ->
+                        val utilityDate = utility.dueDate
+                        (utilityDate.year + 1900) == year && (utilityDate.month + 1) == month && utilityDate.date == day
+                    }
             }
 
             _uiState.update { currentUiState ->
                 currentUiState.copy(
-                    utilities = utilities
+                    dayUtilities = utilities
                 )
             }
         }
@@ -69,6 +79,7 @@ class UtilitiesCalendarViewModel @Inject constructor(
 
 data class UtilitiesCalendarState(
     val selectedDay: CalendarDay? = null,
+    val dayUtilities: List<Utility> = listOf(),
 
-    val utilities: List<Utility> = listOf(),
+    val cachedMonthUtilities: List<Utility> = listOf(),
 )

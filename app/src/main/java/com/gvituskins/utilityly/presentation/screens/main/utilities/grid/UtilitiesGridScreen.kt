@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.screens.main.utilities.components.UtilityGridCard
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun UtilitiesGridScreen(
@@ -64,7 +65,7 @@ fun UtilitiesGridScreen(
                         )
                     }
 
-                    Text(text = uiState.currentMont.toString())
+                    Text(text = uiState.currentMont.format(DateTimeFormatter.ofPattern("MMMM, yyyy")))
 
                     IconButton(onClick = { viewModel.nextMonth() }) {
                         Icon(

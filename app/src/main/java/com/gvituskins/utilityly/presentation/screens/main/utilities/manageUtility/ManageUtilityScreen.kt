@@ -63,8 +63,8 @@ fun ManageUtilityScreen(
 
     ManageContainer(
         navigateBack = navigateBack,
-        titleText = stringResource(R.string.edit_utility),
-        buttonText = stringResource(R.string.edit),
+        titleText = stringResource(if (uiState.isAddMode) R.string.add_utility else R.string.edit_utility),
+        buttonText = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit),
         onButtonClick = { viewModel.addUtility() }
     ) {
         TextInputItem(title = stringResource(R.string.category)) {
