@@ -10,6 +10,7 @@ import com.gvituskins.utilityly.data.db.dao.CompanyDao
 import com.gvituskins.utilityly.data.db.dao.LocationDao
 import com.gvituskins.utilityly.data.db.dao.UtilityDao
 import com.gvituskins.utilityly.data.mappers.toLocationEntity
+import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.locations.Location
 import dagger.Module
 import dagger.Provides
@@ -30,7 +31,8 @@ object DbModule {
     @Singleton
     fun provideDatabase(
         @ApplicationContext applicationContext: Context,
-        locationDao: Provider<LocationDao>
+        locationDao: Provider<LocationDao>,
+        prefs: DataStoreUtil
     ): UlyDatabase {
         return Room.databaseBuilder(
             applicationContext,
@@ -48,6 +50,7 @@ object DbModule {
                                     name = "Home"
                                 ).toLocationEntity()
                             )
+                            prefs.changeLocationId(1)
                         }
                     }
                 }

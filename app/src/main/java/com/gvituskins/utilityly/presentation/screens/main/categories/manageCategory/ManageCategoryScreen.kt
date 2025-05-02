@@ -203,7 +203,7 @@ fun ManageCategoryScreen(
                             .fillMaxWidth()
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        Text(text = stringResource(if (modalInfo.parameter != null) R.string.add else R.string.edit))
+                        Text(text = stringResource(if (modalInfo.parameter == null) R.string.add else R.string.edit))
                     }
                 }
 

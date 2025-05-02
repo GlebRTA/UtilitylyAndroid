@@ -117,6 +117,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    //UI Utils
     implementation (libs.compose.charts)
     implementation(libs.compose.calendar)
 

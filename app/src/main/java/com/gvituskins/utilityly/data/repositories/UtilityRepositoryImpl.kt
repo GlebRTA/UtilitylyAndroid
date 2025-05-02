@@ -37,6 +37,15 @@ class UtilityRepositoryImpl @Inject constructor(
         return utilityDao.getAllUtilities().map { utilitiesDb -> utilitiesDb.toUtilities() }
     }
 
+    override suspend fun getAllUtilitiesByYear(year: Int): List<Utility> {
+        return utilityDao.getAllUtilities()
+            .first()
+            .filter {
+                (it.dueDate.year + 1900) == year
+            }
+            .toUtilities()
+    }
+
     override suspend fun getAllUtilitiesByMonth(month: Int, year: Int): List<Utility> {
         return utilityDao.getAllUtilities()
             .first()

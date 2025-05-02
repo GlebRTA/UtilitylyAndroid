@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
@@ -45,6 +46,7 @@ import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.pickers.DatePickerModal
 import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTextFiled
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
+import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import java.text.SimpleDateFormat
 
@@ -57,6 +59,12 @@ fun ManageUtilityScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    viewModel.label.collectAsOneTimeEvent { event ->
+        when (event) {
+            ManageUtilityOneTime.NavigateBack -> navigateBack()
+        }
+    }
+
     LaunchedEffect(uiState.categoryDropState.value) {
         viewModel.updateCategoryParameters(uiState.categoryDropState.value)
     }
@@ -65,7 +73,7 @@ fun ManageUtilityScreen(
         navigateBack = navigateBack,
         titleText = stringResource(if (uiState.isAddMode) R.string.add_utility else R.string.edit_utility),
         buttonText = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit),
-        onButtonClick = { viewModel.addUtility() }
+        onButtonClick = { viewModel.manageUtility() }
     ) {
         TextInputItem(title = stringResource(R.string.category)) {
             Row(
@@ -190,6 +198,14 @@ fun ManageUtilityScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 ),
+                inputTransformation = {
+                    val changedText = this.asCharSequence().toString()
+                    if (changedText.toDoubleOrNull() == null && changedText.isNotEmpty()) revertAllChanges()
+                    if (changedText.contains(' ')) revertAllChanges()
+                    val secondPartSize = changedText.split(".").getOrNull(1)?.length ?: -1
+                    if (secondPartSize > 2) revertAllChanges()
+                },
+                lineLimits = TextFieldLineLimits.SingleLine
             )
         }
 
@@ -206,3 +222,5 @@ fun ManageUtilityScreen(
         VerticalSpacer(400.dp)
     }
 }
+
+

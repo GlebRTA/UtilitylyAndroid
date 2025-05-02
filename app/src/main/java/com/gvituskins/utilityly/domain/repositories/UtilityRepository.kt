@@ -8,6 +8,8 @@ interface UtilityRepository {
 
     fun getAllUtilities(): Flow<List<Utility>>
 
+    suspend fun getAllUtilitiesByYear(year: Int): List<Utility>
+
     suspend fun getAllUtilitiesByMonth(month: Int, year: Int): List<Utility>
 
     suspend fun getAllUtilitiesByDay(day: Int, month: Int, year: Int): List<Utility>

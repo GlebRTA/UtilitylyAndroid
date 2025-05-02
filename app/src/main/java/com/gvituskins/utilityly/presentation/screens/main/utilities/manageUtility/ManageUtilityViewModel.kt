@@ -20,10 +20,12 @@ import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.DropDownTextFieldState
 import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -41,6 +43,9 @@ class ManageUtilityViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ManageUtilityState())
     val uiState = _uiState.asStateFlow()
+
+    private val _label = Channel<ManageUtilityOneTime>()
+    val label = _label.receiveAsFlow()
 
     init {
         manageUtility.utilityId?.let { initUtilityId ->
@@ -97,29 +102,54 @@ class ManageUtilityViewModel @Inject constructor(
         }
     }
 
-    fun addUtility() {
-        val category = uiState.value.categoryDropState.value ?: return
-        val company = uiState.value.companyDropState.value
-
+    fun manageUtility() {
         viewModelScope.launch {
-            utilityRepository.addNewUtility(
-                Utility(
-                    id = 0,
-                    category = category,
-                    company = company,
-                    repeat = uiState.value.repeat,
-                    amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
-                    location = Location(id = preferences.getCurrentLocationId(), name = ""),
-                    dateCreated = Date(),
-                    paidStatus = PaidStatus.UNPAID,
-                    dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
-                    datePaid = null,
-                    previousUtilityId = utilityRepository.getPreviousUtility(category.id)?.id
-                )
-            )
+            if (uiState.value.isAddMode) addUtility() else editUtility()
+            _label.send(ManageUtilityOneTime.NavigateBack)
         }
     }
 
+    private suspend fun addUtility() {
+        val category = uiState.value.categoryDropState.value ?: return
+        val company = uiState.value.companyDropState.value
+
+        utilityRepository.addNewUtility(
+            Utility(
+                id = 0,
+                category = category,
+                company = company,
+                repeat = uiState.value.repeat,
+                amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
+                location = Location(id = preferences.getCurrentLocationId(), name = ""),
+                dateCreated = Date(),
+                paidStatus = PaidStatus.UNPAID,
+                dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
+                datePaid = null,
+                previousUtilityId = utilityRepository.getPreviousUtility(category.id)?.id
+            )
+        )
+    }
+
+    private suspend fun editUtility() {
+        val editUtility = uiState.value.editUtility ?: return
+        val category = uiState.value.categoryDropState.value ?: return
+        val company = uiState.value.companyDropState.value
+
+        utilityRepository.updateUtility(
+            editUtility.copy(
+                category = category,
+                company = company,
+                repeat = uiState.value.repeat,
+                amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
+                dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
+            )
+        )
+    }
+
+}
+
+sealed interface ManageUtilityOneTime {
+    data object NavigateBack : ManageUtilityOneTime
 }
 
 data class ManageUtilityState(

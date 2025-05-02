@@ -2,13 +2,30 @@ package com.gvituskins.utilityly.data.db.entities
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
 import java.util.Date
 
-@Entity(tableName = "utility")
+@Entity(
+    tableName = "utility",
+    foreignKeys = [
+        ForeignKey(
+            entity = CategoryEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = LocationEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["locationId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class UtilityEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

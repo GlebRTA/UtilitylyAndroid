@@ -17,7 +17,6 @@ class DropDownTextFieldState<T>(
     initialValue: T,
     options: List<T>,
 ) {
-
     var value by mutableStateOf(initialValue)
         private set
 

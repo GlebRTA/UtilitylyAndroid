@@ -22,6 +22,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +44,7 @@ import com.gvituskins.utilityly.presentation.components.inputItems.TextFieldInpu
 import com.gvituskins.utilityly.presentation.components.modalBottomSheet.ModalBottomSheetContainer
 import com.gvituskins.utilityly.presentation.components.modalBottomSheet.UlyModalBottomSheet
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +54,13 @@ fun LocationsScreen(
     viewModel: LocationsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    viewModel.label.collectAsOneTimeEvent { event ->
+        when (event) {
+            is LocationOTE.ShowSnackbar -> snackbarHostState.showSnackbar(message = event.text)
+        }
+    }
 
     UlyScaffold(
         topBar = {
@@ -69,6 +79,7 @@ fun LocationsScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         LazyColumn(

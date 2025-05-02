@@ -39,6 +39,8 @@
     <string name="category">Category</string>
     <string name="edit_utility">Edit Utility</string>
     <string name="add_utility">Add Utility</string>
+    <string name="show_table">Show Table</string>
+    <string name="select_a_year_table">Select a year to generate the table:</string>
 
 
 </resources>

@@ -20,12 +20,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.screens.main.utilities.components.UtilityGridCard
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import java.time.format.DateTimeFormatter
@@ -37,6 +39,10 @@ fun UtilitiesGridScreen(
     viewModel: UtilitiesGridViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.updateMonth()
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         LazyVerticalGrid(
@@ -78,9 +84,9 @@ fun UtilitiesGridScreen(
 
             item(span = { GridItemSpan(2) }) {
                 UtilitiesInfoHeader(
-                    paid = uiState.paid.toString(),
-                    unpaid = uiState.unpaid.toString(),
-                    total = uiState.total.toString()
+                    paid = uiState.paid.roundToStr(),
+                    unpaid = uiState.unpaid.roundToStr(),
+                    total = uiState.total.roundToStr()
                 )
             }
 

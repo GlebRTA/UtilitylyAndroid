@@ -24,10 +24,6 @@ class UtilitiesGridViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UtilitiesGridState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        updateMonth()
-    }
-
     fun nextMonth() {
         _uiState.update { currentUiState ->
             currentUiState.copy(
@@ -46,7 +42,7 @@ class UtilitiesGridViewModel @Inject constructor(
         updateMonth()
     }
 
-    private fun updateMonth() {
+    fun updateMonth() {
         viewModelScope.launch {
             val newUtils = utilityRepository.getAllUtilitiesByMonth(
                 month = uiState.value.currentMont.monthValue,

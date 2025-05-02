@@ -15,7 +15,8 @@ import androidx.compose.ui.Modifier
 fun <T> UlyDropDownTextField(
     state: DropDownTextFieldState<T>,
     textBuilder: (T) -> String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onValueChanged: ((T) -> Unit)? = null
 ) {
     ExposedDropdownMenuBox(
         expanded = state.isExpanded,
@@ -44,6 +45,7 @@ fun <T> UlyDropDownTextField(
                     onClick = {
                         state.updateValue(textValue)
                         state.updateExpand(false)
+                        onValueChanged?.invoke(state.value)
                     },
                 )
             }

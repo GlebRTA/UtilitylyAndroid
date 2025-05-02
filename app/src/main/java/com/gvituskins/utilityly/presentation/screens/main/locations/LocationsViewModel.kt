@@ -7,10 +7,13 @@ import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.locations.Location
 import com.gvituskins.utilityly.domain.repositories.LocationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +26,9 @@ class LocationsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(LocationsState())
     val uiState = _uiState.asStateFlow()
+
+    private val _label = Channel<LocationOTE>()
+    val label = _label.receiveAsFlow()
 
     init {
         preferences.locationId()
@@ -73,9 +79,13 @@ class LocationsViewModel @Inject constructor(
 
     fun deleteLocation(location: Location) {
         viewModelScope.launch {
-            locationRepository.deleteLocation(location)
-            _uiState.update {
-                it.copy(currentModal = LocationsModal.None)
+            if (locationRepository.getAllLocations().first().size > 1) {
+                locationRepository.deleteLocation(location)
+            } else {
+                _label.send(LocationOTE.ShowSnackbar("There must be at least one location"))
+            }
+            _uiState.update { currentUiState ->
+                currentUiState.copy(currentModal = LocationsModal.None)
             }
         }
     }
@@ -85,6 +95,10 @@ class LocationsViewModel @Inject constructor(
             preferences.changeLocationId(id)
         }
     }
+}
+
+sealed interface LocationOTE {
+    data class ShowSnackbar(val text: String) : LocationOTE
 }
 
 data class LocationsState(
