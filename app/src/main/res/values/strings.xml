@@ -19,8 +19,8 @@
     <string name="add_new_category">Add new category</string>
     <string name="delete_category">Delete Category</string>
     <string name="parameters">Parameters</string>
-    <string name="icon">Icon</string>
-    <string name="category_icon">Category Icon</string>
+    <string name="color">Color</string>
+    <string name="category_color">Category Color</string>
     <string name="category_description">Category Description</string>
     <string name="category_name">Category Name</string>
     <string name="company_name">Company Name</string>
@@ -41,6 +41,7 @@
     <string name="add_utility">Add Utility</string>
     <string name="show_table">Show Table</string>
     <string name="select_a_year_table">Select a year to generate the table:</string>
+    <string name="save">Save</string>
 
 
 </resources>

@@ -23,4 +23,6 @@ interface UtilityRepository {
     suspend fun changePaidStatus(utilityId: Int)
 
     suspend fun getPreviousUtility(categoryId: Int): Utility?
+
+    suspend fun getAllAvailableYears(): List<Int>
 }

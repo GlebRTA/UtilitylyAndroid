@@ -120,6 +120,7 @@ dependencies {
     //UI Utils
     implementation (libs.compose.charts)
     implementation(libs.compose.calendar)
+    implementation(libs.compose.colorpicker)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

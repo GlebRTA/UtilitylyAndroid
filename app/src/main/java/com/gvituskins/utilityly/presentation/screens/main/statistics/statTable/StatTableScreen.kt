@@ -9,20 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
-import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.rememberDropDownTextFieldSate
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
 fun StatTableScreen(
     navigateToTable: (Int) -> Unit,
+    viewModel: StatTableViewModel = hiltViewModel()
 ) {
-    val yearState = rememberDropDownTextFieldSate(
-        initialValue = 2025,
-        options = (2010..2050).toList()
-    )
+    val yearState = viewModel.yearState
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -32,7 +30,7 @@ fun StatTableScreen(
             Text(text = stringResource(R.string.select_a_year_table))
             UlyDropDownTextField(
                 state = yearState,
-                textBuilder = { it.toString() },
+                textBuilder = { it?.toString() ?: "" },
                 modifier = Modifier.padding(
                     top = UlyTheme.spacing.medium,
                     bottom = UlyTheme.spacing.xxLarge
@@ -41,10 +39,11 @@ fun StatTableScreen(
         }
 
         UlyFilledTonalButton(
-            onClick = { navigateToTable(yearState.value) },
+            onClick = { yearState.value?.let { navigateToTable(it) } },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(UlyTheme.spacing.mediumSmall)
+                .padding(UlyTheme.spacing.mediumSmall),
+            enabled = yearState.value != null
         ) {
             Text(text = stringResource(R.string.show_table))
         }

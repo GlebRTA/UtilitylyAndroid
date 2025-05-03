@@ -100,4 +100,12 @@ class UtilityRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun getAllAvailableYears(): List<Int> {
+        val years = mutableSetOf<Int>()
+        getAllUtilities().first().forEach {
+            years.add(it.dueDate.year + 1900)
+        }
+        return years.toList()
+    }
 }

@@ -40,6 +40,12 @@ interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertParameters(parameters: List<ParameterCategoryEntity>)
 
+    @Update
+    suspend fun updateParameters(parameters: List<ParameterCategoryEntity>)
+
+    @Delete
+    suspend fun deleteParameters(parameters: List<ParameterCategoryEntity>)
+
     @Transaction
     suspend fun addCategoryWithParameters(
         category: CategoryEntity,
@@ -49,5 +55,33 @@ interface CategoryDao {
 
         val updatedParameters = parameters.map { it.copy(categoryId = categoryId.toInt()) }
         insertParameters(updatedParameters)
+    }
+
+    @Transaction
+    suspend fun syncCategoryWithParameters(
+        category: CategoryEntity,
+        parameters: List<ParameterCategoryEntity>
+    ) {
+        updateCategory(category)
+        val existingParams = getCategoryParameters(categoryId = category.id).parameters
+
+        val toUpdateOrInsert = parameters.mapNotNull { newParam ->
+            if (newParam.id == 0) {
+                newParam.copy(categoryId = category.id)
+            } else {
+                val existing = existingParams.find { it.id == newParam.id }
+                if (existing != null) {
+                    newParam
+                } else {
+                    null
+                }
+            }
+        }
+
+        val newIds = parameters.mapNotNull { if (it.id != 0) it.id else null }.toSet()
+        val toDelete = existingParams.filterNot { it.id in newIds }
+
+        insertParameters(toUpdateOrInsert)
+        deleteParameters(toDelete)
     }
 }

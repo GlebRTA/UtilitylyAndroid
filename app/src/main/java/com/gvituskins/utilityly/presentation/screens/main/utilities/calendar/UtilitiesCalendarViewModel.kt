@@ -21,7 +21,6 @@ class UtilitiesCalendarViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UtilitiesCalendarState())
     val uiState = _uiState.asStateFlow()
 
-
     fun updateMonth(newMonth: CalendarMonth) {
         viewModelScope.launch {
             updateCachedUtilities(newMonth)

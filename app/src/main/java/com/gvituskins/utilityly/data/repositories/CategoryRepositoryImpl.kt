@@ -41,7 +41,10 @@ class CategoryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateCategory(category: Category) {
-        categoryDao.updateCategory(category.toCategoryEntity())
+        categoryDao.syncCategoryWithParameters(
+            category = category.toCategoryEntity(),
+            parameters = category.parameters.map { it.toCategoryParameterEntity(categoryId = category.id) }
+        )
     }
 
     override suspend fun addCategoryParameter(

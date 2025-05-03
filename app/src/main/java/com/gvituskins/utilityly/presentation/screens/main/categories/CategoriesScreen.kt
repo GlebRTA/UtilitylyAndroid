@@ -3,9 +3,10 @@ package com.gvituskins.utilityly.presentation.screens.main.categories
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,7 +21,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,6 +32,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -96,6 +98,7 @@ fun CategoriesScreen(
                     CategoryItem(
                         title = category.name,
                         description = category.description,
+                        color = category.color,
                         onDeleteClick = { viewModel.updateDeleteDialogVisibility(category)  },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -133,6 +136,7 @@ fun CategoriesScreen(
 private fun CategoryItem(
     title: String,
     description: String?,
+    color: Color,
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -140,10 +144,11 @@ private fun CategoryItem(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            imageVector = Icons.Default.WaterDrop,
-            contentDescription = null,
-            modifier = Modifier.size(70.dp)
+        Box(
+            modifier = Modifier
+                .size(70.dp)
+                .clip(UlyTheme.shapes.small)
+                .background(color)
         )
 
         HorizontalSpacer(UlyTheme.spacing.small)

@@ -2,6 +2,7 @@ package com.gvituskins.utilityly.presentation.screens.main.categories.manageCate
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,6 +42,7 @@ class ManageCategoryViewModel @Inject constructor(
                         editCategory = initCategory,
                         name = TextFieldState(initCategory.name),
                         description = TextFieldState(initCategory.description ?: ""),
+                        color = initCategory.color,
 
                         localParameters = initCategory.parameters,
                     )
@@ -56,23 +58,30 @@ class ManageCategoryViewModel @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private suspend fun addCategory() {
+        val color = uiState.value.color ?: return
+
         categoryRepository.addNewCategory(
             Category(
                 name = uiState.value.name.text.toString(),
                 description = uiState.value.description.text.toString(),
-                iconUrl = null,
+                color = color,
                 parameters = uiState.value.localParameters
             )
         )
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private suspend fun editCategory() {
+        val color = uiState.value.color ?: return
+
         uiState.value.editCategory?.let { categoryToEdit ->
-            categoryRepository.addNewCategory(
+            categoryRepository.updateCategory(
                 categoryToEdit.copy(
                     name = uiState.value.name.text.toString(),
                     description = uiState.value.description.text.toString(),
+                    color = color,
                     parameters = uiState.value.localParameters
                 )
             )
@@ -82,7 +91,7 @@ class ManageCategoryViewModel @Inject constructor(
     fun addLocalParameter(name: String) {
         _uiState.update { currentUiState ->
             currentUiState.copy(
-                localParameters = currentUiState.localParameters.plus(CategoryParameter(name = name)),
+                localParameters = currentUiState.localParameters.plus(CategoryParameter(id = 0, name = name)),
                 currentModal = ManageCategoryModal.None
             )
         }
@@ -115,6 +124,15 @@ class ManageCategoryViewModel @Inject constructor(
             )
         }
     }
+
+    fun updateColor(color: Color) {
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                color = color,
+                currentModal = ManageCategoryModal.None
+            )
+        }
+    }
 }
 
 sealed interface ManageCategoryOneTime {
@@ -126,6 +144,7 @@ data class ManageCategoryState(
 
     val name: TextFieldState = TextFieldState(),
     val description: TextFieldState = TextFieldState(),
+    val color: Color? = null,
 
     val currentModal: ManageCategoryModal = ManageCategoryModal.None,
     val localParameters: List<CategoryParameter> = emptyList(),
@@ -133,8 +152,11 @@ data class ManageCategoryState(
     val nameIsError: Boolean
         get() = name.text.isEmpty()
 
+    val colorIsError: Boolean
+        get() = color == null
+
     val isValidToManage: Boolean
-        get() = !nameIsError
+        get() = !nameIsError && !colorIsError
 
     val isAddMode: Boolean
         get() = editCategory == null
@@ -143,5 +165,6 @@ data class ManageCategoryState(
 @Immutable
 sealed interface ManageCategoryModal {
     data class Parameter(val parameter: CategoryParameter?): ManageCategoryModal
+    data object ColorPicker: ManageCategoryModal
     data object None : ManageCategoryModal
 }

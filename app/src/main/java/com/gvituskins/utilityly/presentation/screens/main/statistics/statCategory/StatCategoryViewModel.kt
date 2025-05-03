@@ -11,10 +11,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class StatCategoryViewModel @Inject constructor(
@@ -25,23 +26,34 @@ class StatCategoryViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StatCategoryState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        utilityRepository.getAllUtilities()
+            .onEach {
+                val years = utilityRepository.getAllAvailableYears()
+                uiState.value.yearState.updateOptions(years)
+                if (uiState.value.yearState.value == null) {
+                    uiState.value.yearState.updateValue(years.getOrNull(0))
+                }
+                updateChartInfo()
+            }
+            .launchIn(viewModelScope)
+    }
+
     fun updateChartInfo() {
+        val currentYear = uiState.value.yearState.value ?: return
+
         viewModelScope.launch {
             val categories = categoryRepository.getAllCategories().first()
             val rows = mutableListOf<YearUtilitiesAmount>()
             categories.forEach { category ->
                 val yearUtilitiesAmount = utilityRepository
-                    .getAllUtilitiesByYear(year = uiState.value.yearState.value)
+                    .getAllUtilitiesByYear(year = currentYear)
                     .filter { it.category.id == category.id }
                     .sumOf { it.amount }
 
                 rows.add(
                     YearUtilitiesAmount(
-                        color = Color(
-                            red = Random.nextInt(256),
-                            green = Random.nextInt(256),
-                            blue = Random.nextInt(256)
-                        ),
+                        color = category.color,
                         name = category.name,
                         percent = 0.0,
                         amount = yearUtilitiesAmount
@@ -67,7 +79,10 @@ class StatCategoryViewModel @Inject constructor(
 
 @Immutable
 data class StatCategoryState(
-    val yearState: DropDownTextFieldState<Int> = DropDownTextFieldState(initialValue = 2025, options = listOf(2024, 2025)),
+    val yearState: DropDownTextFieldState<Int?> = DropDownTextFieldState(
+        initialValue = null,
+        options = listOf<Int?>()
+    ),
 
     val tableRows: List<YearUtilitiesAmount> = listOf()
 )

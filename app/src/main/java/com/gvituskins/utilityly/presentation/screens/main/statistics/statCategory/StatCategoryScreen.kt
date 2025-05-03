@@ -50,10 +50,6 @@ fun StatCategoryScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.updateChartInfo()
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,14 +58,12 @@ fun StatCategoryScreen(
     ) {
         UlyDropDownTextField(
             state = uiState.yearState,
-            textBuilder = { it.toString() },
+            textBuilder = { it?.toString() ?: "" },
             modifier = Modifier.padding(
                 top = UlyTheme.spacing.medium,
                 bottom = UlyTheme.spacing.xxLarge
             ),
-            onValueChanged = {
-                viewModel.updateChartInfo()
-            }
+            onValueChanged = { viewModel.updateChartInfo() }
         )
 
         var data by remember {

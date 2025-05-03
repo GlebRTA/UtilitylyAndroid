@@ -1,10 +1,11 @@
 [versions]
-agp = "8.7.3"
+kotlin = "2.1.20"
+agp = "8.9.2"
+
 composeCharts = "0.1.2"
 composeCalendar = "2.6.2"
 converterGson = "2.11.0"
 hiltNavigationComposeVersion = "1.2.0"
-kotlin = "2.1.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -17,10 +18,11 @@ navigationCompose = "2.8.9"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 kotlin-serialization = "1.7.3"
-ksp = "2.1.10-1.0.30"
+ksp = "2.1.20-2.0.1"
 hilt = "2.55"
 roomRuntime = "2.7.1"
 datastore = "1.1.4"
+colorpicker = "1.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +37,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 compose-calendar = { module = "com.kizitonwose.calendar:compose", version.ref = "composeCalendar" }
+compose-colorpicker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorpicker" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -48,7 +51,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3", version="1.4.0-alpha09" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version="1.4.0-alpha13" }
 androidx-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite" }
