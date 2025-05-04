@@ -1,10 +1,6 @@
 package com.gvituskins.utilityly.presentation.screens.main.statistics.statYears
 
-import androidx.compose.animation.core.EaseInOutCubic
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.domain.models.categories.Category
@@ -12,8 +8,6 @@ import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.DropDownTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.ehsannarmani.compose_charts.models.DotProperties
-import ir.ehsannarmani.compose_charts.models.Line
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -42,6 +36,11 @@ class StatYearsViewModel @Inject constructor(
                 uiState.value.categoryState.updateOptions(categories)
                 if (uiState.value.categoryState.value == null) {
                     uiState.value.categoryState.updateValue(categories.getOrNull(0))
+                }
+                _uiState.update { currentUiState ->
+                    currentUiState.copy(
+                        availableYears = allAvailableYears
+                    )
                 }
                 initChart()
             }
@@ -134,28 +133,21 @@ class StatYearsViewModel @Inject constructor(
     private suspend fun buildLine(
         category: Category,
         year: Int
-    ): Line {
+    ): UlyChartLine {
         val categoryMonthsAmounts = mutableListOf<Double>()
         (1..12).forEach { month ->
             val categoryUtilitiesPerMonthAmount = utilityRepository.getAllUtilitiesByMonth(month, year)
                 .filter { monthUtility ->
-                    monthUtility.category.id == category.id && (monthUtility.dueDate.month + 1) == month
+                    monthUtility.category.id == category.id && monthUtility.dueDate.monthValue == month
                 }
                 .sumOf { it.amount }
 
             categoryMonthsAmounts.add(categoryUtilitiesPerMonthAmount)
         }
 
-        val color = Color.Yellow
-        return Line(
+        return UlyChartLine(
             label = category.name,
             values = categoryMonthsAmounts,
-            color = SolidColor(color),
-            firstGradientFillColor = color.copy(alpha = .5f),
-            secondGradientFillColor = Color.Transparent,
-            strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
-            gradientAnimationDelay = 1000,
-            dotProperties = DotProperties(enabled = true, color = SolidColor(color))
         )
     }
 
@@ -171,7 +163,6 @@ class StatYearsViewModel @Inject constructor(
                             )
                         )
                     },
-                    availableYears = allAvailableYears
                 )
             }
         }
@@ -190,5 +181,11 @@ data class StatYearsState(
 data class YearWithLine(
     val id: String = UUID.randomUUID().toString(),
     val year: Int,
-    val line: Line
+    val line: UlyChartLine
+)
+
+@Immutable
+data class UlyChartLine(
+    val label: String,
+    val values: List<Double>
 )

@@ -27,16 +27,18 @@ class StatCategoryViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        utilityRepository.getAllUtilities()
-            .onEach {
-                val years = utilityRepository.getAllAvailableYears()
-                uiState.value.yearState.updateOptions(years)
-                if (uiState.value.yearState.value == null) {
-                    uiState.value.yearState.updateValue(years.getOrNull(0))
+        viewModelScope.launch {
+            utilityRepository.getAllUtilities()
+                .onEach {
+                    val years = utilityRepository.getAllAvailableYears()
+                    uiState.value.yearState.updateOptions(years)
+                    if (uiState.value.yearState.value == null) {
+                        uiState.value.yearState.updateValue(years.getOrNull(0))
+                    }
+                    updateChartInfo()
                 }
-                updateChartInfo()
-            }
-            .launchIn(viewModelScope)
+                .launchIn(viewModelScope)
+        }
     }
 
     fun updateChartInfo() {

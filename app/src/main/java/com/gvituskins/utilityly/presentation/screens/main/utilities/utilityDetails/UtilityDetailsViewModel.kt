@@ -29,8 +29,13 @@ class UtilityDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val utility = utilityRepository.getUtilityById(initUtility.utilityId)
+            val prevUtility = utility.previousUtilityId?.let { utilityRepository.getUtilityById(it) }
+
             _uiState.update { currentUiState ->
-                currentUiState.copy(utility = utility)
+                currentUiState.copy(
+                    utility = utility,
+                    prevUtility = prevUtility
+                )
             }
         }
     }
@@ -53,4 +58,5 @@ class UtilityDetailsViewModel @Inject constructor(
 @Immutable
 data class UtilityDetailsState(
     val utility: Utility? = null,
+    val prevUtility: Utility? = null,
 )

@@ -1,13 +1,11 @@
 package com.gvituskins.utilityly.data.db.entities
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
-import java.util.Date
+import java.time.LocalDate
 
 @Entity(
     tableName = "utility",
@@ -34,27 +32,9 @@ data class UtilityEntity(
     val repeat: UtilityRepeat?,
     val amount: Double,
     val locationId: Int,
-    val dateCreated: Date,
+    val dateCreated: LocalDate,
     val paidStatus: PaidStatus,
-    val dueDate: Date,
-    val datePaid: Date?,
+    val dueDate: LocalDate,
+    val datePaid: LocalDate?,
     val previousUtilityId: Int?,
-)
-
-data class CategoryWithUtilities(
-    @Embedded val category: CategoryEntity,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "categoryId"
-    )
-    val utilities: List<UtilityEntity>
-)
-
-data class CompanyWithUtilities(
-    @Embedded val category: CompanyEntity,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "companyId"
-    )
-    val utilities: List<UtilityEntity>
 )

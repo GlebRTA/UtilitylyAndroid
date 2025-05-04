@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface UtilityRepository {
     suspend fun getUtilityById(id: Int): Utility
 
-    fun getAllUtilities(): Flow<List<Utility>>
+    suspend fun getAllUtilities(): Flow<List<Utility>>
 
     suspend fun getAllUtilitiesByYear(year: Int): List<Utility>
 
@@ -25,4 +25,6 @@ interface UtilityRepository {
     suspend fun getPreviousUtility(categoryId: Int): Utility?
 
     suspend fun getAllAvailableYears(): List<Int>
+
+    suspend fun addParameterValue(value: String, utilityId: Int, categoryId: Int)
 }

@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.toColorInt
 import com.gvituskins.utilityly.data.db.entities.CategoryEntity
 import com.gvituskins.utilityly.data.db.entities.ParameterCategoryEntity
+import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 
@@ -18,6 +19,21 @@ fun CategoryEntity.toCategory(parameters: List<ParameterCategoryEntity>): Catego
     )
 }
 
+data class ParameterWithValue(
+    val parameterCategory: ParameterCategoryEntity,
+    val value: ParameterValueEntity?
+)
+
+fun CategoryEntity.toCategoryWithValues(parameters: List<ParameterWithValue>): Category {
+    return Category(
+        id = id,
+        name = name,
+        description = description,
+        color = Color("#${colorHex}".toColorInt()),
+        parameters = parameters.map { it.parameterCategory.toCategoryParameter(it.value?.value) }
+    )
+}
+
 @OptIn(ExperimentalStdlibApi::class)
 fun Category.toCategoryEntity(): CategoryEntity {
     return CategoryEntity(
@@ -28,10 +44,11 @@ fun Category.toCategoryEntity(): CategoryEntity {
     )
 }
 
-fun ParameterCategoryEntity.toCategoryParameter(): CategoryParameter {
+fun ParameterCategoryEntity.toCategoryParameter(value: String? = null): CategoryParameter {
     return CategoryParameter(
         id = id,
-        name = name
+        name = name,
+        value = value
     )
 }
 

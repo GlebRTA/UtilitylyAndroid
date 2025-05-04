@@ -105,8 +105,8 @@ fun ManageCategoryScreen(
                     modifier = Modifier
                         .size(140.dp)
                         .border(
-                            UlyTheme.spacing.border,
-                            if (uiState.colorIsError) UlyTheme.colors.error else UlyTheme.colors.outline,
+                            width = UlyTheme.spacing.border,
+                            color = if (uiState.colorIsError) UlyTheme.colors.error else UlyTheme.colors.outline,
                             UlyTheme.shapes.small
                         )
                         .clip(UlyTheme.shapes.small)
@@ -139,9 +139,7 @@ fun ManageCategoryScreen(
                                         IconButton(
                                             onClick = {
                                                 viewModel.updateParameterSheet(
-                                                    newState = ManageCategoryModal.Parameter(
-                                                        parameter
-                                                    )
+                                                    newState = ManageCategoryModal.Parameter(parameter)
                                                 )
                                             }
                                         ) {

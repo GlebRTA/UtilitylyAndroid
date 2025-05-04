@@ -9,8 +9,3 @@ data class Category(
     val color: Color,
     val parameters: List<CategoryParameter>
 )
-
-data class CategoryParameter(
-    val id: Int,
-    val name: String
-)

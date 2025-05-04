@@ -4,15 +4,19 @@ import com.gvituskins.utilityly.data.db.dao.CategoryDao
 import com.gvituskins.utilityly.data.db.dao.CompanyDao
 import com.gvituskins.utilityly.data.db.dao.LocationDao
 import com.gvituskins.utilityly.data.db.dao.UtilityDao
+import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
+import com.gvituskins.utilityly.data.mappers.ParameterWithValue
 import com.gvituskins.utilityly.data.mappers.toUtility
 import com.gvituskins.utilityly.data.mappers.toUtilityEntity
 import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
+import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import javax.inject.Inject
 
 class UtilityRepositoryImpl @Inject constructor(
@@ -24,42 +28,56 @@ class UtilityRepositoryImpl @Inject constructor(
 ) : UtilityRepository {
 
     override suspend fun getUtilityById(id: Int): Utility {
-        return utilityDao.getById(id).let { utilityDb ->
+        return utilityDao.getById(id, preferences.getCurrentLocationId()).let { utilityDb ->
+            val categoryParameters = categoryDao.getCategoryParameters(utilityDb.categoryId)
+
+            debugLog("")
+            val a = categoryParameters.parameters.map { categoryParameter ->
+                ParameterWithValue(
+                    parameterCategory = categoryParameter,
+                    value = utilityDao.getParametersValue(
+                        utilityId = utilityDb.id,
+                        categoryParamId = categoryParameter.id
+                    ).also {
+                        debugLog("$it")
+                    }
+                )
+            }
+
             utilityDb.toUtility(
-                categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
+                category = categoryParameters.category,
+                parametersWithValues = a,
                 company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
                 location = locationDao.getLocationById(preferences.getCurrentLocationId())
             )
         }
     }
 
-    override fun getAllUtilities(): Flow<List<Utility>> {
-        return utilityDao.getAllUtilities().map { utilitiesDb -> utilitiesDb.toUtilities() }
+    override suspend fun getAllUtilities(): Flow<List<Utility>> {
+        return utilityDao.getAllUtilities(preferences.getCurrentLocationId()).map { utilitiesDb -> utilitiesDb.toUtilities() }
     }
 
     override suspend fun getAllUtilitiesByYear(year: Int): List<Utility> {
-        return utilityDao.getAllUtilities()
+        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
             .first()
-            .filter {
-                (it.dueDate.year + 1900) == year
-            }
+            .filter { it.dueDate.year == year }
             .toUtilities()
     }
 
     override suspend fun getAllUtilitiesByMonth(month: Int, year: Int): List<Utility> {
-        return utilityDao.getAllUtilities()
+        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
             .first()
             .filter {
-                (it.dueDate.year + 1900) == year && (it.dueDate.month + 1) == month
+                it.dueDate.year == year && it.dueDate.monthValue == month
             }
             .toUtilities()
     }
 
     override suspend fun getAllUtilitiesByDay(day: Int, month: Int, year: Int): List<Utility> {
-        return utilityDao.getAllUtilities()
+        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
             .first()
             .filter {
-                (it.dueDate.year + 1900) == year && (it.dueDate.month + 1) == month && it.dueDate.date == day
+                it.dueDate.year == year && it.dueDate.monthValue == month && it.dueDate.dayOfMonth == day
             }
             .toUtilities()
     }
@@ -75,7 +93,17 @@ class UtilityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addNewUtility(utility: Utility) {
-        utilityDao.addNew(utility.toUtilityEntity())
+        val utilityId = utilityDao.addNew(utility.toUtilityEntity())
+
+        utility.category.parameters.forEach { categoryParameter ->
+            utilityDao.addParameterValue(
+                ParameterValueEntity(
+                    categoryParameterId = categoryParameter.id,
+                    value = categoryParameter.value ?: "",
+                    utilityId = utilityId.toInt()
+                )
+            )
+        }
     }
 
     override suspend fun updateUtility(utility: Utility) {
@@ -88,11 +116,18 @@ class UtilityRepositoryImpl @Inject constructor(
 
     override suspend fun changePaidStatus(utilityId: Int) {
         val utility = getUtilityById(utilityId)
-        updateUtility(utility.copy(paidStatus = utility.paidStatus.otherwise()))
+        val newPaidStatus = utility.paidStatus.otherwise()
+        val paidDate = if (newPaidStatus.isPaid) LocalDate.now() else null
+        updateUtility(
+            utility.copy(
+                paidStatus = newPaidStatus,
+                datePaid = paidDate
+            )
+        )
     }
 
     override suspend fun getPreviousUtility(categoryId: Int): Utility? {
-        return utilityDao.getLastPaidUtilityByCategory(categoryId)?.let { utilityDb ->
+        return utilityDao.getLastPaidUtilityByCategory(categoryId, preferences.getCurrentLocationId())?.let { utilityDb ->
             utilityDb.toUtility(
                 categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
                 company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
@@ -104,8 +139,18 @@ class UtilityRepositoryImpl @Inject constructor(
     override suspend fun getAllAvailableYears(): List<Int> {
         val years = mutableSetOf<Int>()
         getAllUtilities().first().forEach {
-            years.add(it.dueDate.year + 1900)
+            years.add(it.dueDate.year)
         }
         return years.toList()
+    }
+
+    override suspend fun addParameterValue(value: String, utilityId: Int, categoryId: Int) {
+        utilityDao.addParameterValue(
+            ParameterValueEntity(
+                categoryParameterId = categoryId,
+                value = value,
+                utilityId = utilityId
+            )
+        )
     }
 }

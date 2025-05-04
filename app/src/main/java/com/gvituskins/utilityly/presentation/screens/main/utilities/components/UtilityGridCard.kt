@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -19,9 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gvituskins.utilityly.presentation.components.CategoryColorBox
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
@@ -32,8 +32,8 @@ fun UtilityGridCard(
     category: String,
     isPaid: Boolean,
     onEditClicked: () -> Unit,
+    color: Color,
     modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Default.WaterDrop,
     innerPaddings: PaddingValues = PaddingValues(UlyTheme.spacing.mediumSmall),
 ) {
     Card(
@@ -55,10 +55,9 @@ fun UtilityGridCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp)
+                CategoryColorBox(
+                    size = 36.dp,
+                    color = color
                 )
 
                 CheckedIcon(
@@ -98,8 +97,8 @@ private fun UtilityGridCardPreview() {
             amount = "$10:00",
             category = "Water",
             isPaid = false,
+            color = Color.Magenta,
             modifier = Modifier,
-            icon = Icons.Default.WaterDrop,
         )
     }
 }

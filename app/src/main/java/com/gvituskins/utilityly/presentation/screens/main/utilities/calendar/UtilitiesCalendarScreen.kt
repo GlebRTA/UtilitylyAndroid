@@ -15,8 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.WaterDrop
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -82,11 +81,8 @@ fun UtilitiesCalendarScreen(
                     isSelected = day == uiState.selectedDay,
                     onClick = { viewModel.updateSelectedDay(day) },
                     utilities = uiState.cachedMonthUtilities
-                        .filter { utility ->
-                            val date = utility.dueDate
-                            (date.year + 1900) == day.date.year && (date.month + 1) == day.date.monthValue && date.date == day.date.dayOfMonth
-                        }
-                        .map { it.paidStatus.isPaid }
+                        .filter { utility -> day.date == utility.dueDate }
+                        .map { it.paidStatus.isPaid to it.category.color }
                 )
             },
             monthHeader = { month ->
@@ -134,7 +130,7 @@ fun UtilitiesCalendarScreen(
                                     name = utility.category.name,
                                     amount = utility.amount.toString(),
                                     isPaid = utility.paidStatus.isPaid,
-                                    icon = Icons.Default.WaterDrop, //TODO
+                                    color = utility.category.color,
                                     onActionClicked = { onEditClicked(utility.id) },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -157,7 +153,7 @@ fun Day(
     day: CalendarDay,
     isSelected: Boolean,
     onClick: () -> Unit,
-    utilities: List<Boolean>
+    utilities: List<Pair<Boolean, Color>>
 ) {
     Column(
         modifier = Modifier
@@ -180,9 +176,11 @@ fun Day(
     ) {
         Text(
             text = day.date.dayOfMonth.toString(),
-            color = if (day.position == DayPosition.MonthDate) UlyTheme.colors.onBackground else UlyTheme.colors.onBackground.copy(
-                alpha = 0.4f
-            )
+            color = if (day.position == DayPosition.MonthDate) {
+                UlyTheme.colors.onBackground
+            } else {
+                UlyTheme.colors.onBackground.copy(alpha = 0.4f)
+            }
         )
 
         if (utilities.isNotEmpty()) {
@@ -190,12 +188,20 @@ fun Day(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                utilities.forEach { isPaid ->
+                utilities.forEach { pair ->
+                    val isPaid = pair.first
+                    val categoryColor = pair.second
+
                     Box(
                         modifier = Modifier
-                            .size(5.dp)
+                            .size(8.dp)
                             .clip(UlyTheme.shapes.circle)
                             .background(if (isPaid) Color.Green else Color.Red)
+                            .border(
+                                width = 2.dp,
+                                color = categoryColor,
+                                shape = CircleShape
+                            ),
                     )
                 }
             }

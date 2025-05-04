@@ -1,5 +1,7 @@
 package com.gvituskins.utilityly.presentation.screens.main.statistics.statYears
 
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -25,6 +28,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -37,14 +41,19 @@ import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.rememberDropDownTextFieldSate
+import com.gvituskins.utilityly.presentation.core.utils.ChartColorHelper
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import ir.ehsannarmani.compose_charts.LineChart
+import ir.ehsannarmani.compose_charts.extensions.format
 import ir.ehsannarmani.compose_charts.models.AnimationMode
+import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.HorizontalIndicatorProperties
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
+import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.PopupProperties
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatYearsScreen(
     viewModel: StatYearsViewModel = hiltViewModel()
@@ -76,11 +85,24 @@ fun StatYearsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            data = uiState.yearWIthLine.map { it.line },
+            data = uiState.yearWIthLine.mapIndexed { index, yearWithLine ->
+                val lineColor = ChartColorHelper.getLineColor(index)
+                Line(
+                    color = SolidColor(lineColor),
+                    label = yearWithLine.line.label,
+                    values = yearWithLine.line.values,
+                    firstGradientFillColor = lineColor.copy(alpha = .5f),
+                    secondGradientFillColor = Color.Transparent,
+                    dotProperties = DotProperties(enabled = true, color = SolidColor(lineColor)),
+                    strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
+                    gradientAnimationDelay = 1000
+                )
+            },
             animationMode = AnimationMode.Together(delayBuilder = { it * 500L }),
             indicatorProperties = HorizontalIndicatorProperties(
                 enabled = true,
-                textStyle = UlyTheme.typography.bodySmall.copy(color = UlyTheme.colors.onBackground)
+                textStyle = UlyTheme.typography.bodySmall.copy(color = UlyTheme.colors.onBackground),
+                contentBuilder = { "$" + it.format(1) }
             ),
             labelHelperProperties = LabelHelperProperties(enabled = false),
             curvedEdges = false,
@@ -103,10 +125,10 @@ fun StatYearsScreen(
             )
         )
 
-        uiState.yearWIthLine.forEach { yearWithLine ->
+        uiState.yearWIthLine.forEachIndexed { index, yearWithLine ->
             VerticalSpacer(UlyTheme.spacing.xLarge)
             YearRow(
-                color = yearWithLine.line.color,
+                color = SolidColor(ChartColorHelper.getLineColor(index)),
                 year = yearWithLine.year,
                 options = uiState.availableYears,
                 onValueChanged = { year ->
@@ -164,6 +186,7 @@ private fun ColumnScope.YearRow(
             modifier = Modifier
                 .fillMaxHeight()
                 .aspectRatio(1f)
+                .clip(UlyTheme.shapes.small)
                 .background(color)
         )
 

@@ -37,7 +37,7 @@ class TableViewModel @Inject constructor(
                 (1..12).forEach { month ->
                     val categoryUtilitiesPerMonthAmount = utilityRepository.getAllUtilitiesByMonth(month, year)
                         .filter { monthUtility ->
-                            monthUtility.category.id == category.id && (monthUtility.dueDate.month + 1) == month
+                            monthUtility.category.id == category.id && monthUtility.dueDate.monthValue == month
                         }
                         .sumOf { it.amount }
                         .roundToStr()

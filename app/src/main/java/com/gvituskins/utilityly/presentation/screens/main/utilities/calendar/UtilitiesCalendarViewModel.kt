@@ -60,10 +60,7 @@ class UtilitiesCalendarViewModel @Inject constructor(
                 listOf()
             } else {
                 uiState.value.cachedMonthUtilities
-                    .filter { utility ->
-                        val utilityDate = utility.dueDate
-                        (utilityDate.year + 1900) == year && (utilityDate.month + 1) == month && utilityDate.date == day
-                    }
+                    .filter { utility -> utility.dueDate == date }
             }
 
             _uiState.update { currentUiState ->

@@ -1,8 +1,11 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.manageUtility
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -36,6 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
+import com.gvituskins.utilityly.presentation.components.AnimatedCounter
+import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyOutlinedButton
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.CenterSegmentedButton
@@ -48,7 +53,10 @@ import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTe
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ManageUtilityScreen(
@@ -100,7 +108,7 @@ fun ManageUtilityScreen(
 
         VerticalSpacer(UlyTheme.spacing.large)
 
-        TextInputItem(title = "Company Name") {
+        TextInputItem(title = stringResource(R.string.company_name)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.height(IntrinsicSize.Min)
@@ -127,10 +135,10 @@ fun ManageUtilityScreen(
 
         TextInputItem(title = stringResource(R.string.due_date)) {
             var showModal by remember { mutableStateOf(false) }
-            val formatter = remember { SimpleDateFormat("dd/MM/YYYY") }
+            val formatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
 
             OutlinedTextField(
-                value = uiState.dueDate?.let { formatter.format(uiState.dueDate) } ?: "",
+                value = uiState.dueDate?.let { LocalDate.ofEpochDay(it).format(formatter) } ?: "",
                 onValueChange = {},
                 readOnly = true,
                 placeholder = { Text("DD/MM/YYYY") },
@@ -153,7 +161,12 @@ fun ManageUtilityScreen(
             if (showModal) {
                 DatePickerModal(
                     onDateSelected = { timeMils ->
-                        viewModel.updateDueDate(timeMils)
+                        timeMils?.let {
+                            val date = Instant.ofEpochMilli(timeMils)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                            viewModel.updateDueDate(date.toEpochDay())
+                        }
                     },
                     onDismiss = { showModal = false },
                     initialDate = uiState.dueDate
@@ -163,31 +176,57 @@ fun ManageUtilityScreen(
 
         VerticalSpacer(UlyTheme.spacing.large)
 
-        TextInputItem(title = "Repeat") {
-            SingleChoiceSegmentedButtonRow {
+        if (uiState.isAddMode) {
+            TextInputItem(title = stringResource(R.string.repeat)) {
                 val selectedButton = uiState.repeat
 
-                StartSegmentedButton(
-                    selected = selectedButton == UtilityRepeat.WEEKLY,
-                    onClick = { viewModel.updateRepeat(UtilityRepeat.WEEKLY) },
-                    text = stringResource(R.string.weekly)
-                )
+                Column {
+                    SingleChoiceSegmentedButtonRow {
+                        StartSegmentedButton(
+                            selected = selectedButton == UtilityRepeat.WEEKLY,
+                            onClick = { viewModel.updateRepeat(UtilityRepeat.WEEKLY) },
+                            text = stringResource(R.string.weekly)
+                        )
 
-                CenterSegmentedButton(
-                    selected = selectedButton == UtilityRepeat.MONTHLY,
-                    onClick = { viewModel.updateRepeat(UtilityRepeat.MONTHLY) },
-                    text = stringResource(R.string.monthly)
-                )
+                        CenterSegmentedButton(
+                            selected = selectedButton == UtilityRepeat.MONTHLY,
+                            onClick = { viewModel.updateRepeat(UtilityRepeat.MONTHLY) },
+                            text = stringResource(R.string.monthly)
+                        )
 
-                EndSegmentedButton(
-                    selected = selectedButton == UtilityRepeat.ANNUALLY,
-                    onClick = { viewModel.updateRepeat(UtilityRepeat.ANNUALLY) },
-                    text = stringResource(R.string.annual)
-                )
+                        EndSegmentedButton(
+                            selected = selectedButton == UtilityRepeat.ANNUALLY,
+                            onClick = { viewModel.updateRepeat(UtilityRepeat.ANNUALLY) },
+                            text = stringResource(R.string.annual)
+                        )
+                    }
+                }
+
+
+                AnimatedVisibility(visible = selectedButton != null) {
+                    Row(
+                        modifier = Modifier.padding(top = UlyTheme.spacing.mediumSmall),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Times to repeat:")
+
+                        HorizontalSpacer(UlyTheme.spacing.small)
+
+                        AnimatedCounter(
+                            counter = uiState.repeatCounter,
+                            onCounterChanged = { viewModel.updateRepeatCounter(it) },
+                            modifier = Modifier.border(
+                                width = 1.dp,
+                                color = UlyTheme.colors.outline,
+                                shape = UlyTheme.shapes.circle
+                            )
+                        )
+                    }
+                }
             }
-        }
 
-        VerticalSpacer(UlyTheme.spacing.large)
+            VerticalSpacer(UlyTheme.spacing.large)
+        }
 
         TextInputItem(title = stringResource(R.string.amount_to_pay)) {
             UlyOutlinedTextFiled(
@@ -210,7 +249,7 @@ fun ManageUtilityScreen(
         }
 
         uiState.categoryParameters.forEach { parameter ->
-            val textFieldState = rememberTextFieldState(parameter.name)
+            val textFieldState = rememberTextFieldState(parameter.value ?: "")
             VerticalSpacer(UlyTheme.spacing.large)
             TextInputItem(title = parameter.name) {
                 UlyOutlinedTextFiled(

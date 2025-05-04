@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -95,7 +94,7 @@ fun UtilitiesGridScreen(
                     amount = utility.amount.toString(),
                     category = utility.category.name,
                     isPaid = utility.paidStatus.isPaid,
-                    icon = Icons.Default.WaterDrop, //utility.category.iconUrl,
+                    color = utility.category.color,
                     onEditClicked = { onEditClicked(utility.id) },
                     modifier = Modifier
                         .padding(UlyTheme.spacing.small)

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
@@ -47,9 +48,9 @@ import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTop
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.concurrent.TimeUnit
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import kotlin.math.abs
 
 @Composable
@@ -68,6 +69,8 @@ fun UtilityDetailsScreen(
             )
         }
     ) { innerPaddings ->
+        val monthFormatter = remember { DateTimeFormatter.ofPattern("MMMM") }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,10 +80,10 @@ fun UtilityDetailsScreen(
         ) {
             TitleCard(
                 title = "${uiState.utility?.location?.name ?: ""} ${uiState.utility?.category?.name ?: ""}",
-                month = SimpleDateFormat("MMMM").format(uiState.utility?.dueDate?.time ?: 0),
-                due = uiState.utility?.dueDate?.time?.let { dueDate ->
-                    val difInMils = dueDate - Date().time
-                    val dif = TimeUnit.MILLISECONDS.toDays(difInMils)
+                month = uiState.utility?.dueDate?.format(monthFormatter) ?: "-",
+                due = uiState.utility?.dueDate?.let { dueDate ->
+                    val dif = ChronoUnit.DAYS.between(LocalDate.now(), dueDate)
+
                     val uiDif = abs(dif)
                     if (dif > 0) {
                         "due in $uiDif days"
@@ -92,7 +95,7 @@ fun UtilityDetailsScreen(
                 } ?: "-",
                 company = uiState.utility?.company?.name ?: "-",
                 amount = uiState.utility?.amount?.toString() ?: "-",
-                isPaid = uiState.utility?.paidStatus?.isPaid ?: false,
+                isPaid = uiState.utility?.paidStatus?.isPaid == true,
                 onPaidClick = { viewModel.changePaidStatus() }
             )
 
@@ -102,13 +105,22 @@ fun UtilityDetailsScreen(
 
             VerticalSpacer(UlyTheme.spacing.xLarge)
 
-            CategoryParametersTable()
+            val params = uiState.utility?.category?.parameters
+            if (!params.isNullOrEmpty()) {
+                CategoryParametersTable(
+                    currentParameters = params,
+                    prevParameters = uiState.prevUtility?.category?.parameters
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun CategoryParametersTable() {
+private fun CategoryParametersTable(
+    currentParameters: List<CategoryParameter>?,
+    prevParameters: List<CategoryParameter>?,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,24 +138,15 @@ private fun CategoryParametersTable() {
                 background = UlyTheme.colors.outline.copy(alpha = 0.3f),
             )
         }
-        HorizontalDivider()
-        TableRow(
-            name = "Kitchen Hot Water",
-            previous = "120",
-            current = "123"
-        )
-        HorizontalDivider()
-        TableRow(
-            name = "Kitchen Cold Water",
-            previous = "97",
-            current = "102"
-        )
-        HorizontalDivider()
-        TableRow(
-            name = "Bathroom Hot Water",
-            previous = "990",
-            current = "1231"
-        )
+
+        currentParameters?.forEachIndexed { index, parameter ->
+            HorizontalDivider()
+            TableRow(
+                name = parameter.name,
+                previous = prevParameters?.getOrNull(index)?.value ?: "-",
+                current = parameter.value ?: "-"
+            )
+        }
     }
 }
 

@@ -12,6 +12,7 @@ import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.models.companies.Company
 import com.gvituskins.utilityly.domain.models.enums.PaidStatus
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
+import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat.*
 import com.gvituskins.utilityly.domain.models.locations.Location
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +55,7 @@ class ManageUtilityViewModel @Inject constructor(
                 _uiState.update { currentUiState ->
                     currentUiState.copy(
                         editUtility = initUtility,
-                        dueDate = initUtility.dueDate.time,
+                        dueDate = initUtility.dueDate.toEpochDay(),
                         repeat = initUtility.repeat,
                     )
                 }
@@ -102,6 +103,15 @@ class ManageUtilityViewModel @Inject constructor(
         }
     }
 
+    fun updateRepeatCounter(newCount: Int) {
+        if (newCount < 1) return
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                repeatCounter = newCount
+            )
+        }
+    }
+
     fun manageUtility() {
         viewModelScope.launch {
             if (uiState.value.isAddMode) addUtility() else editUtility()
@@ -113,21 +123,63 @@ class ManageUtilityViewModel @Inject constructor(
         val category = uiState.value.categoryDropState.value ?: return
         val company = uiState.value.companyDropState.value
 
-        utilityRepository.addNewUtility(
-            Utility(
-                id = 0,
-                category = category,
-                company = company,
-                repeat = uiState.value.repeat,
-                amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
-                location = Location(id = preferences.getCurrentLocationId(), name = ""),
-                dateCreated = Date(),
-                paidStatus = PaidStatus.UNPAID,
-                dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
-                datePaid = null,
-                previousUtilityId = utilityRepository.getPreviousUtility(category.id)?.id
-            )
+        val utility = Utility(
+            id = 0,
+            category = category.copy(
+                parameters = category.parameters.map { it.copy(value = "test") }
+            ),
+            company = company,
+            repeat = uiState.value.repeat,
+            amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
+            location = Location(id = preferences.getCurrentLocationId(), name = ""),
+            dateCreated = LocalDate.now(),
+            paidStatus = PaidStatus.UNPAID,
+            dueDate = uiState.value.dueDate?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
+            datePaid = null,
+            previousUtilityId = utilityRepository.getPreviousUtility(category.id)?.id
         )
+
+        val repeatCounter = uiState.value.repeatCounter
+        when (uiState.value.repeat) {
+            WEEKLY -> {
+                addRepeatUtilities(
+                    utility = utility,
+                    repeatTimes = repeatCounter
+                ) { date, weeksToAdd ->
+                    date.plusWeeks(weeksToAdd.toLong())
+                }
+            }
+            MONTHLY -> {
+                addRepeatUtilities(
+                    utility = utility,
+                    repeatTimes = repeatCounter
+                ) { date, monthToAdd ->
+                    date.plusMonths(monthToAdd.toLong())
+                }
+            }
+            ANNUALLY -> {
+                addRepeatUtilities(
+                    utility = utility,
+                    repeatTimes = repeatCounter
+                ) { date, yearsToAdd ->
+                    date.plusYears(yearsToAdd.toLong())
+                }
+            }
+            null -> utilityRepository.addNewUtility(utility)
+        }
+    }
+
+    private suspend fun addRepeatUtilities(
+        utility: Utility,
+        repeatTimes: Int,
+        dueDateBuilder: (LocalDate, Int) -> LocalDate
+    ) {
+        utilityRepository.addNewUtility(utility)
+        (1..repeatTimes).forEach { toAdd ->
+            utilityRepository.addNewUtility(
+                utility.copy(dueDate = dueDateBuilder(utility.dueDate, toAdd))
+            )
+        }
     }
 
     private suspend fun editUtility() {
@@ -141,7 +193,7 @@ class ManageUtilityViewModel @Inject constructor(
                 company = company,
                 repeat = uiState.value.repeat,
                 amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
-                dueDate = uiState.value.dueDate?.let { Date(it) } ?: Date(),
+                dueDate = uiState.value.dueDate?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
             )
         )
     }
@@ -162,6 +214,7 @@ data class ManageUtilityState(
 
     val dueDate: Long? = null,
     val repeat: UtilityRepeat? = null,
+    val repeatCounter: Int = 5,
     val amount: TextFieldState = TextFieldState()
 ) {
     val isAddMode: Boolean
