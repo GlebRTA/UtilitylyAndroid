@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,7 @@ import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalBu
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 import kotlinx.coroutines.launch
@@ -101,7 +103,10 @@ fun UtilityDetailsScreen(
 
             VerticalSpacer(UlyTheme.spacing.xLarge)
 
-            DetailsSection()
+            DetailsSection(
+                coast = uiState.detailsCoast,
+                compare = uiState.detailsCompare
+            )
 
             VerticalSpacer(UlyTheme.spacing.xLarge)
 
@@ -270,7 +275,10 @@ private fun TitleCard(
 }
 
 @Composable
-private fun DetailsSection() {
+private fun DetailsSection(
+    coast: Float,
+    compare: Float?
+) {
     val coastAnimProgress = remember {
         Animatable(0f)
     }
@@ -279,13 +287,17 @@ private fun DetailsSection() {
         Animatable(0f)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(coast) {
         launch {
-            coastAnimProgress.animateTo(0.42f, tween(1000))
+            coastAnimProgress.animateTo(coast, tween(1000))
         }
+    }
 
-        launch {
-            compareAnimProgress.animateTo(0.77f, tween(1000))
+    LaunchedEffect(compare) {
+        compare?.let {
+            launch {
+                compareAnimProgress.animateTo(compare, tween(1000))
+            }
         }
     }
 
@@ -305,19 +317,21 @@ private fun DetailsSection() {
         ) {
             DetailsInfoRow(
                 startText = "Coast",
-                endText = "42%",
+                endText = (coastAnimProgress.value * 100).roundToStr(1) + "%",
                 progress = { coastAnimProgress.value },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            VerticalSpacer(UlyTheme.spacing.medium)
+            compare?.let {
+                VerticalSpacer(UlyTheme.spacing.medium)
 
-            DetailsInfoRow(
-                startText = "Compare with last payment",
-                endText = "-13%",
-                progress = { compareAnimProgress.value },
-                modifier = Modifier.fillMaxWidth()
-            )
+                DetailsInfoRow(
+                    startText = "Compare with last payment",
+                    endText = (compareAnimProgress.value * 100).roundToStr(0) + "%",
+                    progress = { compareAnimProgress.value },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -337,7 +351,7 @@ private fun DetailsInfoRow(
             text = startText,
             style = UlyTheme.typography.titleMedium,
             lineHeight = 20.sp,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1.5f)
         )
 
         HorizontalSpacer(UlyTheme.spacing.xSmall)
@@ -346,7 +360,7 @@ private fun DetailsInfoRow(
             modifier = Modifier
                 .height(12.dp)
                 .width(120.dp)
-                .weight(2f)
+                .weight(3f)
                 .clip(UlyTheme.shapes.xSmall)
                 .border(
                     width = 0.5.dp,
@@ -355,7 +369,7 @@ private fun DetailsInfoRow(
                 )
                 .drawBehind {
                     drawRect(
-                        color = Color.Red,
+                        brush = Brush.linearGradient(colors = listOf(Color.Green, Color.Red)),
                         size = size.copy(width = size.width * progress())
                     )
                 }
@@ -365,7 +379,8 @@ private fun DetailsInfoRow(
 
         Text(
             text = endText,
-            fontStyle = FontStyle.Italic
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier.weight(0.8f)
         )
     }
 }

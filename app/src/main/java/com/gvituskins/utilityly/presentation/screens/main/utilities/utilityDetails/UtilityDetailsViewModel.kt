@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
+import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,15 +30,34 @@ class UtilityDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val utility = utilityRepository.getUtilityById(initUtility.utilityId)
-            val prevUtility = utility.previousUtilityId?.let { utilityRepository.getUtilityById(it) }
+            val prevUtility = utilityRepository.getPreviousUtility(
+                utilityId = utility.id,
+                categoryId = utility.category.id,
+                date = utility.dueDate
+            )
+            debugLog("prev util = ${prevUtility?.amount}, id = ${prevUtility?.id}; cur util = ${utility.amount}, id = ${utility.id}")
+
+            val difference = prevUtility?.amount?.let { oldAmount ->
+                (utility.amount - oldAmount) / 100f
+            }
 
             _uiState.update { currentUiState ->
                 currentUiState.copy(
                     utility = utility,
-                    prevUtility = prevUtility
+                    prevUtility = prevUtility,
+                    detailsCoast = getDetailsCoast(utility),
+                    detailsCompare = difference?.toFloat()
                 )
             }
         }
+    }
+
+    private suspend fun getDetailsCoast(utility: Utility): Float {
+        val totalSum = utilityRepository.getAllUtilitiesByMonth(
+            month = utility.dueDate.monthValue,
+            year = utility.dueDate.year,
+        ).sumOf { it.amount }
+        return ((utility.amount * 100 / totalSum) / 100f).toFloat()
     }
 
     fun changePaidStatus() {
@@ -59,4 +79,7 @@ class UtilityDetailsViewModel @Inject constructor(
 data class UtilityDetailsState(
     val utility: Utility? = null,
     val prevUtility: Utility? = null,
+
+    val detailsCoast: Float = 0f,
+    val detailsCompare: Float? = 0f,
 )

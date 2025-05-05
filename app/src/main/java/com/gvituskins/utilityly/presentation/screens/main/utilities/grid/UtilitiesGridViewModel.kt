@@ -64,15 +64,13 @@ data class UtilitiesGridState(
     val currentMont: YearMonth = YearMonth.now()
 ) {
     val total: Double
-        get() = utilities.map { it.amount }.sum()
+        get() = utilities.sumOf { it.amount }
 
     val unpaid: Double
         get() = utilities
-            .filter { it.paidStatus == PaidStatus.UNPAID }
-            .map { it.amount }.sum()
+            .filter { it.paidStatus == PaidStatus.UNPAID }.sumOf { it.amount }
 
     val paid: Double
         get() = utilities
-            .filter { it.paidStatus == PaidStatus.PAID }
-            .map { it.amount }.sum()
+            .filter { it.paidStatus == PaidStatus.PAID }.sumOf { it.amount }
 }

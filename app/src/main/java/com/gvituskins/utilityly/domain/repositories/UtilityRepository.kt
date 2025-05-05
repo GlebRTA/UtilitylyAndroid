@@ -2,6 +2,7 @@ package com.gvituskins.utilityly.domain.repositories
 
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 interface UtilityRepository {
     suspend fun getUtilityById(id: Int): Utility
@@ -22,7 +23,7 @@ interface UtilityRepository {
 
     suspend fun changePaidStatus(utilityId: Int)
 
-    suspend fun getPreviousUtility(categoryId: Int): Utility?
+    suspend fun getPreviousUtility(utilityId: Int, categoryId: Int, date: LocalDate): Utility?
 
     suspend fun getAllAvailableYears(): List<Int>
 

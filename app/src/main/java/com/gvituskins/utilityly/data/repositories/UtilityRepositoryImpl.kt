@@ -12,7 +12,6 @@ import com.gvituskins.utilityly.data.mappers.toUtilityEntity
 import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
-import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -31,16 +30,13 @@ class UtilityRepositoryImpl @Inject constructor(
         return utilityDao.getById(id, preferences.getCurrentLocationId()).let { utilityDb ->
             val categoryParameters = categoryDao.getCategoryParameters(utilityDb.categoryId)
 
-            debugLog("")
             val a = categoryParameters.parameters.map { categoryParameter ->
                 ParameterWithValue(
                     parameterCategory = categoryParameter,
                     value = utilityDao.getParametersValue(
                         utilityId = utilityDb.id,
                         categoryParamId = categoryParameter.id
-                    ).also {
-                        debugLog("$it")
-                    }
+                    )
                 )
             }
 
@@ -126,14 +122,20 @@ class UtilityRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getPreviousUtility(categoryId: Int): Utility? {
-        return utilityDao.getLastPaidUtilityByCategory(categoryId, preferences.getCurrentLocationId())?.let { utilityDb ->
-            utilityDb.toUtility(
-                categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
-                company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
-                location = locationDao.getLocationById(preferences.getCurrentLocationId())
-            )
-        }
+    override suspend fun getPreviousUtility(
+        utilityId: Int,
+        categoryId: Int,
+        date: LocalDate
+    ): Utility? {
+        return utilityDao.getLastPaidUtilityByCategory(categoryId, preferences.getCurrentLocationId())
+            ?.find { it.dueDate <= date && it.id != utilityId }
+            ?.let { utilityDb ->
+                utilityDb.toUtility(
+                    categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
+                    company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
+                    location = locationDao.getLocationById(preferences.getCurrentLocationId())
+                )
+            }
     }
 
     override suspend fun getAllAvailableYears(): List<Int> {
