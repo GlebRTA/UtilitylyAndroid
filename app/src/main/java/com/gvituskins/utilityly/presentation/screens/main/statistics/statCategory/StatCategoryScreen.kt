@@ -7,6 +7,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -125,7 +126,14 @@ fun StatCategoryScreen(
                     name = pie.label.toString(),
                     percent = info?.percent?.roundToStr(1) + "%",
                     amount = "${UiConstants.CURRENCY_SIGN}${pie.data.roundToStr(1)}",
-                    isSelected = pie.selected
+                    isSelected = pie.selected,
+                    onClick = {
+                        val pieIndex = data.indexOf(pie)
+                        data = data.mapIndexed { mapIndex, pie ->
+                            val selected = if (pieIndex == mapIndex) !pie.selected else false
+                            pie.copy(selected = selected)
+                        }
+                    }
                 )
             }
         }
@@ -139,6 +147,7 @@ private fun TableRow(
     percent: String,
     amount: String,
     isSelected: Boolean,
+    onClick: () -> Unit,
     background: Color = UlyTheme.colors.background,
 ) {
     val scaleAnim = animateFloatAsState(targetValue = if (isSelected) 1.05f else 1f,)
@@ -154,7 +163,8 @@ private fun TableRow(
                 scaleX = scaleAnim.value
                 scaleY = scaleAnim.value
                 translationY = -translationAnim.value.toPx()
-            },
+            }
+            .clickable { onClick() },
         border = BorderStroke(
             width = UlyTheme.spacing.border,
             color = UlyTheme.colors.outline,
