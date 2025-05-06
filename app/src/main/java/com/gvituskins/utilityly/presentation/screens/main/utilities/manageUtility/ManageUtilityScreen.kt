@@ -208,7 +208,7 @@ fun ManageUtilityScreen(
                         modifier = Modifier.padding(top = UlyTheme.spacing.mediumSmall),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Times to repeat:")
+                        Text(text = stringResource(R.string.times_to_repeat))
 
                         HorizontalSpacer(UlyTheme.spacing.small)
 

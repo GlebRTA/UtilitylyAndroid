@@ -59,7 +59,7 @@ fun ManageCompanyScreen(
             TextFieldInputItem(
                 title = "Phone",
                 textFiledState = uiState.phone,
-                placeholderText = "Company Phone",
+                placeholderText = stringResource(R.string.company_phone),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Phone
                 )
@@ -68,7 +68,7 @@ fun ManageCompanyScreen(
             TextFieldInputItem(
                 title = "WEB Page",
                 textFiledState = uiState.webPage,
-                placeholderText = "Company WEB Page",
+                placeholderText = stringResource(R.string.company_web_page),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri
                 )
@@ -77,7 +77,7 @@ fun ManageCompanyScreen(
             TextFieldInputItem(
                 title = "e-mail",
                 textFiledState = uiState.email,
-                placeholderText = "Company e-mail",
+                placeholderText = stringResource(R.string.company_e_mail),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 )

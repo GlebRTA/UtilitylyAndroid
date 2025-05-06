@@ -65,7 +65,7 @@ fun LocationsScreen(
     UlyScaffold(
         topBar = {
             UlyDefaultTopAppBar(
-                title = "Locations",
+                title = stringResource(R.string.locations),
                 navigateBack = navigateBack
             )
         },
@@ -75,7 +75,7 @@ fun LocationsScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add new location"
+                    contentDescription = stringResource(R.string.add_new_location)
                 )
             }
         },
@@ -136,11 +136,11 @@ fun LocationsScreen(
                     viewModel.updateLocationModal(LocationsModal.None)
                 },
                 titleText = "Do you want delete location: ${modalInfo.location.name}?",
-                confirmText = "Delete",
+                confirmText = stringResource(R.string.delete),
                 onConfirmClicked = {
                     viewModel.deleteLocation(location = modalInfo.location)
                 },
-                dismissText = "Cancel"
+                dismissText = stringResource(R.string.cancel)
             )
         }
         is LocationsModal.None -> {}
@@ -157,7 +157,7 @@ private fun ManageLocationContent(
 
     ModalBottomSheetContainer {
         TextFieldInputItem(
-            title = "Location Name",
+            title = stringResource(R.string.location_name),
             textFiledState = locationName,
             lineLimits = TextFieldLineLimits.SingleLine
         )
@@ -193,14 +193,14 @@ private fun LazyItemScope.LocationListItem(
                     IconButton(onClick = { onEditClick() }) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = "Edit location"
+                            contentDescription = stringResource(R.string.edit_location)
                         )
                     }
 
                     IconButton(onClick = { onDeleteClick() }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = "Delete location"
+                            contentDescription = stringResource(R.string.delete_location)
                         )
                     }
                 }

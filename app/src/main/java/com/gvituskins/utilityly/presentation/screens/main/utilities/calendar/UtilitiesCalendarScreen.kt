@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.takeIf
 import com.gvituskins.utilityly.presentation.core.utils.UiConstants
@@ -124,7 +125,7 @@ fun UtilitiesCalendarScreen(
                 val selectedDay = uiState.selectedDay
                 if (selectedDay != null && selectedDay.date.yearMonth == month.yearMonth) {
                     if (uiState.dayUtilities.isEmpty()) {
-                        EmptyStub(text = "There is no utilities added")
+                        EmptyStub(text = stringResource(R.string.there_is_no_utilities_added))
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxWidth(),
@@ -153,7 +154,6 @@ fun UtilitiesCalendarScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Day(
     day: CalendarDay,

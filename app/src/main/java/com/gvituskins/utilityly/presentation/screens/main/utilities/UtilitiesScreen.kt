@@ -12,12 +12,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.EndSegmentedButton
@@ -39,9 +36,7 @@ fun UtilitiesScreen(
     navigateToAddUtility: () -> Unit,
     navigateToUtilityDetails: (Int) -> Unit,
     navigateToEditUtility: (Int) -> Unit,
-    viewModel: UtilitiesViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
     val pagerState = rememberPagerState {
@@ -84,7 +79,7 @@ fun UtilitiesScreen(
                             pagerState.animateScrollToPage(UtilitiesPagerScreens.CALENDAR.ordinal)
                         }
                     },
-                    text = "Calendar",
+                    text = stringResource(R.string.calendar),
                     modifier = Modifier.weight(1f)
                 )
 
@@ -95,7 +90,7 @@ fun UtilitiesScreen(
                             pagerState.animateScrollToPage(UtilitiesPagerScreens.GRID.ordinal)
                         }
                     },
-                    text = "Grid",
+                    text = stringResource(R.string.grid),
                     modifier = Modifier.weight(1f),
                 )
             }

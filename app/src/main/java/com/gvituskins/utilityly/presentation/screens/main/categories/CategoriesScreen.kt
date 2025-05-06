@@ -120,11 +120,11 @@ fun CategoriesScreen(
                 viewModel.updateDeleteDialogVisibility(null)
             },
             titleText = "Do you want delete category ${categoryToDelete.name}?",
-            confirmText = "Delete",
+            confirmText = stringResource(R.string.delete),
             onConfirmClicked = {
                 viewModel.deleteCategory(categoryToDelete)
             },
-            dismissText = "Cancel"
+            dismissText = stringResource(R.string.cancel),
         )
     }
 }

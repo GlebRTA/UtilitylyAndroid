@@ -132,7 +132,7 @@ private fun ThemeSettings(
                 bottomEnd = CornerSize(0.dp)
             )
         ) {
-            Text(text = "System")
+            Text(text = stringResource(R.string.system))
         }
 
         SegmentedButton(
@@ -140,7 +140,7 @@ private fun ThemeSettings(
             onClick = { onThemeChange(ThemeType.LIGHT) },
             shape = UlyTheme.shapes.none
         ) {
-            Text(text = "Light")
+            Text(text = stringResource(R.string.light))
         }
 
         SegmentedButton(
@@ -151,7 +151,7 @@ private fun ThemeSettings(
                 bottomStart = CornerSize(0.dp)
             )
         ) {
-            Text(text = "Dark")
+            Text(text = stringResource(R.string.dark))
         }
     }
 }

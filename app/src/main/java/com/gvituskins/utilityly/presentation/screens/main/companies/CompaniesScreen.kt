@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
@@ -37,7 +39,7 @@ fun CompaniesScreen(
     UlyScaffold(
         topBar = {
             UlyDefaultTopAppBar(
-                title = "Companies",
+                title = stringResource(R.string.companies),
                 navigateBack = navigateBack
             )
         },
@@ -45,14 +47,14 @@ fun CompaniesScreen(
             FloatingActionButton(onClick = navigateToAddCompany) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add new company"
+                    contentDescription = stringResource(R.string.add_new_company)
                 )
             }
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         if (uiState.companies.isEmpty()) {
-            EmptyStub(text = "There is no company added")
+            EmptyStub(text = stringResource(R.string.there_is_no_company_added))
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -76,11 +78,11 @@ fun CompaniesScreen(
                 onDismissRequest = {
                     viewModel.updateModal(CompanyModal.None)
                 },
-                confirmText = "Delete",
+                confirmText = stringResource(R.string.delete),
                 onConfirmClicked = {
                     viewModel.deleteCompany(modalInfo.company)
                 },
-                dismissText = "Cancel",
+                dismissText = stringResource(R.string.cancel),
             )
         }
 
@@ -104,7 +106,7 @@ private fun LazyItemScope.CompanyListItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete Company"
+                        contentDescription = stringResource(R.string.delete_company)
                     )
                 }
             }

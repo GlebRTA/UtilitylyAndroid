@@ -189,10 +189,10 @@ fun ManageCategoryScreen(
                         .padding(horizontal = UlyTheme.spacing.mediumSmall)
                 ) {
                     TextFieldInputItem(
-                        title = "Name",
+                        title = stringResource(R.string.name),
                         textFiledState = name,
                         isError = name.text.isEmpty(),
-                        errorText = "Parameter name should not be empty"
+                        errorText = stringResource(R.string.parameter_name_should_not_be_empty)
                     )
 
                     VerticalSpacer(UlyTheme.spacing.xxLarge)

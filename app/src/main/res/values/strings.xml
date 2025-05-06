@@ -43,6 +43,26 @@
     <string name="select_a_year_table">Select a year to generate the table:</string>
     <string name="save">Save</string>
     <string name="repeat">Repeat</string>
+    <string name="grid">Grid</string>
+    <string name="calendar">Calendar</string>
+    <string name="times_to_repeat">Times to repeat:</string>
+    <string name="there_is_no_utilities_added">There is no utilities added</string>
+    <string name="empty">Empty</string>
+    <string name="system">System</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="add_new_location">Add new location</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="location_name">Location Name</string>
+    <string name="edit_location">Edit location</string>
+    <string name="delete_location">Delete location</string>
+    <string name="there_is_no_company_added">There is no company added</string>
+    <string name="delete_company">Delete Company</string>
+    <string name="company_phone">Company Phone</string>
+    <string name="company_web_page">Company WEB Page</string>
+    <string name="company_e_mail">Company e-mail</string>
+    <string name="parameter_name_should_not_be_empty">Parameter name should not be empty</string>
 
 
 </resources>
