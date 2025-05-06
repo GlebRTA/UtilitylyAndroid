@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.DateRange
@@ -81,7 +80,8 @@ fun ManageUtilityScreen(
         navigateBack = navigateBack,
         titleText = stringResource(if (uiState.isAddMode) R.string.add_utility else R.string.edit_utility),
         buttonText = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit),
-        onButtonClick = { viewModel.manageUtility() }
+        onButtonClick = { viewModel.manageUtility() },
+        isButtonEnabled = uiState.isManageEnabled
     ) {
         TextInputItem(title = stringResource(R.string.category)) {
             Row(
@@ -249,11 +249,16 @@ fun ManageUtilityScreen(
         }
 
         uiState.categoryParameters.forEach { parameter ->
-            val textFieldState = rememberTextFieldState(parameter.value ?: "")
             VerticalSpacer(UlyTheme.spacing.large)
             TextInputItem(title = parameter.name) {
-                UlyOutlinedTextFiled(
-                    state = textFieldState
+                OutlinedTextField(
+                    value = parameter.value ?: "",
+                    onValueChange = { newValue ->
+                        viewModel.updateCategoryParameterValue(
+                            parameter = parameter,
+                            newValue = newValue
+                        )
+                    }
                 )
             }
         }

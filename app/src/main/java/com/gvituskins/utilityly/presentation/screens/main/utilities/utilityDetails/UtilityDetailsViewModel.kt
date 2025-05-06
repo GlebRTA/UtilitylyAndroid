@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
+import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,6 +46,7 @@ class UtilityDetailsViewModel @Inject constructor(
                 )
             } else null
 
+            debugLog("prev = ${prevUtility?.category?.parameters}")
             _uiState.update { currentUiState ->
                 currentUiState.copy(
                     utility = utility,

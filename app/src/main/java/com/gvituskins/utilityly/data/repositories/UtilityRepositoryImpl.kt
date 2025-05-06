@@ -30,7 +30,7 @@ class UtilityRepositoryImpl @Inject constructor(
         return utilityDao.getById(id, preferences.getCurrentLocationId()).let { utilityDb ->
             val categoryParameters = categoryDao.getCategoryParameters(utilityDb.categoryId)
 
-            val a = categoryParameters.parameters.map { categoryParameter ->
+            val paramsWithValues = categoryParameters.parameters.map { categoryParameter ->
                 ParameterWithValue(
                     parameterCategory = categoryParameter,
                     value = utilityDao.getParametersValue(
@@ -42,7 +42,7 @@ class UtilityRepositoryImpl @Inject constructor(
 
             utilityDb.toUtility(
                 category = categoryParameters.category,
-                parametersWithValues = a,
+                parametersWithValues = paramsWithValues,
                 company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
                 location = locationDao.getLocationById(preferences.getCurrentLocationId())
             )
@@ -89,6 +89,7 @@ class UtilityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addNewUtility(utility: Utility) {
+        //TODO(Create transaction)
         val utilityId = utilityDao.addNew(utility.toUtilityEntity())
 
         utility.category.parameters.forEach { categoryParameter ->
@@ -103,6 +104,7 @@ class UtilityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUtility(utility: Utility) {
+        //TODO(Stopped here create sync params values)
         utilityDao.updateUtility(utility.toUtilityEntity())
     }
 
@@ -130,11 +132,7 @@ class UtilityRepositoryImpl @Inject constructor(
         return utilityDao.getLastPaidUtilityByCategory(categoryId, preferences.getCurrentLocationId())
             ?.find { it.dueDate <= date && it.id != utilityId }
             ?.let { utilityDb ->
-                utilityDb.toUtility(
-                    categoryWithParameters = categoryDao.getCategoryParameters(utilityDb.categoryId),
-                    company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
-                    location = locationDao.getLocationById(preferences.getCurrentLocationId())
-                )
+                getUtilityById(utilityDb.id)
             }
     }
 

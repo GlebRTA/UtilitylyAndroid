@@ -89,6 +89,22 @@ class ManageUtilityViewModel @Inject constructor(
         }
     }
 
+    fun updateCategoryParameterValue(parameter: CategoryParameter, newValue: String) {
+        val params = uiState.value.categoryParameters
+        val categoryParam = params.find { it.id == parameter.id } ?: return
+
+        val finalParams = params.toMutableList().apply {
+            val index = params.indexOf(categoryParam)
+            remove(categoryParam)
+            add(index, categoryParam.copy(value = newValue))
+        }
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                categoryParameters = finalParams
+            )
+        }
+    }
+
     fun updateDueDate(newValue: Long?) {
         _uiState.update { currentUiState ->
             currentUiState.copy(dueDate = newValue)
@@ -126,7 +142,7 @@ class ManageUtilityViewModel @Inject constructor(
         val utility = Utility(
             id = 0,
             category = category.copy(
-                parameters = category.parameters.map { it.copy(value = "test") }
+                parameters = uiState.value.categoryParameters
             ),
             company = company,
             repeat = uiState.value.repeat,
@@ -223,4 +239,16 @@ data class ManageUtilityState(
 ) {
     val isAddMode: Boolean
         get() = editUtility == null
+
+    val isCategoryError: Boolean
+        get() = categoryDropState.value == null
+
+    val isDueDateError: Boolean
+        get() = dueDate == null
+
+    val isAmountError: Boolean
+        get() = amount.text.isEmpty()
+
+    val isManageEnabled: Boolean
+        get() = !isCategoryError && !isDueDateError && !isAmountError
 }
