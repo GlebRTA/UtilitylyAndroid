@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
+import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import ir.ehsannarmani.compose_charts.PieChart
@@ -123,7 +124,7 @@ fun StatCategoryScreen(
                     color = pie.color,
                     name = pie.label.toString(),
                     percent = info?.percent?.roundToStr(1) + "%",
-                    amount = "$${pie.data.roundToStr(1)}",
+                    amount = "${UiConstants.CURRENCY_SIGN}${pie.data.roundToStr(1)}",
                     isSelected = pie.selected
                 )
             }

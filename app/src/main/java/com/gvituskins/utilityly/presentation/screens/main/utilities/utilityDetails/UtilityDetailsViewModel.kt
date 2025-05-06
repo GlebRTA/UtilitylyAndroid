@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
-import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,18 +34,23 @@ class UtilityDetailsViewModel @Inject constructor(
                 categoryId = utility.category.id,
                 date = utility.dueDate
             )
-            debugLog("prev util = ${prevUtility?.amount}, id = ${prevUtility?.id}; cur util = ${utility.amount}, id = ${utility.id}")
 
-            val difference = prevUtility?.amount?.let { oldAmount ->
-                (utility.amount - oldAmount) / 100f
-            }
+            val difference = prevUtility?.amount?.let { oldAmount -> utility.amount - oldAmount }
+            val differenceInPercent = difference?.let { dif -> dif / prevUtility.amount }
+
+            val detailsCompare = if (difference != null && differenceInPercent != null) {
+                CompareAmount(
+                    amountDif = difference.toFloat(),
+                    percentDif = differenceInPercent.toFloat()
+                )
+            } else null
 
             _uiState.update { currentUiState ->
                 currentUiState.copy(
                     utility = utility,
                     prevUtility = prevUtility,
                     detailsCoast = getDetailsCoast(utility),
-                    detailsCompare = difference?.toFloat()
+                    detailsCompare = detailsCompare
                 )
             }
         }
@@ -81,5 +85,11 @@ data class UtilityDetailsState(
     val prevUtility: Utility? = null,
 
     val detailsCoast: Float = 0f,
-    val detailsCompare: Float? = 0f,
+    val detailsCompare: CompareAmount? = CompareAmount(0f, 0f),
+)
+
+@Immutable
+data class CompareAmount(
+    val amountDif: Float,
+    val percentDif: Float
 )

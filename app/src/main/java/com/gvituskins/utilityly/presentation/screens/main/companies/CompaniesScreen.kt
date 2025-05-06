@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
+import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 
 @Composable
@@ -50,16 +51,20 @@ fun CompaniesScreen(
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = innerPadding
-        ) {
-            items(items = uiState.companies, key = { it.id }) { company ->
-                CompanyListItem(
-                    name = company.name,
-                    onClick = { navigateToEditCompany(company.id) },
-                    onDeleteClick = { viewModel.updateModal(CompanyModal.Delete(company)) }
-                )
+        if (uiState.companies.isEmpty()) {
+            EmptyStub(text = "There is no company added")
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = innerPadding
+            ) {
+                items(items = uiState.companies, key = { it.id }) { company ->
+                    CompanyListItem(
+                        name = company.name,
+                        onClick = { navigateToEditCompany(company.id) },
+                        onDeleteClick = { viewModel.updateModal(CompanyModal.Delete(company)) }
+                    )
+                }
             }
         }
     }

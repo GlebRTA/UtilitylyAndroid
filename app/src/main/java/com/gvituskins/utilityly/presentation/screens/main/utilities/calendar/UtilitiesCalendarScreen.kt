@@ -30,7 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.takeIf
+import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.screens.main.utilities.components.UtilityListCard
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.kizitonwose.calendar.compose.HorizontalCalendar
@@ -118,8 +120,12 @@ fun UtilitiesCalendarScreen(
             },
             monthFooter = { month ->
                 HorizontalDivider()
-                uiState.selectedDay?.let { selectedDay ->
-                    if (selectedDay.date.yearMonth == month.yearMonth) {
+
+                val selectedDay = uiState.selectedDay
+                if (selectedDay != null && selectedDay.date.yearMonth == month.yearMonth) {
+                    if (uiState.dayUtilities.isEmpty()) {
+                        EmptyStub(text = "There is no utilities added")
+                    } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(vertical = UlyTheme.spacing.mediumSmall),
@@ -128,7 +134,7 @@ fun UtilitiesCalendarScreen(
                             items(items = uiState.dayUtilities, key = { it.id }) { utility ->
                                 UtilityListCard(
                                     name = utility.category.name,
-                                    amount = utility.amount.toString(),
+                                    amount = "${UiConstants.CURRENCY_SIGN}${utility.amount}",
                                     isPaid = utility.paidStatus.isPaid,
                                     color = utility.category.color,
                                     onActionClicked = { onEditClicked(utility.id) },

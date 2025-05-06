@@ -42,6 +42,7 @@ import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.rememberDropDownTextFieldSate
 import com.gvituskins.utilityly.presentation.core.utils.ChartColorHelper
+import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.extensions.format
@@ -102,7 +103,7 @@ fun StatYearsScreen(
             indicatorProperties = HorizontalIndicatorProperties(
                 enabled = true,
                 textStyle = UlyTheme.typography.bodySmall.copy(color = UlyTheme.colors.onBackground),
-                contentBuilder = { "$" + it.format(1) }
+                contentBuilder = { UiConstants.CURRENCY_SIGN + it.format(1) }
             ),
             labelHelperProperties = LabelHelperProperties(enabled = false),
             curvedEdges = false,

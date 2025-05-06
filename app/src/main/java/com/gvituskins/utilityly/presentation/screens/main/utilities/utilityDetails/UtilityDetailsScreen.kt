@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
@@ -46,6 +47,7 @@ import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalBu
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
@@ -96,7 +98,7 @@ fun UtilityDetailsScreen(
                     }
                 } ?: "-",
                 company = uiState.utility?.company?.name ?: "-",
-                amount = uiState.utility?.amount?.toString() ?: "-",
+                amount = uiState.utility?.amount?.let { "${UiConstants.CURRENCY_SIGN}$it" } ?: "-",
                 isPaid = uiState.utility?.paidStatus?.isPaid == true,
                 onPaidClick = { viewModel.changePaidStatus() }
             )
@@ -277,13 +279,17 @@ private fun TitleCard(
 @Composable
 private fun DetailsSection(
     coast: Float,
-    compare: Float?
+    compare: CompareAmount?
 ) {
     val coastAnimProgress = remember {
         Animatable(0f)
     }
 
     val compareAnimProgress = remember {
+        Animatable(0f)
+    }
+
+    val compareAmountAnimProgress = remember {
         Animatable(0f)
     }
 
@@ -296,7 +302,10 @@ private fun DetailsSection(
     LaunchedEffect(compare) {
         compare?.let {
             launch {
-                compareAnimProgress.animateTo(compare, tween(1000))
+                compareAnimProgress.animateTo(compare.percentDif, tween(1000))
+            }
+            launch {
+                compareAmountAnimProgress.animateTo(compare.amountDif, tween(1000))
             }
         }
     }
@@ -319,6 +328,7 @@ private fun DetailsSection(
                 startText = "Coast",
                 endText = (coastAnimProgress.value * 100).roundToStr(1) + "%",
                 progress = { coastAnimProgress.value },
+                progressStartFromCenter = false,
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -327,8 +337,9 @@ private fun DetailsSection(
 
                 DetailsInfoRow(
                     startText = "Compare with last payment",
-                    endText = (compareAnimProgress.value * 100).roundToStr(0) + "%",
+                    endText = compareAmountAnimProgress.value.roundToStr(n = 1, alwaysShowSign = true) + UiConstants.CURRENCY_SIGN,
                     progress = { compareAnimProgress.value },
+                    progressStartFromCenter = true,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -341,6 +352,7 @@ private fun DetailsInfoRow(
     startText: String,
     endText: String,
     progress: () -> Float,
+    progressStartFromCenter: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -368,10 +380,19 @@ private fun DetailsInfoRow(
                     shape = UlyTheme.shapes.xSmall
                 )
                 .drawBehind {
-                    drawRect(
-                        brush = Brush.linearGradient(colors = listOf(Color.Green, Color.Red)),
-                        size = size.copy(width = size.width * progress())
-                    )
+                    val progressResult = progress()
+                    if (progressStartFromCenter) {
+                        drawRect(
+                            color = if (progressResult > 0) Color.Red else Color.Green,
+                            size = size.copy(width = size.width / 2 * progressResult),
+                            topLeft = Offset(x = size.width / 2, y = 0f)
+                        )
+                    } else {
+                        drawRect(
+                            brush = Brush.linearGradient(colors = listOf(Color.Green, Color.Yellow, Color.Red)),
+                            size = size.copy(width = size.width * progressResult),
+                        )
+                    }
                 }
         )
 

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.screens.main.utilities.components.UtilityGridCard
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
@@ -91,7 +92,7 @@ fun UtilitiesGridScreen(
 
             items(items = uiState.utilities, key = { it.id }) { utility ->
                 UtilityGridCard(
-                    amount = utility.amount.toString(),
+                    amount = "${UiConstants.CURRENCY_SIGN}${utility.amount}",
                     category = utility.category.name,
                     isPaid = utility.paidStatus.isPaid,
                     color = utility.category.color,
@@ -126,17 +127,17 @@ fun UtilitiesInfoHeader(
             .padding(UlyTheme.spacing.mediumSmall)
     ) {
         Text(
-            text = "Paid: $$paid",
+            text = "Paid: ${UiConstants.CURRENCY_SIGN}$paid",
             style = UlyTheme.typography.titleMedium
         )
 
         Text(
-            text = "Unpaid: $$unpaid",
+            text = "Unpaid: ${UiConstants.CURRENCY_SIGN}$unpaid",
             style = UlyTheme.typography.titleMedium
         )
 
         Text(
-            text = "Total: $$total",
+            text = "Total: ${UiConstants.CURRENCY_SIGN}$total",
             style = UlyTheme.typography.titleMedium
         )
     }

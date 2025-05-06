@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
+import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.navigation.graphs.StatisticsNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +42,7 @@ class TableViewModel @Inject constructor(
                         }
                         .sumOf { it.amount }
                         .roundToStr()
-                    categoryMonthsAmounts.add("$$categoryUtilitiesPerMonthAmount")
+                    categoryMonthsAmounts.add("${UiConstants.CURRENCY_SIGN}$categoryUtilitiesPerMonthAmount")
                 }
                 tableRows.add(
                     TableRowModel(
