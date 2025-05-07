@@ -106,10 +106,10 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     //Retrofit
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+//    implementation(libs.okhttp)
+//    implementation(libs.logging.interceptor)
+//    implementation(libs.retrofit)
+//    implementation(libs.converter.gson)
 
     //Hilt
     implementation(libs.androidx.hilt.navigation.compose)
@@ -122,7 +122,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     //UI Utils
-    implementation (libs.compose.charts)
+    implementation(libs.compose.charts)
     implementation(libs.compose.calendar)
     implementation(libs.compose.colorpicker)
 
