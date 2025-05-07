@@ -40,7 +40,7 @@ class ManageUtilityViewModel @Inject constructor(
     private val utilityRepository: UtilityRepository,
     private val preferences: DataStoreUtil
 ) : ViewModel() {
-    private val manageUtility = savedStateHandle.toRoute<UtilitiesNavGraph.ManageUtility>()
+    private val initParams = savedStateHandle.toRoute<UtilitiesNavGraph.ManageUtility>()
 
     private val _uiState = MutableStateFlow(ManageUtilityState())
     val uiState = _uiState.asStateFlow()
@@ -49,13 +49,14 @@ class ManageUtilityViewModel @Inject constructor(
     val label = _label.receiveAsFlow()
 
     init {
-        manageUtility.utilityId?.let { initUtilityId ->
+        val initUtilityId = initParams.utilityId
+        if (initUtilityId != null) {
             viewModelScope.launch {
                 val initUtility = utilityRepository.getUtilityById(initUtilityId)
                 _uiState.update { currentUiState ->
                     currentUiState.copy(
                         editUtility = initUtility,
-                        dueDate = initUtility.dueDate.toEpochDay(),
+                        dueDateEpochDay = initUtility.dueDate.toEpochDay(),
                         repeat = initUtility.repeat,
                     )
                 }
@@ -64,6 +65,12 @@ class ManageUtilityViewModel @Inject constructor(
                 initUtility.company?.let { uiState.value.companyDropState.updateValue(it) }
 
                 uiState.value.amount.setTextAndPlaceCursorAtEnd(initUtility.amount.toString())
+            }
+        } else {
+            initParams.initDateEpochDays?.let {
+                _uiState.update { currentUiState ->
+                    currentUiState.copy(dueDateEpochDay = it)
+                }
             }
         }
 
@@ -107,7 +114,7 @@ class ManageUtilityViewModel @Inject constructor(
 
     fun updateDueDate(newValue: Long?) {
         _uiState.update { currentUiState ->
-            currentUiState.copy(dueDate = newValue)
+            currentUiState.copy(dueDateEpochDay = newValue)
         }
     }
 
@@ -150,13 +157,9 @@ class ManageUtilityViewModel @Inject constructor(
             location = Location(id = preferences.getCurrentLocationId(), name = ""),
             dateCreated = LocalDate.now(),
             paidStatus = PaidStatus.UNPAID,
-            dueDate = uiState.value.dueDate?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
+            dueDate = uiState.value.dueDateEpochDay?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
             datePaid = null,
-            previousUtilityId = utilityRepository.getPreviousUtility(
-                utilityId = 0,
-                categoryId = category.id,
-                date = LocalDate.now()
-            )?.id //TODO(Remove it after)
+            previousUtilityId = null
         )
 
         val repeatCounter = uiState.value.repeatCounter
@@ -209,11 +212,12 @@ class ManageUtilityViewModel @Inject constructor(
 
         utilityRepository.updateUtility(
             editUtility.copy(
-                category = category,
+                category = category.copy(
+                    parameters = uiState.value.categoryParameters
+                ),
                 company = company,
-                repeat = uiState.value.repeat,
                 amount = uiState.value.amount.text.toString().toDoubleOrNull() ?: 0.0,
-                dueDate = uiState.value.dueDate?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
+                dueDate = uiState.value.dueDateEpochDay?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
             )
         )
     }
@@ -232,7 +236,7 @@ data class ManageUtilityState(
 
     val companyDropState: DropDownTextFieldState<Company?> = DropDownTextFieldState(initialValue = null, listOf()),
 
-    val dueDate: Long? = null,
+    val dueDateEpochDay: Long? = null,
     val repeat: UtilityRepeat? = null,
     val repeatCounter: Int = 5,
     val amount: TextFieldState = TextFieldState()
@@ -244,7 +248,7 @@ data class ManageUtilityState(
         get() = categoryDropState.value == null
 
     val isDueDateError: Boolean
-        get() = dueDate == null
+        get() = dueDateEpochDay == null
 
     val isAmountError: Boolean
         get() = amount.text.isEmpty()

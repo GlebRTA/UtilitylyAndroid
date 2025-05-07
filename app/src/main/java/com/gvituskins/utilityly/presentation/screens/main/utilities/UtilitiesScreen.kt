@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.EndSegmentedButton
@@ -23,6 +24,7 @@ import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.navBar.UlyBottomNavigationBar
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.UtilitiesCalendarScreen
+import com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.UtilitiesCalendarViewModel
 import com.gvituskins.utilityly.presentation.screens.main.utilities.grid.UtilitiesGridScreen
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import kotlinx.coroutines.launch
@@ -33,7 +35,7 @@ enum class UtilitiesPagerScreens {
 
 @Composable
 fun UtilitiesScreen(
-    navigateToAddUtility: () -> Unit,
+    navigateToAddUtility: (Long?) -> Unit,
     navigateToUtilityDetails: (Int) -> Unit,
     navigateToEditUtility: (Int) -> Unit,
 ) {
@@ -43,12 +45,20 @@ fun UtilitiesScreen(
         UtilitiesPagerScreens.entries.size
     }
 
+    val calendarViewModel = hiltViewModel<UtilitiesCalendarViewModel>()
+
     UlyScaffold(
         topBar = {
             UlyDefaultTopAppBar(
                 title = stringResource(R.string.nav_utilities),
                 actions = {
-                    IconButton(onClick = navigateToAddUtility) {
+                    IconButton(
+                        onClick = {
+                            navigateToAddUtility(
+                                calendarViewModel.uiState.value.selectedDay?.date?.toEpochDay()
+                            )
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = "Add new utility"
@@ -105,7 +115,8 @@ fun UtilitiesScreen(
                     UtilitiesPagerScreens.CALENDAR -> {
                         UtilitiesCalendarScreen(
                             onUtilityClicked = navigateToUtilityDetails,
-                            onEditClicked = navigateToEditUtility
+                            onEditClicked = navigateToEditUtility,
+                            viewModel = calendarViewModel
                         )
                     }
                     UtilitiesPagerScreens.GRID -> {

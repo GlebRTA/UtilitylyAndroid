@@ -7,11 +7,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
-import com.gvituskins.utilityly.presentation.core.utils.debugLog
 import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +27,9 @@ class UtilityDetailsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(UtilityDetailsState())
     val uiState = _uiState.asStateFlow()
+
+    private val _label = Channel<UtilityDetailsOTM>()
+    val label = _label.receiveAsFlow()
 
     init {
         viewModelScope.launch {
@@ -46,7 +50,6 @@ class UtilityDetailsViewModel @Inject constructor(
                 )
             } else null
 
-            debugLog("prev = ${prevUtility?.category?.parameters}")
             _uiState.update { currentUiState ->
                 currentUiState.copy(
                     utility = utility,
@@ -79,6 +82,21 @@ class UtilityDetailsViewModel @Inject constructor(
         }
     }
 
+    fun updateModal(newState: UtilityDetailsModal) {
+        _uiState.update { currentUiState ->
+            currentUiState.copy(currentModal = newState)
+        }
+    }
+
+    fun deleteUtility() {
+        viewModelScope.launch {
+            uiState.value.utility?.id?.let { id ->
+                utilityRepository.deleteUtility(utilityId = id)
+                updateModal(UtilityDetailsModal.None)
+                _label.send(UtilityDetailsOTM.NavigateBack)
+            }
+        }
+    }
 }
 
 @Immutable
@@ -88,6 +106,8 @@ data class UtilityDetailsState(
 
     val detailsCoast: Float = 0f,
     val detailsCompare: CompareAmount? = CompareAmount(0f, 0f),
+
+    val currentModal: UtilityDetailsModal = UtilityDetailsModal.None
 )
 
 @Immutable
@@ -95,3 +115,14 @@ data class CompareAmount(
     val amountDif: Float,
     val percentDif: Float
 )
+
+@Immutable
+sealed interface UtilityDetailsModal {
+    data object Delete : UtilityDetailsModal
+    data object None : UtilityDetailsModal
+}
+
+@Immutable
+sealed interface UtilityDetailsOTM {
+    data object NavigateBack : UtilityDetailsOTM
+}

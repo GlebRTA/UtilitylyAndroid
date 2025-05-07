@@ -21,7 +21,13 @@ import java.time.LocalDate
             parentColumns = ["id"],
             childColumns = ["locationId"],
             onDelete = ForeignKey.CASCADE
-        )
+        ),
+        ForeignKey(
+            entity = CompanyEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["companyId"],
+            onDelete = ForeignKey.SET_NULL
+        ),
     ]
 )
 data class UtilityEntity(

@@ -74,6 +74,10 @@ android {
         compose = true
         buildConfig = true
     }
+
+    composeCompiler {
+        stabilityConfigurationFile = rootProject.file("stability_config.conf")
+    }
 }
 
 dependencies {

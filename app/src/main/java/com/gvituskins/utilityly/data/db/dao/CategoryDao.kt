@@ -65,23 +65,22 @@ interface CategoryDao {
         updateCategory(category)
         val existingParams = getCategoryParameters(categoryId = category.id).parameters
 
-        val toUpdateOrInsert = parameters.mapNotNull { newParam ->
+        val toInsert = parameters.mapNotNull { newParam ->
             if (newParam.id == 0) {
                 newParam.copy(categoryId = category.id)
-            } else {
-                val existing = existingParams.find { it.id == newParam.id }
-                if (existing != null) {
-                    newParam
-                } else {
-                    null
-                }
-            }
+            } else null
+        }
+
+        val toUpdate = parameters.mapNotNull { newParam ->
+            val existing = existingParams.find { it.id == newParam.id }
+            if (existing != null) newParam else null
         }
 
         val newIds = parameters.mapNotNull { if (it.id != 0) it.id else null }.toSet()
         val toDelete = existingParams.filterNot { it.id in newIds }
 
-        insertParameters(toUpdateOrInsert)
+        updateParameters(toUpdate)
+        insertParameters(toInsert)
         deleteParameters(toDelete)
     }
 }

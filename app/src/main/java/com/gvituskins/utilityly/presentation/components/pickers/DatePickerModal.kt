@@ -13,17 +13,19 @@ import androidx.compose.runtime.Composable
 fun DatePickerModal(
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit,
-    initialDate: Long? = null
+    initialDate: Long? = null,
 ) {
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDate)
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = {
-                onDateSelected(datePickerState.selectedDateMillis)
-                onDismiss()
-            }) {
+            TextButton(
+                onClick = {
+                    onDateSelected(datePickerState.selectedDateMillis)
+                    onDismiss()
+                }
+            ) {
                 Text("OK")
             }
         },

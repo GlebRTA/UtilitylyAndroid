@@ -24,6 +24,7 @@ class UtilitiesCalendarViewModel @Inject constructor(
     fun updateMonth(newMonth: CalendarMonth) {
         viewModelScope.launch {
             updateCachedUtilities(newMonth)
+            updateDay()
         }
     }
 
@@ -50,24 +51,21 @@ class UtilitiesCalendarViewModel @Inject constructor(
     }
 
     private fun updateDay() {
-        viewModelScope.launch {
-            val date = uiState.value.selectedDay?.date
-            val day = date?.dayOfMonth
-            val month = date?.monthValue
-            val year = date?.year
+        val date = uiState.value.selectedDay?.date
+        val day = date?.dayOfMonth
+        val month = date?.monthValue
+        val year = date?.year
 
-            val utilities = if (day == null || month == null || year == null) {
-                listOf()
-            } else {
-                uiState.value.cachedMonthUtilities
-                    .filter { utility -> utility.dueDate == date }
-            }
+        val utilities = if (day == null || month == null || year == null) {
+            listOf()
+        } else {
+            uiState.value.cachedMonthUtilities.filter { utility -> utility.dueDate == date }
+        }
 
-            _uiState.update { currentUiState ->
-                currentUiState.copy(
-                    dayUtilities = utilities
-                )
-            }
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                dayUtilities = utilities
+            )
         }
     }
 }

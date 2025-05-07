@@ -89,23 +89,44 @@ class UtilityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addNewUtility(utility: Utility) {
-        //TODO(Create transaction)
-        val utilityId = utilityDao.addNew(utility.toUtilityEntity())
-
-        utility.category.parameters.forEach { categoryParameter ->
-            utilityDao.addParameterValue(
-                ParameterValueEntity(
-                    categoryParameterId = categoryParameter.id,
-                    value = categoryParameter.value ?: "",
-                    utilityId = utilityId.toInt()
-                )
+        val paramValues = utility.category.parameters.map { categoryParameter ->
+            ParameterValueEntity(
+                categoryParameterId = categoryParameter.id,
+                value = categoryParameter.value ?: "",
+                utilityId = 0 //Will be added in DTO
             )
         }
+
+        utilityDao.addNewUtilityWithParametersValues(
+            utility = utility.toUtilityEntity(),
+            paramValues = paramValues
+        )
     }
 
     override suspend fun updateUtility(utility: Utility) {
-        //TODO(Stopped here create sync params values)
-        utilityDao.updateUtility(utility.toUtilityEntity())
+        val paramValues = utility.category.parameters.map { categoryParameter ->
+            val value = utilityDao.getParametersValue(
+                utilityId = utility.id,
+                categoryParamId = categoryParameter.id
+            )
+
+            if (value != null) {
+                value.copy(
+                    value = categoryParameter.value ?: ""
+                )
+            } else {
+                ParameterValueEntity(
+                    categoryParameterId = categoryParameter.id,
+                    value = categoryParameter.value ?: "",
+                    utilityId = utility.id
+                )
+            }
+        }
+
+        utilityDao.updateUtilityWithParametersValues(
+            utility = utility.toUtilityEntity(),
+            paramValues = paramValues
+        )
     }
 
     override suspend fun deleteUtility(utilityId: Int) {

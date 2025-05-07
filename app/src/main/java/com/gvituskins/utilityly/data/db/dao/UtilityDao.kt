@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
@@ -26,7 +27,7 @@ interface UtilityDao {
     suspend fun updateUtility(utility: UtilityEntity)
 
     @Delete
-    suspend fun delete(utility: UtilityEntity)
+    suspend fun deleteUtility(utility: UtilityEntity)
 
     @Query("DELETE FROM utility WHERE id = :utilityId")
     suspend fun deleteById(utilityId: Int)
@@ -39,4 +40,25 @@ interface UtilityDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addParameterValue(value: ParameterValueEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertParameterValues(values: List<ParameterValueEntity>)
+
+    @Transaction
+    suspend fun addNewUtilityWithParametersValues(
+        utility: UtilityEntity,
+        paramValues: List<ParameterValueEntity>,
+    ) {
+        val utilityId = addNew(utility)
+        insertParameterValues(paramValues.map { it.copy(utilityId = utilityId.toInt()) })
+    }
+
+    @Transaction
+    suspend fun updateUtilityWithParametersValues(
+        utility: UtilityEntity,
+        paramValues: List<ParameterValueEntity>,
+    ) {
+        updateUtility(utility)
+        insertParameterValues(paramValues)
+    }
 }

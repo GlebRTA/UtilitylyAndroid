@@ -16,7 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
@@ -32,6 +36,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,14 +45,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
+import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.core.utils.UiConstants
+import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
@@ -64,12 +72,26 @@ fun UtilityDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    viewModel.label.collectAsOneTimeEvent { event ->
+        when (event) {
+            UtilityDetailsOTM.NavigateBack -> navigateBack()
+        }
+    }
+
     UlyScaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             UlyDefaultTopAppBar(
-                title = "Utility",
-                navigateBack = navigateBack
+                title = stringResource(R.string.utility),
+                navigateBack = navigateBack,
+                actions = {
+                    IconButton(onClick = { viewModel.updateModal(UtilityDetailsModal.Delete) }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete_utility)
+                        )
+                    }
+                }
             )
         }
     ) { innerPaddings ->
@@ -92,7 +114,7 @@ fun UtilityDetailsScreen(
                     if (dif > 0) {
                         "due in $uiDif days"
                     } else if (dif == 0L) {
-                        "Today"
+                        stringResource(R.string.today)
                     } else {
                         "overdue by $uiDif days"
                     }
@@ -121,6 +143,19 @@ fun UtilityDetailsScreen(
             }
         }
     }
+
+    when (uiState.currentModal) {
+        UtilityDetailsModal.Delete -> {
+            UlyAlertDialog(
+                titleText = "Do you want to delete utility?",
+                onDismissRequest = { viewModel.updateModal(UtilityDetailsModal.None) },
+                confirmText = stringResource(R.string.delete),
+                onConfirmClicked = { viewModel.deleteUtility() },
+                dismissText = stringResource(R.string.cancel)
+            )
+        }
+        UtilityDetailsModal.None -> {  }
+    }
 }
 
 @Composable
@@ -139,9 +174,9 @@ private fun CategoryParametersTable(
     ) {
         ProvideTextStyle(LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)) {
             TableRow(
-                name = "Name",
-                previous = "Previous",
-                current = "Current",
+                name = stringResource(R.string.name),
+                previous = stringResource(R.string.previous),
+                current = stringResource(R.string.current),
                 background = UlyTheme.colors.outline.copy(alpha = 0.3f),
             )
         }
@@ -169,14 +204,13 @@ private fun TableRow(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .background(background)
-            .padding(
-                vertical = UlyTheme.spacing.small,
-                horizontal = UlyTheme.spacing.medium,
-            )
+            .padding(vertical = UlyTheme.spacing.small)
     ) {
         Text(
             text = name,
-            modifier = Modifier.weight(2f)
+            modifier = Modifier
+                .weight(2f)
+                .padding(start = UlyTheme.spacing.medium)
         )
 
         VerticalDivider()
@@ -271,7 +305,7 @@ private fun TitleCard(
             onClick = onPaidClick,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = if (isPaid) "Make as unpaid" else "Make as paid")
+            Text(text = stringResource(if (isPaid) R.string.make_as_unpaid else R.string.make_as_paid))
         }
     }
 }
@@ -311,7 +345,7 @@ private fun DetailsSection(
     }
 
     TextInputItem(
-        title = "Details",
+        title = stringResource(R.string.details),
         titleStyle = UlyTheme.typography.displaySmall
     ) {
         Column(
@@ -325,7 +359,7 @@ private fun DetailsSection(
                 .padding(UlyTheme.spacing.medium)
         ) {
             DetailsInfoRow(
-                startText = "Coast",
+                startText = stringResource(R.string.coast),
                 endText = (coastAnimProgress.value * 100).roundToStr(1) + "%",
                 progress = { coastAnimProgress.value },
                 progressStartFromCenter = false,
@@ -336,7 +370,7 @@ private fun DetailsSection(
                 VerticalSpacer(UlyTheme.spacing.medium)
 
                 DetailsInfoRow(
-                    startText = "Compare with last payment",
+                    startText = stringResource(R.string.compare_with_last_payment),
                     endText = compareAmountAnimProgress.value.roundToStr(n = 1, alwaysShowSign = true) + UiConstants.CURRENCY_SIGN,
                     progress = { compareAnimProgress.value },
                     progressStartFromCenter = true,
@@ -389,7 +423,13 @@ private fun DetailsInfoRow(
                         )
                     } else {
                         drawRect(
-                            brush = Brush.linearGradient(colors = listOf(Color.Green, Color.Yellow, Color.Red)),
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color.Green,
+                                    Color.Yellow,
+                                    Color.Red
+                                )
+                            ),
                             size = size.copy(width = size.width * progressResult),
                         )
                     }

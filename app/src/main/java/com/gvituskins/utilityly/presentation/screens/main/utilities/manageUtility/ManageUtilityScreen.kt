@@ -51,10 +51,10 @@ import com.gvituskins.utilityly.presentation.components.pickers.DatePickerModal
 import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTextFiled
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.UlyDropDownTextField
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
+import com.gvituskins.utilityly.presentation.core.utils.timeMillsToLocalDate
+import com.gvituskins.utilityly.presentation.core.utils.toMillisAtTime
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -138,7 +138,7 @@ fun ManageUtilityScreen(
             val formatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
 
             OutlinedTextField(
-                value = uiState.dueDate?.let { LocalDate.ofEpochDay(it).format(formatter) } ?: "",
+                value = uiState.dueDateEpochDay?.let { LocalDate.ofEpochDay(it).format(formatter) } ?: "",
                 onValueChange = {},
                 readOnly = true,
                 placeholder = { Text("DD/MM/YYYY") },
@@ -147,7 +147,7 @@ fun ManageUtilityScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.65f)
-                    .pointerInput(uiState.dueDate) {
+                    .pointerInput(uiState.dueDateEpochDay) {
                         awaitEachGesture {
                             awaitFirstDown(pass = PointerEventPass.Initial)
                             val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
@@ -162,14 +162,16 @@ fun ManageUtilityScreen(
                 DatePickerModal(
                     onDateSelected = { timeMils ->
                         timeMils?.let {
-                            val date = Instant.ofEpochMilli(timeMils)
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate()
-                            viewModel.updateDueDate(date.toEpochDay())
+                            val days = timeMils
+                                .timeMillsToLocalDate()
+                                .toEpochDay()
+                            viewModel.updateDueDate(days)
                         }
                     },
                     onDismiss = { showModal = false },
-                    initialDate = uiState.dueDate
+                    initialDate = uiState.dueDateEpochDay?.let {
+                        LocalDate.ofEpochDay(it).toMillisAtTime()
+                    },
                 )
             }
         }
@@ -266,5 +268,3 @@ fun ManageUtilityScreen(
         VerticalSpacer(400.dp)
     }
 }
-
-
