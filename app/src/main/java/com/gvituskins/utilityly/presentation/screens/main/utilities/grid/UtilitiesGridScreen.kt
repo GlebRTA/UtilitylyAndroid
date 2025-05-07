@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
-import com.gvituskins.utilityly.presentation.screens.main.utilities.components.UtilityGridCard
+import com.gvituskins.utilityly.presentation.screens.main.utilities.grid.components.UtilityGridCard
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import java.time.format.DateTimeFormatter
 

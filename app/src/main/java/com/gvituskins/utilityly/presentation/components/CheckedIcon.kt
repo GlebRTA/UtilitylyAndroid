@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.utilities.components
+package com.gvituskins.utilityly.presentation.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check

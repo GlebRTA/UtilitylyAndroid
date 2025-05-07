@@ -42,7 +42,6 @@ import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
-import com.gvituskins.utilityly.presentation.components.navBar.UlyBottomNavigationBar
 import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
@@ -64,7 +63,6 @@ fun CategoriesScreen(
 
     UlyScaffold(
         topBar = { UlyDefaultTopAppBar(title = stringResource(R.string.nav_categories)) },
-        bottomBar = { UlyBottomNavigationBar() },
         floatingActionButton = {
             AnimatedVisibility(
                 visible = showFab,

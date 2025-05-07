@@ -5,8 +5,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -79,17 +77,6 @@ fun UlyNavigationSuiteScaffold(
                             initialOffsetY = { it }
                         )
                     },
-                    exit = if (isLandscape) {
-                        slideOutHorizontally(
-                            animationSpec = tween(300),
-                            targetOffsetX = { -it }
-                        )
-                    } else {
-                        slideOutVertically(
-                            animationSpec = tween(300),
-                            targetOffsetY = { it }
-                        )
-                    }
                 ) {
                     NavigationSuite(
                         layoutType = layoutType,

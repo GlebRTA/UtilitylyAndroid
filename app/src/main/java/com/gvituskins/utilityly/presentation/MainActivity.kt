@@ -11,7 +11,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
@@ -19,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
+import com.gvituskins.utilityly.presentation.components.navBar.UlyNavigationSuiteScaffold
 import com.gvituskins.utilityly.presentation.navigation.graphs.UtilitiesNavGraph
 import com.gvituskins.utilityly.presentation.navigation.graphs.categoriesGraph
 import com.gvituskins.utilityly.presentation.navigation.graphs.moreGraph
@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
             UtilitylyTheme(themeType = currentTheme.themeType) {
                 val navController = LocalNavController.current
 
-                Surface(modifier = Modifier.fillMaxSize()) {
+                UlyNavigationSuiteScaffold(modifier = Modifier.fillMaxSize()) {
                     NavHost(
                         navController = navController,
                         startDestination = UtilitiesNavGraph,

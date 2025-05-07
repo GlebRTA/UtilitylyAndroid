@@ -21,7 +21,6 @@ import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.EndSegmentedButton
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.StartSegmentedButton
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
-import com.gvituskins.utilityly.presentation.components.navBar.UlyBottomNavigationBar
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.UtilitiesCalendarScreen
 import com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.UtilitiesCalendarViewModel
@@ -67,7 +66,6 @@ fun UtilitiesScreen(
                 }
             )
         },
-        bottomBar = { UlyBottomNavigationBar() },
     ) { innerPaddings ->
         Column(
             modifier = Modifier

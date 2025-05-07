@@ -1,4 +1,4 @@
-package com.gvituskins.utilityly.presentation.screens.main.utilities.components
+package com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +21,7 @@ import com.gvituskins.utilityly.presentation.components.CategoryColorBox
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyOutlinedButton
+import com.gvituskins.utilityly.presentation.components.CheckedIcon
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 

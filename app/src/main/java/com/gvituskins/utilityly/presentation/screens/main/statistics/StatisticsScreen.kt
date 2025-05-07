@@ -17,7 +17,6 @@ import com.gvituskins.utilityly.presentation.components.buttons.segmented.Center
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.EndSegmentedButton
 import com.gvituskins.utilityly.presentation.components.buttons.segmented.StartSegmentedButton
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
-import com.gvituskins.utilityly.presentation.components.navBar.UlyBottomNavigationBar
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.screens.main.statistics.statCategory.StatCategoryScreen
 import com.gvituskins.utilityly.presentation.screens.main.statistics.statTable.StatTableScreen
@@ -41,7 +40,6 @@ fun StatisticsScreen(
 
     UlyScaffold(
         topBar = { UlyDefaultTopAppBar(title = stringResource(R.string.nav_statistics)) },
-        bottomBar = { UlyBottomNavigationBar() },
     ) { innerPaddings ->
         Column(
             modifier = Modifier
