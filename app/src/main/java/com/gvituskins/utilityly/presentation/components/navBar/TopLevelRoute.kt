@@ -1,6 +1,7 @@
 package com.gvituskins.utilityly.presentation.components.navBar
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.InsertChart
@@ -26,6 +27,7 @@ data class TopLevelRoute<T : Any>(
     val visibleNavInLandscape: Set<T>,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
+    val interactionSource: MutableInteractionSource = MutableInteractionSource()
 )
 
 val navigationBarRoutes = listOf(

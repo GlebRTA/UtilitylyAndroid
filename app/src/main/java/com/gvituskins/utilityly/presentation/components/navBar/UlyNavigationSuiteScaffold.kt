@@ -2,9 +2,14 @@ package com.gvituskins.utilityly.presentation.components.navBar
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -26,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -33,6 +39,21 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.gvituskins.utilityly.presentation.theme.LocalNavController
+
+@Composable
+private fun Modifier.animateNavigationItem(interactionSource: MutableInteractionSource): Modifier {
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.8f else 1f,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessMediumLow)
+    )
+
+    return this then Modifier.graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+    }
+}
 
 @Composable
 fun UlyNavigationSuiteScaffold(
@@ -99,12 +120,14 @@ fun UlyNavigationSuiteScaffold(
                                         Icon(
                                             imageVector = if (isSelected) bottomItem.selectedIcon else bottomItem.unselectedIcon,
                                             contentDescription = stringResource(bottomItem.name),
+                                            modifier = Modifier.animateNavigationItem(bottomItem.interactionSource)
                                         )
                                     },
-                                    label = { Text(text =  stringResource(bottomItem.name)) }
+                                    label = { Text(text =  stringResource(bottomItem.name)) },
+                                    interactionSource = bottomItem.interactionSource
                                 )
                             }
-                        }
+                        },
                     )
                 }
             },
