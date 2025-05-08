@@ -104,4 +104,7 @@ data class ManageCompanyState(
 
     val nameIsError: Boolean
         get() = name.text.isEmpty()
+
+    val manageIsValid: Boolean
+        get() = !nameIsError
 }

@@ -37,6 +37,7 @@ fun ManageCompanyScreen(
         titleText = stringResource(if (uiState.isAddMode) R.string.title_add_company else R.string.title_edit_company),
         buttonText = stringResource(if (uiState.isAddMode) R.string.add else R.string.edit),
         onButtonClick = { viewModel.manageCategory() },
+        isButtonEnabled = uiState.manageIsValid
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

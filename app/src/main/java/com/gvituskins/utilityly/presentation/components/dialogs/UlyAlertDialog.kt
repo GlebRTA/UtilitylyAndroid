@@ -13,6 +13,7 @@ fun UlyAlertDialog(
     confirmText: String,
     onConfirmClicked: () -> Unit,
     dismissText: String,
+    bodyText: String? = null,
     onDismissClicked: () -> Unit = onDismissRequest,
 ) {
     AlertDialog(
@@ -27,8 +28,11 @@ fun UlyAlertDialog(
                 Text(text = dismissText)
             }
         },
-        title = {
-            Text(text = titleText)
+        title = { Text(text = titleText) },
+        text = {
+            bodyText?.let {
+                Text(text = bodyText)
+            }
         },
         shape = UlyTheme.shapes.medium
     )

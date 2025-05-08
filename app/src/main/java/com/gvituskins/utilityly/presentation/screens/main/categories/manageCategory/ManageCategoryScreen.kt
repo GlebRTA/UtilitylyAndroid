@@ -182,6 +182,7 @@ fun ManageCategoryScreen(
                 onDismissRequest = { viewModel.updateParameterSheet(ManageCategoryModal.None) }
             ) {
                 val name = rememberTextFieldState(modalInfo.parameter?.name ?: "")
+                val isError = name.text.isEmpty()
 
                 Column(
                     modifier = Modifier
@@ -191,7 +192,6 @@ fun ManageCategoryScreen(
                     TextFieldInputItem(
                         title = stringResource(R.string.name),
                         textFiledState = name,
-                        isError = name.text.isEmpty(),
                         errorText = stringResource(R.string.parameter_name_should_not_be_empty)
                     )
 
@@ -209,7 +209,8 @@ fun ManageCategoryScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.CenterHorizontally),
+                        enabled = !isError
                     ) {
                         Text(text = stringResource(if (modalInfo.parameter == null) R.string.add else R.string.edit))
                     }

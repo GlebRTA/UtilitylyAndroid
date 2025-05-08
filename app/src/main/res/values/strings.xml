@@ -73,6 +73,7 @@
     <string name="details">Details</string>
     <string name="coast">Coast</string>
     <string name="compare_with_last_payment">Compare with last payment</string>
+    <string name="delete_all_related_utilities">It will delete all related utilities!</string>
 
 
 </resources>

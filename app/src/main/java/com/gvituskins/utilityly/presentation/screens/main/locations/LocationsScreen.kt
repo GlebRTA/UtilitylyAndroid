@@ -140,7 +140,8 @@ fun LocationsScreen(
                 onConfirmClicked = {
                     viewModel.deleteLocation(location = modalInfo.location)
                 },
-                dismissText = stringResource(R.string.cancel)
+                dismissText = stringResource(R.string.cancel),
+                bodyText = stringResource(R.string.delete_all_related_utilities)
             )
         }
         is LocationsModal.None -> {}
@@ -154,6 +155,7 @@ private fun ManageLocationContent(
     initLocationNameField: String = ""
 ) {
     val locationName = remember { TextFieldState(initialText = initLocationNameField) }
+    val isError = locationName.text.isEmpty()
 
     ModalBottomSheetContainer {
         TextFieldInputItem(
@@ -168,7 +170,8 @@ private fun ManageLocationContent(
             onClick = { onApply(locationName.text.toString()) },
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
+            enabled = !isError
         ) {
             Text(text = buttonText)
         }
