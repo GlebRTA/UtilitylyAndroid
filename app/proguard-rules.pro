@@ -21,14 +21,15 @@
 #-renamesourcefileattribute SourceFile
 
 # GSON
--keepattributes Signature
--keep class com.google.gson.reflect.TypeToken { *; }
--keep class * extends com.google.gson.reflect.TypeToken
--keep class * {
-  @com.google.gson.annotations.SerializedName <fields>;
-}
+#-keepattributes Signature
+#-keep class com.google.gson.reflect.TypeToken { *; }
+#-keep class * extends com.google.gson.reflect.TypeToken
+#-keep class * {
+#  @com.google.gson.annotations.SerializedName <fields>;
+#}
 
 # Retrofit
--keep,allowobfuscation,allowshrinking interface retrofit2.Call
--keep,allowobfuscation,allowshrinking class retrofit2.Response
+#-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+#-keep,allowobfuscation,allowshrinking class retrofit2.Response
+
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation

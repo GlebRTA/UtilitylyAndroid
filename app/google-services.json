@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "519584036524",
+    "project_id": "utilityly-141ca",
+    "storage_bucket": "utilityly-141ca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519584036524:android:8a27582f7c803c44685109",
+        "android_client_info": {
+          "package_name": "com.gvituskins.utilityly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSlnq5UJeuBz2AaHvGKZmplugYrqfLs5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519584036524:android:ade93548810b9563685109",
+        "android_client_info": {
+          "package_name": "com.gvituskins.utilityly.staging"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSlnq5UJeuBz2AaHvGKZmplugYrqfLs5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

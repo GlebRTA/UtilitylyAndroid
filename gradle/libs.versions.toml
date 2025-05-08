@@ -23,6 +23,9 @@ hilt = "2.55"
 roomRuntime = "2.7.1"
 datastore = "1.1.4"
 colorpicker = "1.1.2"
+googleService = "4.4.2"
+crashlyticsPlugin = "3.0.3"
+firebaseBom = "33.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,6 +64,9 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -69,4 +75,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+google-service = { id = "com.google.gms.google-services", version.ref = "googleService" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyticsPlugin" }
 

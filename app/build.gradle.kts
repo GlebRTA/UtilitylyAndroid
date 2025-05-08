@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.service)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 val localProperties = Properties()
@@ -125,6 +127,11 @@ dependencies {
     implementation(libs.compose.charts)
     implementation(libs.compose.calendar)
     implementation(libs.compose.colorpicker)
+
+    //Firebase
+    implementation(platform(libs.google.firebase.bom))
+    implementation(libs.google.firebase.analytics)
+    implementation(libs.google.firebase.crashlytics)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
