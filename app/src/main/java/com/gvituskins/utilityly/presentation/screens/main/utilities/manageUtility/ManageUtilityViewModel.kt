@@ -200,7 +200,14 @@ class ManageUtilityViewModel @Inject constructor(
         utilityRepository.addNewUtility(utility)
         (1..repeatTimes).forEach { toAdd ->
             utilityRepository.addNewUtility(
-                utility.copy(dueDate = dueDateBuilder(utility.dueDate, toAdd))
+                utility.copy(
+                    dueDate = dueDateBuilder(utility.dueDate, toAdd),
+                    category = utility.category.copy(
+                        parameters = utility.category.parameters.map { param ->
+                            param.copy(value = "")
+                        }
+                    )
+                )
             )
         }
     }
