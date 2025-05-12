@@ -84,7 +84,7 @@ fun StatYearsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            data = uiState.yearWIthLine.mapIndexed { index, yearWithLine ->
+            data = uiState.yearWithLine.mapIndexed { index, yearWithLine ->
                 val lineColor = ChartColorHelper.getLineColor(index)
                 Line(
                     color = SolidColor(lineColor),
@@ -124,7 +124,7 @@ fun StatYearsScreen(
             )
         )
 
-        uiState.yearWIthLine.forEachIndexed { index, yearWithLine ->
+        uiState.yearWithLine.forEachIndexed { index, yearWithLine ->
             VerticalSpacer(UlyTheme.spacing.xLarge)
             YearRow(
                 color = SolidColor(ChartColorHelper.getLineColor(index)),

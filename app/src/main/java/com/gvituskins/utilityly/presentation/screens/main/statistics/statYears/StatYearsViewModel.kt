@@ -58,7 +58,7 @@ class StatYearsViewModel @Inject constructor(
                 year = newYear
             )
 
-            val newList = uiState.value.yearWIthLine.toMutableList().apply {
+            val newList = uiState.value.yearWithLine.toMutableList().apply {
                 val oldYearWithLine = find { it.id == id } ?: return@launch
                 val newYearWithLine = oldYearWithLine.copy(
                     year = newYear,
@@ -74,7 +74,7 @@ class StatYearsViewModel @Inject constructor(
 
             _uiState.update { currentUiState ->
                 currentUiState.copy(
-                    yearWIthLine = newList,
+                    yearWithLine = newList,
                     availableYears = newAvailableYears
                 )
             }
@@ -90,7 +90,7 @@ class StatYearsViewModel @Inject constructor(
                 year = year
             )
 
-            val newList = uiState.value.yearWIthLine.toMutableList().apply {
+            val newList = uiState.value.yearWithLine.toMutableList().apply {
                 add(
                     YearWithLine(
                         year = year,
@@ -105,7 +105,7 @@ class StatYearsViewModel @Inject constructor(
 
             _uiState.update { currentUiState ->
                 currentUiState.copy(
-                    yearWIthLine = newList,
+                    yearWithLine = newList,
                     availableYears = years
                 )
             }
@@ -113,9 +113,9 @@ class StatYearsViewModel @Inject constructor(
     }
 
     fun removeLine(year: Int) {
-        val year = uiState.value.yearWIthLine.find { it.year == year } ?: return
+        val year = uiState.value.yearWithLine.find { it.year == year } ?: return
 
-        val newList = uiState.value.yearWIthLine.toMutableList().apply {
+        val newList = uiState.value.yearWithLine.toMutableList().apply {
             remove(year)
         }
 
@@ -124,7 +124,7 @@ class StatYearsViewModel @Inject constructor(
 
         _uiState.update { currentUiState ->
             currentUiState.copy(
-                yearWIthLine = newList,
+                yearWithLine = newList,
                 availableYears = newAvailableYears
             )
         }
@@ -155,7 +155,7 @@ class StatYearsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentUiState ->
                 currentUiState.copy(
-                    yearWIthLine = uiState.value.yearWIthLine.map { yearWithLine ->
+                    yearWithLine = uiState.value.yearWithLine.map { yearWithLine ->
                         yearWithLine.copy(
                             line = buildLine(
                                 category = uiState.value.categoryState.value ?: return@launch,
@@ -173,7 +173,7 @@ class StatYearsViewModel @Inject constructor(
 data class StatYearsState(
     val categoryState: DropDownTextFieldState<Category?> = DropDownTextFieldState(initialValue = null, listOf()),
 
-    val yearWIthLine: List<YearWithLine> = listOf(),
+    val yearWithLine: List<YearWithLine> = listOf(),
     val availableYears: List<Int> = listOf()
 )
 
