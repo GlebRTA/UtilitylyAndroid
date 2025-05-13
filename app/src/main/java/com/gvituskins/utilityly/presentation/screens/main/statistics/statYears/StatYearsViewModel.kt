@@ -3,6 +3,7 @@ package com.gvituskins.utilityly.presentation.screens.main.statistics.statYears
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
@@ -10,6 +11,7 @@ import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextF
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -20,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatYearsViewModel @Inject constructor(
     categoryRepository: CategoryRepository,
+    preferences: DataStoreUtil,
     private val utilityRepository: UtilityRepository,
 ) : ViewModel() {
 
@@ -30,21 +33,36 @@ class StatYearsViewModel @Inject constructor(
 
     init {
         categoryRepository.getAllCategories()
-            .onEach { categories ->
-                allAvailableYears = utilityRepository.getAllAvailableYears()
+            .onEach { categories -> updateStatistics(categories) }
+            .launchIn(viewModelScope)
 
-                uiState.value.categoryState.updateOptions(categories)
-                if (uiState.value.categoryState.value == null) {
-                    uiState.value.categoryState.updateValue(categories.getOrNull(0))
-                }
-                _uiState.update { currentUiState ->
-                    currentUiState.copy(
-                        availableYears = allAvailableYears
-                    )
-                }
-                initChart()
+        preferences.locationId()
+            .onEach {
+                _uiState.update { StatYearsState() }
+                updateStatistics(categoryRepository.getAllCategories().first())
             }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            utilityRepository.getAllUtilities()
+                .onEach { updateChartWithSavedYears() }
+                .launchIn(viewModelScope)
+        }
+    }
+
+    private suspend fun updateStatistics(categories: List<Category>) {
+        allAvailableYears = utilityRepository.getAllAvailableYears()
+
+        uiState.value.categoryState.updateOptions(categories)
+        if (uiState.value.categoryState.value == null) {
+            uiState.value.categoryState.updateValue(categories.getOrNull(0))
+        }
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                availableYears = allAvailableYears
+            )
+        }
+        updateChartWithSavedYears()
     }
 
     fun updateLine(
@@ -70,7 +88,7 @@ class StatYearsViewModel @Inject constructor(
             }
 
             val usedYears = newList.map { it.year }
-            val newAvailableYears = allAvailableYears.subtract(usedYears).toList()
+            val newAvailableYears = allAvailableYears.subtract(usedYears.toSet()).toList()
 
             _uiState.update { currentUiState ->
                 currentUiState.copy(
@@ -113,14 +131,14 @@ class StatYearsViewModel @Inject constructor(
     }
 
     fun removeLine(year: Int) {
-        val year = uiState.value.yearWithLine.find { it.year == year } ?: return
+        val yearWithLine = uiState.value.yearWithLine.find { it.year == year } ?: return
 
         val newList = uiState.value.yearWithLine.toMutableList().apply {
-            remove(year)
+            remove(yearWithLine)
         }
 
         val usedYears = newList.map { it.year }
-        val newAvailableYears = allAvailableYears.subtract(usedYears).toList()
+        val newAvailableYears = allAvailableYears.subtract(usedYears.toSet()).toList()
 
         _uiState.update { currentUiState ->
             currentUiState.copy(
@@ -151,7 +169,7 @@ class StatYearsViewModel @Inject constructor(
         )
     }
 
-    fun initChart() {
+    fun updateChartWithSavedYears() {
         viewModelScope.launch {
             _uiState.update { currentUiState ->
                 currentUiState.copy(

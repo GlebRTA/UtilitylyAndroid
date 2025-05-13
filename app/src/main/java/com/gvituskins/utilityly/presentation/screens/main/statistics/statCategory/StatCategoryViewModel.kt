@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import com.gvituskins.utilityly.presentation.components.textFields.dropDownTextField.DropDownTextFieldState
@@ -19,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StatCategoryViewModel @Inject constructor(
+    preferences: DataStoreUtil,
     private val categoryRepository: CategoryRepository,
     private val utilityRepository: UtilityRepository,
 ) : ViewModel() {
@@ -29,16 +31,25 @@ class StatCategoryViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             utilityRepository.getAllUtilities()
-                .onEach {
-                    val years = utilityRepository.getAllAvailableYears()
-                    uiState.value.yearState.updateOptions(years)
-                    if (uiState.value.yearState.value == null) {
-                        uiState.value.yearState.updateValue(years.getOrNull(0))
-                    }
-                    updateChartInfo()
-                }
+                .onEach { updateStatistics() }
                 .launchIn(viewModelScope)
         }
+
+        preferences.locationId()
+            .onEach {
+                _uiState.update { StatCategoryState() }
+                updateStatistics()
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private suspend fun updateStatistics() {
+        val years = utilityRepository.getAllAvailableYears()
+        uiState.value.yearState.updateOptions(years)
+        if (uiState.value.yearState.value == null) {
+            uiState.value.yearState.updateValue(years.getOrNull(0))
+        }
+        updateChartInfo()
     }
 
     fun updateChartInfo() {

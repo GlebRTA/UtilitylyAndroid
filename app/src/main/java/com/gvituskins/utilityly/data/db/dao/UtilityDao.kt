@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UtilityDao {
 
-    @Query("SELECT * FROM utility WHERE locationId = :locationId")
+    @Query("SELECT * FROM utility WHERE locationId = :locationId ORDER BY dueDate DESC")
     fun getAllUtilities(locationId: Int): Flow<List<UtilityEntity>>
 
     @Query("SELECT * FROM utility WHERE id == :id AND locationId = :locationId")

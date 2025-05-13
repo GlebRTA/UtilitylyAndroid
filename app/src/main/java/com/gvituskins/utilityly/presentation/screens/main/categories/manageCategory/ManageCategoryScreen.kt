@@ -21,7 +21,6 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +48,7 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.gvituskins.utilityly.R
+import com.gvituskins.utilityly.presentation.components.BottomButtonSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
 import com.gvituskins.utilityly.presentation.components.containers.ManageContainer
@@ -173,7 +173,7 @@ fun ManageCategoryScreen(
             }
         }
 
-        VerticalSpacer(ButtonDefaults.MinHeight * 2)
+        BottomButtonSpacer()
     }
 
     when (val modalInfo = uiState.currentModal) {

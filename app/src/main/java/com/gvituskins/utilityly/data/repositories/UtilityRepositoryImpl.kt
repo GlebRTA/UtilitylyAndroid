@@ -50,7 +50,8 @@ class UtilityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAllUtilities(): Flow<List<Utility>> {
-        return utilityDao.getAllUtilities(preferences.getCurrentLocationId()).map { utilitiesDb -> utilitiesDb.toUtilities() }
+        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
+            .map { utilitiesDb -> utilitiesDb.toUtilities() }
     }
 
     override suspend fun getAllUtilitiesByYear(year: Int): List<Utility> {

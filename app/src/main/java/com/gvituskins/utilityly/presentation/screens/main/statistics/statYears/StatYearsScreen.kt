@@ -75,7 +75,7 @@ fun StatYearsScreen(
             ),
             onValueChanged = { category ->
                 category?.let {
-                    viewModel.initChart()
+                    viewModel.updateChartWithSavedYears()
                 }
             }
         )

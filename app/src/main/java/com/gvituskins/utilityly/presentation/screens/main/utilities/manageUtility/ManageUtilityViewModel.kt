@@ -62,6 +62,7 @@ class ManageUtilityViewModel @Inject constructor(
                 }
 
                 uiState.value.categoryDropState.updateValue(initUtility.category)
+                updateCategoryParameters(initUtility.category)
                 initUtility.company?.let { uiState.value.companyDropState.updateValue(it) }
 
                 uiState.value.amount.setTextAndPlaceCursorAtEnd(initUtility.amount.toString())

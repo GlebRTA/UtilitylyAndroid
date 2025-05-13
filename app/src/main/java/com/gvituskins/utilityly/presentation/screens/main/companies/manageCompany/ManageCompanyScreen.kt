@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,7 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
-import com.gvituskins.utilityly.presentation.components.VerticalSpacer
+import com.gvituskins.utilityly.presentation.components.BottomButtonSpacer
 import com.gvituskins.utilityly.presentation.components.containers.ManageContainer
 import com.gvituskins.utilityly.presentation.components.inputItems.TextFieldInputItem
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
@@ -85,6 +84,6 @@ fun ManageCompanyScreen(
             )
         }
 
-        VerticalSpacer(ButtonDefaults.MinHeight * 2)
+        BottomButtonSpacer()
     }
 }

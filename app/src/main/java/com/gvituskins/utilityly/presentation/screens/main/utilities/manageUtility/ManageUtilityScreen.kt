@@ -22,7 +22,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.enums.UtilityRepeat
 import com.gvituskins.utilityly.presentation.components.AnimatedCounter
+import com.gvituskins.utilityly.presentation.components.BottomButtonSpacer
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyOutlinedButton
@@ -72,10 +72,6 @@ fun ManageUtilityScreen(
         }
     }
 
-    LaunchedEffect(uiState.categoryDropState.value) {
-        viewModel.updateCategoryParameters(uiState.categoryDropState.value)
-    }
-
     ManageContainer(
         navigateBack = navigateBack,
         titleText = stringResource(if (uiState.isAddMode) R.string.add_utility else R.string.edit_utility),
@@ -91,7 +87,10 @@ fun ManageUtilityScreen(
                 UlyDropDownTextField(
                     state = uiState.categoryDropState,
                     textBuilder = { it?.name ?: "" },
-                    modifier = Modifier.weight(1.8f)
+                    modifier = Modifier.weight(1.8f),
+                    onValueChanged = { newCategory ->
+                        viewModel.updateCategoryParameters(newCategory)
+                    }
                 )
 
                 UlyOutlinedButton(
@@ -265,6 +264,6 @@ fun ManageUtilityScreen(
             }
         }
 
-        VerticalSpacer(400.dp)
+        BottomButtonSpacer()
     }
 }
