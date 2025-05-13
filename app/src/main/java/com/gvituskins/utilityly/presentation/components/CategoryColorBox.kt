@@ -16,10 +16,11 @@ import com.gvituskins.utilityly.presentation.theme.UlyTheme
 fun CategoryColorBox(
     size: Dp,
     color: Color,
-    shape: Shape = UlyTheme.shapes.small
+    modifier: Modifier = Modifier,
+    shape: Shape = UlyTheme.shapes.small,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(size)
             .clip(shape)
             .background(color)

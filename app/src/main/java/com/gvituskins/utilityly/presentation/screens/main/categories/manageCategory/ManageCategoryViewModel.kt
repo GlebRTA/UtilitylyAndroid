@@ -25,7 +25,7 @@ class ManageCategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
-    private val manageCategory = savedStateHandle.toRoute<CategoriesNavGraph.ManageCategory>()
+    val manageCategory = savedStateHandle.toRoute<CategoriesNavGraph.ManageCategory>()
 
     private val _uiState = MutableStateFlow(ManageCategoryState())
     val uiState = _uiState.asStateFlow()

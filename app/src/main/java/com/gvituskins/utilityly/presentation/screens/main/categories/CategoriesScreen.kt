@@ -1,6 +1,7 @@
 package com.gvituskins.utilityly.presentation.screens.main.categories
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
@@ -37,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
+import com.gvituskins.utilityly.presentation.LocalAnimatedContentScopeScope
+import com.gvituskins.utilityly.presentation.LocalSharedTransitionScope
 import com.gvituskins.utilityly.presentation.components.CategoryColorBox
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
@@ -91,6 +94,7 @@ fun CategoriesScreen(
             ) {
                 items(items = uiState.categories, key = { it.id }) { category ->
                     CategoryItem(
+                        id = category.id,
                         title = category.name,
                         description = category.description,
                         color = category.color,
@@ -127,8 +131,10 @@ fun CategoriesScreen(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun CategoryItem(
+    id: Int,
     title: String,
     description: String?,
     color: Color,
@@ -139,10 +145,17 @@ private fun CategoryItem(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CategoryColorBox(
-            size = 70.dp,
-            color = color
-        )
+        with(LocalSharedTransitionScope.current) {
+            CategoryColorBox(
+                size = 70.dp,
+                color = color,
+                modifier = Modifier
+                    .sharedElement(
+                        sharedContentState = rememberSharedContentState(id),
+                        animatedVisibilityScope = LocalAnimatedContentScopeScope.current
+                    )
+            )
+        }
 
         HorizontalSpacer(UlyTheme.spacing.small)
 

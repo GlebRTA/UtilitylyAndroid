@@ -1,5 +1,6 @@
 package com.gvituskins.utilityly.presentation.screens.main.categories.manageCategory
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -48,6 +49,8 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.gvituskins.utilityly.R
+import com.gvituskins.utilityly.presentation.LocalAnimatedContentScopeScope
+import com.gvituskins.utilityly.presentation.LocalSharedTransitionScope
 import com.gvituskins.utilityly.presentation.components.BottomButtonSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
@@ -59,8 +62,7 @@ import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTe
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun ManageCategoryScreen(
     navigateBack: () -> Unit,
@@ -101,27 +103,32 @@ fun ManageCategoryScreen(
             )
 
             TextInputItem(title = stringResource(R.string.color)) {
-                Box(
-                    modifier = Modifier
-                        .size(140.dp)
-                        .border(
-                            width = UlyTheme.spacing.border,
-                            color = if (uiState.colorIsError) UlyTheme.colors.error else UlyTheme.colors.outline,
-                            UlyTheme.shapes.small
-                        )
-                        .clip(UlyTheme.shapes.small)
-                        .background(uiState.color ?: UlyTheme.colors.background)
-                        .clickable {
-                            viewModel.updateParameterSheet(ManageCategoryModal.ColorPicker)
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (uiState.colorIsError) {
-                        Text(text = stringResource(R.string.category_color))
+                with(LocalSharedTransitionScope.current) {
+                    Box(
+                        modifier = Modifier
+                            .sharedElement(
+                                sharedContentState = rememberSharedContentState(viewModel.manageCategory.categoryId ?: -1),
+                                animatedVisibilityScope = LocalAnimatedContentScopeScope.current
+                            )
+                            .size(140.dp)
+                            .border(
+                                width = UlyTheme.spacing.border,
+                                color = if (uiState.colorIsError) UlyTheme.colors.error else UlyTheme.colors.outline,
+                                UlyTheme.shapes.small
+                            )
+                            .clip(UlyTheme.shapes.small)
+                            .background(uiState.color ?: UlyTheme.colors.background)
+                            .clickable {
+                                viewModel.updateParameterSheet(ManageCategoryModal.ColorPicker)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (uiState.colorIsError) {
+                            Text(text = stringResource(R.string.category_color))
+                        }
                     }
                 }
             }
-
 
             TextInputItem(title = stringResource(R.string.parameters)) {
                 Column(

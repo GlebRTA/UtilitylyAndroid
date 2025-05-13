@@ -2,10 +2,10 @@ package com.gvituskins.utilityly.presentation.navigation.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.gvituskins.utilityly.presentation.navigation.BaseNavGraph
 import com.gvituskins.utilityly.presentation.navigation.routeComposable
+import com.gvituskins.utilityly.presentation.navigation.ulyComposable
 import com.gvituskins.utilityly.presentation.screens.main.categories.CategoriesScreen
 import com.gvituskins.utilityly.presentation.screens.main.categories.manageCategory.ManageCategoryScreen
 import kotlinx.serialization.Serializable
@@ -17,17 +17,21 @@ fun NavGraphBuilder.categoriesGraph(navController: NavController) {
         routeComposable<CategoriesNavGraph.Categories> {
             CategoriesScreen(
                 navigateToAddCategory = {
-                    navController.navigate(CategoriesNavGraph.ManageCategory(null))
+                    navController.navigate(CategoriesNavGraph.ManageCategory(null)) {
+                        launchSingleTop = true
+                    }
                 },
                 navigateToEditCategory = { categoryId ->
-                    navController.navigate(CategoriesNavGraph.ManageCategory(categoryId))
-                }
+                    navController.navigate(CategoriesNavGraph.ManageCategory(categoryId)) {
+                        launchSingleTop = true
+                    }
+                },
             )
         }
 
-        composable<CategoriesNavGraph.ManageCategory> {
+        ulyComposable<CategoriesNavGraph.ManageCategory> {
             ManageCategoryScreen(
-                navigateBack = { navController.navigateUp() }
+                navigateBack = { navController.navigateUp() },
             )
         }
     }

@@ -7,13 +7,20 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -30,10 +37,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope> {
+    error("SharedTransitionScope is not provided")
+}
+
+val LocalAnimatedContentScopeScope = compositionLocalOf<AnimatedContentScope> {
+    error("AnimatedContentScope is not provided")
+}
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewmodel: MainViewModel by viewModels()
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         handleEdgeToEdgeColors()
@@ -45,26 +62,34 @@ class MainActivity : ComponentActivity() {
                 val navController = LocalNavController.current
 
                 UlyNavigationSuiteScaffold(modifier = Modifier.fillMaxSize()) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = UtilitiesNavGraph,
-                        enterTransition = { EnterTransition.None },
-                        exitTransition = { ExitTransition.None },
-                        popExitTransition = {
-                            scaleOut(
-                                targetScale = 0.9f,
-                                transformOrigin = TransformOrigin(
-                                    pivotFractionX = 0.5f,
-                                    pivotFractionY = 0.5f
-                                )
-                            )
-                        },
-                        popEnterTransition = { EnterTransition.None },
-                    ) {
-                        utilitiesGraph(navController = navController)
-                        statisticsGraph(navController = navController)
-                        categoriesGraph(navController = navController)
-                        moreGraph(navController = navController)
+                    SharedTransitionLayout {
+                        CompositionLocalProvider(
+                            LocalSharedTransitionScope provides this
+                        ) {
+                            NavHost(
+                                navController = navController,
+                                startDestination = UtilitiesNavGraph,
+                                enterTransition = {
+                                    slideInVertically(
+                                        initialOffsetY = { it },
+                                        animationSpec = tween(400)
+                                    )
+                                },
+                                exitTransition = { ExitTransition.None },
+                                popEnterTransition = { EnterTransition.None },
+                                popExitTransition = {
+                                    slideOutVertically(
+                                        targetOffsetY = { it },
+                                        animationSpec = tween(400)
+                                    )
+                                },
+                            ) {
+                                utilitiesGraph(navController = navController)
+                                statisticsGraph(navController = navController)
+                                categoriesGraph(navController = navController)
+                                moreGraph(navController = navController)
+                            }
+                        }
                     }
                 }
             }

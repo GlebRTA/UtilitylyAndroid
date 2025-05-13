@@ -15,20 +15,23 @@ import androidx.navigation.compose.composable
 import com.gvituskins.utilityly.presentation.LocalAnimatedContentScopeScope
 import kotlin.reflect.KType
 
-inline fun <reified T : Any> NavGraphBuilder.routeComposable(
+inline fun <reified T : Any> NavGraphBuilder.ulyComposable(
     typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    noinline sizeTransform:
-    (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)? = null,
+    noinline enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = null,
+    noinline exitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = null,
+    noinline popEnterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards EnterTransition?)? = enterTransition,
+    noinline popExitTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards ExitTransition?)? = exitTransition,
+    noinline sizeTransform: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> @JvmSuppressWildcards SizeTransform?)? = null,
     noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable<T>(
         typeMap = typeMap,
         deepLinks = deepLinks,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None},
-        popExitTransition = { ExitTransition.None },
-        popEnterTransition = { EnterTransition.None },
+        enterTransition = enterTransition,
+        exitTransition = exitTransition,
+        popEnterTransition = popEnterTransition,
+        popExitTransition = popExitTransition,
         sizeTransform = sizeTransform,
         content = {
             CompositionLocalProvider(
@@ -36,6 +39,6 @@ inline fun <reified T : Any> NavGraphBuilder.routeComposable(
             ) {
                 this.content(it)
             }
-        }
+        },
     )
 }
