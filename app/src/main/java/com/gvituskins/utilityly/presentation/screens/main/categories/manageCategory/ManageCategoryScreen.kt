@@ -59,6 +59,7 @@ import com.gvituskins.utilityly.presentation.components.inputItems.TextFieldInpu
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.modalBottomSheet.UlyModalBottomSheet
 import com.gvituskins.utilityly.presentation.components.textFields.UlyOutlinedTextFiled
+import com.gvituskins.utilityly.presentation.core.utils.SharedTransitionKeys
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
@@ -107,7 +108,9 @@ fun ManageCategoryScreen(
                     Box(
                         modifier = Modifier
                             .sharedElement(
-                                sharedContentState = rememberSharedContentState(viewModel.manageCategory.categoryId ?: -1),
+                                sharedContentState = rememberSharedContentState(
+                                    SharedTransitionKeys.categoryColorBox(viewModel.manageCategory.categoryId)
+                                ),
                                 animatedVisibilityScope = LocalAnimatedContentScopeScope.current
                             )
                             .size(140.dp)

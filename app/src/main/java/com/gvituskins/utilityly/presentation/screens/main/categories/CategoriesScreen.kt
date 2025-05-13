@@ -47,6 +47,7 @@ import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.core.utils.SharedTransitionKeys
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
@@ -151,7 +152,7 @@ private fun CategoryItem(
                 color = color,
                 modifier = Modifier
                     .sharedElement(
-                        sharedContentState = rememberSharedContentState(id),
+                        sharedContentState = rememberSharedContentState(SharedTransitionKeys.categoryColorBox(id)),
                         animatedVisibilityScope = LocalAnimatedContentScopeScope.current
                     )
             )
