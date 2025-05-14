@@ -19,6 +19,8 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,9 +42,15 @@ fun MoreScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    //TODO(Delete after Google fix issue)
+    val sharedTransitionLayoutBugFix = remember { mutableIntStateOf(0) }
+
     UlyScaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { UlyDefaultTopAppBar(title = stringResource(R.string.nav_more)) },
+        topBar = {
+            sharedTransitionLayoutBugFix.intValue
+            UlyDefaultTopAppBar(title = stringResource(R.string.nav_more))
+        },
     ) { innerPaddings ->
         Column(
             modifier = Modifier
@@ -60,6 +68,7 @@ fun MoreScreen(
                 ThemeSettings(
                     themeType = uiState.theme,
                     onThemeChange = { newType ->
+                        sharedTransitionLayoutBugFix.intValue += 1
                         viewModel.updateTheme(newType)
                     },
                     modifier = Modifier
