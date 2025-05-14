@@ -21,8 +21,8 @@ fun NavGraphBuilder.categoriesGraph(navController: NavController) {
                         launchSingleTop = true
                     }
                 },
-                navigateToEditCategory = { categoryId ->
-                    navController.navigate(CategoriesNavGraph.ManageCategory(categoryId)) {
+                navigateToEditCategory = { categoryId, color ->
+                    navController.navigate(CategoriesNavGraph.ManageCategory(categoryId, color)) {
                         launchSingleTop = true
                     }
                 },
@@ -44,7 +44,7 @@ object CategoriesNavGraph : BaseNavGraph {
     object Categories
 
     @Serializable
-    data class ManageCategory(val categoryId: Int?)
+    data class ManageCategory(val categoryId: Int?, val color: String? = null)
 
     override val showNavigationInPortrait = setOf(Categories)
     override val showNavigationInLandscape = setOf(Categories, ManageCategory(-1))

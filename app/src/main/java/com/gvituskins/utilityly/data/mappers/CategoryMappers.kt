@@ -1,13 +1,14 @@
 package com.gvituskins.utilityly.data.mappers
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.toColorInt
 import com.gvituskins.utilityly.data.db.entities.CategoryEntity
 import com.gvituskins.utilityly.data.db.entities.ParameterCategoryEntity
 import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
+import com.gvituskins.utilityly.presentation.core.utils.fromHexToColor
+import com.gvituskins.utilityly.presentation.core.utils.toHex
 
 fun CategoryEntity.toCategory(parameters: List<ParameterCategoryEntity>): Category {
     return Category(
@@ -29,18 +30,17 @@ fun CategoryEntity.toCategoryWithValues(parameters: List<ParameterWithValue>): C
         id = id,
         name = name,
         description = description,
-        color = Color("#${colorHex}".toColorInt()),
+        color = colorHex.fromHexToColor(),
         parameters = parameters.map { it.parameterCategory.toCategoryParameter(it.value?.value) }
     )
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun Category.toCategoryEntity(): CategoryEntity {
     return CategoryEntity(
         id = id,
         name = name,
         description = description,
-        colorHex = color.toArgb().toHexString()
+        colorHex = color.toHex()
     )
 }
 

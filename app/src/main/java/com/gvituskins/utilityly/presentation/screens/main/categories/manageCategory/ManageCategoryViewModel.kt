@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.domain.repositories.CategoryRepository
+import com.gvituskins.utilityly.presentation.core.utils.fromHexToColor
 import com.gvituskins.utilityly.presentation.navigation.graphs.CategoriesNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -27,7 +28,11 @@ class ManageCategoryViewModel @Inject constructor(
 ) : ViewModel() {
     val manageCategory = savedStateHandle.toRoute<CategoriesNavGraph.ManageCategory>()
 
-    private val _uiState = MutableStateFlow(ManageCategoryState())
+    private val _uiState = MutableStateFlow(
+        ManageCategoryState(
+            color = manageCategory.color?.fromHexToColor().takeIf { manageCategory.categoryId != null }
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private val _label = Channel<ManageCategoryOneTime>()
@@ -58,7 +63,6 @@ class ManageCategoryViewModel @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     private suspend fun addCategory() {
         val color = uiState.value.color ?: return
 
@@ -72,7 +76,6 @@ class ManageCategoryViewModel @Inject constructor(
         )
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     private suspend fun editCategory() {
         val color = uiState.value.color ?: return
 

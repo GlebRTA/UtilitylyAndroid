@@ -48,12 +48,13 @@ import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.stubs.EmptyStub
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
 import com.gvituskins.utilityly.presentation.core.utils.SharedTransitionKeys
+import com.gvituskins.utilityly.presentation.core.utils.toHex
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 
 @Composable
 fun CategoriesScreen(
     navigateToAddCategory: () -> Unit,
-    navigateToEditCategory: (Int) -> Unit,
+    navigateToEditCategory: (Int, String) -> Unit,
     viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -103,7 +104,7 @@ fun CategoriesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .clickable { navigateToEditCategory(category.id) }
+                            .clickable { navigateToEditCategory(category.id, category.color.toHex()) }
                             .padding(
                                 horizontal = UlyTheme.spacing.small,
                                 vertical = UlyTheme.spacing.xSmall
@@ -128,6 +129,7 @@ fun CategoriesScreen(
                 viewModel.deleteCategory(categoryToDelete)
             },
             dismissText = stringResource(R.string.cancel),
+            bodyText = stringResource(R.string.delete_all_related_utilities)
         )
     }
 }
