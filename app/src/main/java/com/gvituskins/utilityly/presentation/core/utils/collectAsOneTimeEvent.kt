@@ -17,11 +17,13 @@ import kotlinx.coroutines.withContext
 @Composable
 @NonRestartableComposable
 fun <T> Flow<T>.collectAsOneTimeEvent(
+    key1: Any? = null,
+    key2: Any? = null,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    onOneTimeEvent: suspend CoroutineScope.(T) -> Unit
+    onOneTimeEvent: suspend CoroutineScope.(T) -> Unit,
 ) {
-    LaunchedEffect(key1 = lifecycleOwner) {
+    LaunchedEffect(lifecycleOwner, key1, key2, this) {
         lifecycleOwner.repeatOnLifecycle(minActiveState) {
             withContext(Dispatchers.Main.immediate) {
                 collect { oneTimeEvent -> onOneTimeEvent(oneTimeEvent) }

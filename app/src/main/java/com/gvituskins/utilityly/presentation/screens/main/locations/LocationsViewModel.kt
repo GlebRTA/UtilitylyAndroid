@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.locations.Location
 import com.gvituskins.utilityly.domain.repositories.LocationRepository
+import com.gvituskins.utilityly.presentation.core.utils.handleSnackbarDbCall
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -56,31 +56,41 @@ class LocationsViewModel @Inject constructor(
 
     fun addLocation(name: String) {
         viewModelScope.launch {
-            locationRepository.addNewLocation(
+            val result = locationRepository.addNewLocation(
                 Location(
                     id = 0,
                     name = name
                 )
             )
-            _uiState.update {
-                it.copy(currentModal = LocationsModal.None)
+            handleSnackbarDbCall(
+                result = result,
+                successMessage = "Location added successfully"
+            )
+            _uiState.update { currentUiState ->
+                currentUiState.copy(currentModal = LocationsModal.None)
             }
         }
     }
 
     fun updateLocation(location: Location) {
         viewModelScope.launch {
-            locationRepository.updateLocation(location)
-            _uiState.update {
-                it.copy(currentModal = LocationsModal.None)
+            handleSnackbarDbCall(
+                result = locationRepository.updateLocation(location),
+                successMessage = "Location updated successfully"
+            )
+            _uiState.update { currentUiState ->
+                currentUiState.copy(currentModal = LocationsModal.None)
             }
         }
     }
 
     fun deleteLocation(location: Location) {
         viewModelScope.launch {
-            if (locationRepository.getAllLocations().first().size > 1) {
-                locationRepository.deleteLocation(location)
+            if (uiState.value.locations.size > 1) {
+                handleSnackbarDbCall(
+                    result = locationRepository.deleteLocation(location),
+                    successMessage = "Location deleted successfully"
+                )
             } else {
                 _label.send(LocationOTE.ShowSnackbar("There must be at least one location"))
             }

@@ -3,6 +3,8 @@ package com.gvituskins.utilityly.data.repositories
 import com.gvituskins.utilityly.data.db.dao.CompanyDao
 import com.gvituskins.utilityly.data.mappers.toCompany
 import com.gvituskins.utilityly.data.mappers.toCompanyEntity
+import com.gvituskins.utilityly.data.utils.dbCall
+import com.gvituskins.utilityly.domain.models.common.Either
 import com.gvituskins.utilityly.domain.models.companies.Company
 import com.gvituskins.utilityly.domain.repositories.CompanyRepository
 import kotlinx.coroutines.flow.Flow
@@ -22,15 +24,21 @@ class CompanyRepositoryImpl @Inject constructor(
         return companyDao.getCompanyById(id).toCompany()
     }
 
-    override suspend fun addCompany(company: Company) {
-        companyDao.addCompany(company.toCompanyEntity())
+    override suspend fun addCompany(company: Company): Either<Unit, String> {
+        return dbCall {
+            companyDao.addCompany(company.toCompanyEntity())
+        }
     }
 
-    override suspend fun updateCompany(company: Company) {
-        companyDao.updateCompany(company.toCompanyEntity())
+    override suspend fun updateCompany(company: Company): Either<Unit, String> {
+        return dbCall {
+            companyDao.updateCompany(company.toCompanyEntity())
+        }
     }
 
-    override suspend fun deleteCompany(company: Company) {
-        companyDao.deleteCompany(company.toCompanyEntity())
+    override suspend fun deleteCompany(company: Company): Either<Unit, String> {
+        return dbCall {
+            companyDao.deleteCompany(company.toCompanyEntity())
+        }
     }
 }

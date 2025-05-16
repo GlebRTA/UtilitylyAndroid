@@ -1,5 +1,6 @@
 package com.gvituskins.utilityly.presentation.screens.main.locations
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -87,14 +88,16 @@ fun LocationsScreen(
             contentPadding = innerPadding
         ) {
             items(items = uiState.locations, key = { it.id }) { location ->
+                val isSelected = uiState.selectedLocationId == location.id
                 val color = animateColorAsState(
-                    if (uiState.selectedLocationId == location.id) Color.Yellow.copy(alpha = .4f) else UlyTheme.colors.background
+                    if (isSelected) Color.Yellow.copy(alpha = .4f) else UlyTheme.colors.background
                 )
 
                 LocationListItem(
                     name = location.name,
                     onClick = { viewModel.changeSelectedLocation(location.id) },
                     onEditClick = { viewModel.updateLocationModal(LocationsModal.Edit(location)) },
+                    deleteIconVisible = !isSelected,
                     onDeleteClick = { viewModel.updateLocationModal(LocationsModal.Delete(location)) },
                     containerColor = color.value
                 )
@@ -111,7 +114,8 @@ fun LocationsScreen(
             ) {
                 ManageLocationContent(
                     onApply = { name -> viewModel.addLocation(name) },
-                    buttonText = stringResource(R.string.add)
+                    buttonText = stringResource(R.string.add),
+                    locationNames = uiState.locations.map { it.name }
                 )
             }
         }
@@ -125,6 +129,7 @@ fun LocationsScreen(
                         viewModel.updateLocation(modalInfo.location.copy(name = name))
                     },
                     buttonText = stringResource(R.string.edit),
+                    locationNames = uiState.locations.map { it.name },
                     initLocationNameField = modalInfo.location.name
                 )
             }
@@ -152,16 +157,22 @@ fun LocationsScreen(
 private fun ManageLocationContent(
     onApply: (String) -> Unit,
     buttonText: String,
+    locationNames: List<String>,
     initLocationNameField: String = ""
 ) {
     val locationName = remember { TextFieldState(initialText = initLocationNameField) }
-    val isError = locationName.text.isEmpty()
+
+    val isEmptyError = locationName.text.isEmpty()
+    val isContainsError = locationName.text.toString().lowercase() in locationNames.map { it.lowercase() }
+    val isError = isEmptyError || isContainsError
 
     ModalBottomSheetContainer {
         TextFieldInputItem(
             title = stringResource(R.string.location_name),
             textFiledState = locationName,
-            lineLimits = TextFieldLineLimits.SingleLine
+            lineLimits = TextFieldLineLimits.SingleLine,
+            isError = isError,
+            errorText = if (isEmptyError) "Required data not entered" else "This location has already been added"
         )
 
         VerticalSpacer(UlyTheme.spacing.xxLarge)
@@ -183,6 +194,7 @@ private fun LazyItemScope.LocationListItem(
     name: String,
     onClick: () -> Unit,
     onEditClick: () -> Unit,
+    deleteIconVisible: Boolean,
     onDeleteClick: () -> Unit,
     containerColor: Color
 ) {
@@ -200,11 +212,13 @@ private fun LazyItemScope.LocationListItem(
                         )
                     }
 
-                    IconButton(onClick = { onDeleteClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.delete_location)
-                        )
+                    AnimatedVisibility(deleteIconVisible) {
+                        IconButton(onClick = { onDeleteClick() }) {
+                            Icon(
+                                imageVector = Icons.Filled.Delete,
+                                contentDescription = stringResource(R.string.delete_location)
+                            )
+                        }
                     }
                 }
             },

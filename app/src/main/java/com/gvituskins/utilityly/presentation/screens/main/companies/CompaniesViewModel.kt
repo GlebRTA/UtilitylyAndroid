@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gvituskins.utilityly.domain.models.companies.Company
 import com.gvituskins.utilityly.domain.repositories.CompanyRepository
+import com.gvituskins.utilityly.presentation.core.utils.handleSnackbarDbCall
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,8 +37,11 @@ class CompaniesViewModel @Inject constructor(
 
     fun deleteCompany(company: Company) {
         viewModelScope.launch {
-            companyRepository.deleteCompany(company)
             updateModal(CompanyModal.None)
+            handleSnackbarDbCall(
+                result = companyRepository.deleteCompany(company),
+                successMessage = "Company deleted successfully"
+            )
         }
     }
 
@@ -47,6 +51,8 @@ class CompaniesViewModel @Inject constructor(
         }
     }
 }
+
+
 
 data class CompaniesState(
     val companies: List<Company> = emptyList(),

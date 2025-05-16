@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gvituskins.utilityly.domain.models.companies.Company
 import com.gvituskins.utilityly.domain.repositories.CompanyRepository
+import com.gvituskins.utilityly.presentation.core.utils.handleSnackbarDbCall
 import com.gvituskins.utilityly.presentation.navigation.graphs.MoreNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -51,28 +52,13 @@ class ManageCompanyViewModel @Inject constructor(
     }
 
     fun manageCategory() {
+        if (uiState.value.isAddMode) addCompany() else editCompany()
+    }
+
+    private fun addCompany() {
         viewModelScope.launch {
-            if (uiState.value.isAddMode) addCompany() else editCompany()
-            _label.send(ManageCompanyOneTime.NavigateBack)
-        }
-    }
-
-    private suspend fun addCompany() {
-        companyRepository.addCompany(
-            Company(
-                name = uiState.value.name.text.toString(),
-                address = uiState.value.address.text.toString(),
-                phone = uiState.value.phone.text.toString(),
-                webPageUrl = uiState.value.webPage.text.toString(),
-                email = uiState.value.email.text.toString(),
-            )
-        )
-    }
-
-    private suspend fun editCompany() {
-        uiState.value.editCompany?.let { companyToEdit ->
-            companyRepository.updateCompany(
-                companyToEdit.copy(
+            val result = companyRepository.addCompany(
+                Company(
                     name = uiState.value.name.text.toString(),
                     address = uiState.value.address.text.toString(),
                     phone = uiState.value.phone.text.toString(),
@@ -80,6 +66,34 @@ class ManageCompanyViewModel @Inject constructor(
                     email = uiState.value.email.text.toString(),
                 )
             )
+            handleSnackbarDbCall(
+                result = result,
+                successMessage = "Company added successfully!"
+            )
+            _label.send(ManageCompanyOneTime.NavigateBack)
+        }
+    }
+
+    private fun editCompany() {
+        viewModelScope.launch {
+            uiState.value.editCompany?.let { companyToEdit ->
+                val result = companyRepository.updateCompany(
+                    companyToEdit.copy(
+                        name = uiState.value.name.text.toString(),
+                        address = uiState.value.address.text.toString(),
+                        phone = uiState.value.phone.text.toString(),
+                        webPageUrl = uiState.value.webPage.text.toString(),
+                        email = uiState.value.email.text.toString(),
+                    )
+                )
+
+                handleSnackbarDbCall(
+                    result = result,
+                    successMessage = "Company edited successfully!"
+                )
+            }
+
+            _label.send(ManageCompanyOneTime.NavigateBack)
         }
     }
 
