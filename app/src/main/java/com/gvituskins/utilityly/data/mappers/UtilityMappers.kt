@@ -23,7 +23,6 @@ fun UtilityEntity.toUtility(
         paidStatus = paidStatus,
         dueDate = dueDate,
         datePaid = datePaid,
-        previousUtilityId = previousUtilityId
     )
 }
 
@@ -44,7 +43,6 @@ fun UtilityEntity.toUtility(
         paidStatus = paidStatus,
         dueDate = dueDate,
         datePaid = datePaid,
-        previousUtilityId = previousUtilityId
     )
 }
 
@@ -60,6 +58,5 @@ fun Utility.toUtilityEntity(): UtilityEntity {
         paidStatus = paidStatus,
         dueDate = dueDate,
         datePaid = datePaid,
-        previousUtilityId = previousUtilityId
     )
 }

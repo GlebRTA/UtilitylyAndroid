@@ -170,9 +170,9 @@ private fun ManageLocationContent(
         TextFieldInputItem(
             title = stringResource(R.string.location_name),
             textFiledState = locationName,
-            lineLimits = TextFieldLineLimits.SingleLine,
             isError = isError,
-            errorText = if (isEmptyError) "Required data not entered" else "This location has already been added"
+            errorText = if (isEmptyError) "Required data not entered" else "This location has already been added",
+            lineLimits = TextFieldLineLimits.SingleLine
         )
 
         VerticalSpacer(UlyTheme.spacing.xxLarge)

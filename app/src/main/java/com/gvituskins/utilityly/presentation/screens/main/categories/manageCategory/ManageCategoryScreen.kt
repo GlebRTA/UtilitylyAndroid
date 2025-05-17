@@ -93,7 +93,8 @@ fun ManageCategoryScreen(
                 textFiledState = uiState.name,
                 placeholderText = stringResource(R.string.category_name),
                 isError = uiState.nameIsError,
-                errorText = "Category name should not be empty"
+                errorText = "Category name should not be empty",
+                lineLimits = TextFieldLineLimits.SingleLine
             )
 
             TextFieldInputItem(
@@ -202,7 +203,8 @@ fun ManageCategoryScreen(
                     TextFieldInputItem(
                         title = stringResource(R.string.name),
                         textFiledState = name,
-                        errorText = stringResource(R.string.parameter_name_should_not_be_empty)
+                        errorText = stringResource(R.string.parameter_name_should_not_be_empty),
+                        lineLimits = TextFieldLineLimits.SingleLine
                     )
 
                     VerticalSpacer(UlyTheme.spacing.xxLarge)

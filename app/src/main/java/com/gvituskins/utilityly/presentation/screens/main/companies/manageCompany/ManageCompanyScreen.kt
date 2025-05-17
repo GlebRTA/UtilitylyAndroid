@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -47,7 +48,8 @@ fun ManageCompanyScreen(
                 textFiledState = uiState.name,
                 placeholderText = stringResource(R.string.company_name),
                 isError = uiState.nameIsError,
-                errorText = "Company name should not be empty"
+                errorText = "Company name should not be empty",
+                lineLimits = TextFieldLineLimits.SingleLine,
             )
 
             TextFieldInputItem(
@@ -60,6 +62,7 @@ fun ManageCompanyScreen(
                 title = "Phone",
                 textFiledState = uiState.phone,
                 placeholderText = stringResource(R.string.company_phone),
+                lineLimits = TextFieldLineLimits.SingleLine,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Phone
                 )
@@ -69,6 +72,7 @@ fun ManageCompanyScreen(
                 title = "WEB Page",
                 textFiledState = uiState.webPage,
                 placeholderText = stringResource(R.string.company_web_page),
+                lineLimits = TextFieldLineLimits.SingleLine,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri
                 )
@@ -78,6 +82,7 @@ fun ManageCompanyScreen(
                 title = "e-mail",
                 textFiledState = uiState.email,
                 placeholderText = stringResource(R.string.company_e_mail),
+                lineLimits = TextFieldLineLimits.SingleLine,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 )

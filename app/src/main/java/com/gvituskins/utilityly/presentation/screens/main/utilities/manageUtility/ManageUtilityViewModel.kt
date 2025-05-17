@@ -160,7 +160,6 @@ class ManageUtilityViewModel @Inject constructor(
             paidStatus = PaidStatus.UNPAID,
             dueDate = uiState.value.dueDateEpochDay?.let { LocalDate.ofEpochDay(it) } ?: LocalDate.now(),
             datePaid = null,
-            previousUtilityId = null
         )
 
         val repeatCounter = uiState.value.repeatCounter

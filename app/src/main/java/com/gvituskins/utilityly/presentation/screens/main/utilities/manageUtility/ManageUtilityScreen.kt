@@ -259,7 +259,8 @@ fun ManageUtilityScreen(
                             parameter = parameter,
                             newValue = newValue
                         )
-                    }
+                    },
+                    singleLine = true
                 )
             }
         }

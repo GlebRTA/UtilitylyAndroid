@@ -42,5 +42,4 @@ data class UtilityEntity(
     val paidStatus: PaidStatus,
     val dueDate: LocalDate,
     val datePaid: LocalDate?,
-    val previousUtilityId: Int?,
 )
