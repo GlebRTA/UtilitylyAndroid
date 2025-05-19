@@ -1,7 +1,5 @@
 package com.gvituskins.utilityly.data.mappers
 
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import com.gvituskins.utilityly.data.db.entities.CategoryEntity
 import com.gvituskins.utilityly.data.db.entities.ParameterCategoryEntity
 import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
@@ -9,16 +7,6 @@ import com.gvituskins.utilityly.domain.models.categories.Category
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
 import com.gvituskins.utilityly.presentation.core.utils.fromHexToColor
 import com.gvituskins.utilityly.presentation.core.utils.toHex
-
-fun CategoryEntity.toCategory(parameters: List<ParameterCategoryEntity>): Category {
-    return Category(
-        id = id,
-        name = name,
-        description = description,
-        color = Color("#${colorHex}".toColorInt()),
-        parameters = parameters.map { it.toCategoryParameter() }
-    )
-}
 
 data class ParameterWithValue(
     val parameterCategory: ParameterCategoryEntity,
@@ -32,6 +20,16 @@ fun CategoryEntity.toCategoryWithValues(parameters: List<ParameterWithValue>): C
         description = description,
         color = colorHex.fromHexToColor(),
         parameters = parameters.map { it.parameterCategory.toCategoryParameter(it.value?.value) }
+    )
+}
+
+fun CategoryEntity.toCategory(parameters: List<ParameterCategoryEntity>): Category {
+    return Category(
+        id = id,
+        name = name,
+        description = description,
+        color = colorHex.fromHexToColor(),
+        parameters = parameters.map { it.toCategoryParameter() }
     )
 }
 

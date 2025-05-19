@@ -28,7 +28,7 @@ fun ManageCompanyScreen(
 
     viewModel.label.collectAsOneTimeEvent { event ->
         when (event) {
-            ManageCompanyOneTime.NavigateBack -> navigateBack()
+            ManageCompanyOTE.NavigateBack -> navigateBack()
         }
     }
 

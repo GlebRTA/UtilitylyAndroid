@@ -75,5 +75,9 @@
     <string name="compare_with_last_payment">Compare with last payment</string>
     <string name="delete_all_related_utilities">It will delete all related utilities!</string>
 
+    <string name="init_location_name">Home</string>
+    <string name="add_new_utility">Add new utility</string>
+    <string name="do_you_want_to_delete_utility">Do you want to delete utility?</string>
+    <string name="select_date">Select date</string>
 
 </resources>

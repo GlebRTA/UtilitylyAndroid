@@ -147,7 +147,7 @@ fun UtilityDetailsScreen(
     when (uiState.currentModal) {
         UtilityDetailsModal.Delete -> {
             UlyAlertDialog(
-                titleText = "Do you want to delete utility?",
+                titleText = stringResource(R.string.do_you_want_to_delete_utility),
                 onDismissRequest = { viewModel.updateModal(UtilityDetailsModal.None) },
                 confirmText = stringResource(R.string.delete),
                 onConfirmClicked = { viewModel.deleteUtility() },

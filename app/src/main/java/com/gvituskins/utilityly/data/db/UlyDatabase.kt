@@ -15,7 +15,14 @@ import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
 
 @Database(
-    entities = [UtilityEntity::class, CategoryEntity::class, ParameterCategoryEntity::class, ParameterValueEntity::class, LocationEntity::class, CompanyEntity::class],
+    entities = [
+        UtilityEntity::class,
+        CategoryEntity::class,
+        ParameterCategoryEntity::class,
+        ParameterValueEntity::class,
+        LocationEntity::class,
+        CompanyEntity::class
+    ],
     version = 1,
 )
 @TypeConverters(Converters::class)

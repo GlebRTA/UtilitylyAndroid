@@ -29,7 +29,7 @@ class ManageCompanyViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ManageCompanyState())
     val uiState = _uiState.asStateFlow()
 
-    private val _label = Channel<ManageCompanyOneTime>()
+    private val _label = Channel<ManageCompanyOTE>()
     val label = _label.receiveAsFlow()
 
     init {
@@ -70,7 +70,7 @@ class ManageCompanyViewModel @Inject constructor(
                 result = result,
                 successMessage = "Company added successfully!"
             )
-            _label.send(ManageCompanyOneTime.NavigateBack)
+            _label.send(ManageCompanyOTE.NavigateBack)
         }
     }
 
@@ -93,14 +93,14 @@ class ManageCompanyViewModel @Inject constructor(
                 )
             }
 
-            _label.send(ManageCompanyOneTime.NavigateBack)
+            _label.send(ManageCompanyOTE.NavigateBack)
         }
     }
 
 }
 
-sealed interface ManageCompanyOneTime {
-    data object NavigateBack : ManageCompanyOneTime
+sealed interface ManageCompanyOTE {
+    data object NavigateBack : ManageCompanyOTE
 }
 
 @Immutable

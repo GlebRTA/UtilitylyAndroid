@@ -60,7 +60,7 @@ fun UtilitiesScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add new utility"
+                            contentDescription = stringResource(R.string.add_new_utility)
                         )
                     }
                 }

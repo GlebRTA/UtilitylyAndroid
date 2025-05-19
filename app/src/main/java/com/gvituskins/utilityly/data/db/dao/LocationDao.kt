@@ -3,6 +3,7 @@ package com.gvituskins.utilityly.data.db.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.gvituskins.utilityly.data.db.entities.LocationEntity
@@ -17,7 +18,7 @@ interface LocationDao {
     @Query("SELECT * FROM location WHERE id = :id")
     suspend fun getLocationById(id: Int): LocationEntity
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addLocation(location: LocationEntity)
 
     @Update

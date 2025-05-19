@@ -142,7 +142,10 @@ fun ManageUtilityScreen(
                 readOnly = true,
                 placeholder = { Text("DD/MM/YYYY") },
                 trailingIcon = {
-                    Icon(imageVector = Icons.Default.DateRange, contentDescription = "Select date")
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = stringResource(R.string.select_date)
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth(0.65f)

@@ -19,6 +19,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -28,6 +29,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -71,9 +73,7 @@ class MainActivity : ComponentActivity() {
             UtilitylyTheme(themeType = currentTheme.themeType) {
                 val navController = LocalNavController.current
 
-                val snackbarHostState = remember {
-                    SnackbarHostState()
-                }
+                val snackbarHostState = remember { SnackbarHostState() }
 
                 SnackbarController.events.collectAsOneTimeEvent(key1 = snackbarHostState) { event ->
                     snackbarHostState.currentSnackbarData?.dismiss()
@@ -91,7 +91,12 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState,
+                            modifier = Modifier.padding(bottom = 50.dp)
+                        )
+                    },
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 ) {
                     UlyNavigationSuiteScaffold(modifier = Modifier.fillMaxSize()) {

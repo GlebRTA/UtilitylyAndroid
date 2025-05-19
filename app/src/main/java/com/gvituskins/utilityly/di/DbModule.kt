@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.data.db.UlyDatabase
 import com.gvituskins.utilityly.data.db.dao.CategoryDao
 import com.gvituskins.utilityly.data.db.dao.CompanyDao
@@ -37,7 +38,7 @@ object DbModule {
         return Room.databaseBuilder(
             applicationContext,
             UlyDatabase::class.java,
-            "utilityly"
+            DB_NAME
         )
             .addCallback(
                 object : RoomDatabase.Callback() {
@@ -47,7 +48,7 @@ object DbModule {
                             locationDao.get().addLocation(
                                 Location(
                                     id = 1,
-                                    name = "Home"
+                                    name = applicationContext.getString(R.string.init_location_name)
                                 ).toLocationEntity()
                             )
                             prefs.changeLocationId(1)
@@ -81,4 +82,6 @@ object DbModule {
     fun provideCompanyDao(appDatabase: UlyDatabase): CompanyDao {
         return appDatabase.companyDao()
     }
+
+    private const val DB_NAME = "utilityly"
 }
