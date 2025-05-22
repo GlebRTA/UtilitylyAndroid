@@ -26,6 +26,4 @@ interface UtilityRepository {
     suspend fun getPreviousUtility(utilityId: Int, categoryId: Int, date: LocalDate): Utility?
 
     suspend fun getAllAvailableYears(): List<Int>
-
-    suspend fun addParameterValue(value: String, utilityId: Int, categoryId: Int)
 }

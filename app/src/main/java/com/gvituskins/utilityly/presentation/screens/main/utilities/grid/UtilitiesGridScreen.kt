@@ -133,7 +133,8 @@ fun UtilitiesInfoHeader(
 
         Text(
             text = "Unpaid: ${UiConstants.CURRENCY_SIGN}$unpaid",
-            style = UlyTheme.typography.titleMedium
+            style = UlyTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = UlyTheme.spacing.small)
         )
 
         Text(

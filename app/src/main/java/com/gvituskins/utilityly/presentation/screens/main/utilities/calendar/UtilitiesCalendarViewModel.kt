@@ -7,6 +7,9 @@ import com.gvituskins.utilityly.domain.repositories.UtilityRepository
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,17 +31,22 @@ class UtilitiesCalendarViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateCachedUtilities(month: CalendarMonth) {
-        val day = month.yearMonth.monthValue
-        val year = month.yearMonth.year
+    private suspend fun updateCachedUtilities(month: CalendarMonth) = coroutineScope {
+        val currentMonth = month.yearMonth
+        val prevMonth = currentMonth.minusMonths(1)
+        val nextMonth = currentMonth.plusMonths(1)
 
-        val prevMonth = utilityRepository.getAllUtilitiesByMonth(day - 1, year)
-        val currentMonth = utilityRepository.getAllUtilitiesByMonth(day, year)
-        val nextMonth = utilityRepository.getAllUtilitiesByMonth(day + 1, year)
+        val monthUtilities = listOf(
+            async { utilityRepository.getAllUtilitiesByMonth(prevMonth.monthValue, prevMonth.year) },
+            async { utilityRepository.getAllUtilitiesByMonth(currentMonth.monthValue, currentMonth.year) },
+            async { utilityRepository.getAllUtilitiesByMonth(nextMonth.monthValue, nextMonth.year) }
+        )
+            .awaitAll()
+            .flatten()
 
         _uiState.update { currentUiState ->
             currentUiState.copy(
-                cachedMonthUtilities = listOf(prevMonth, currentMonth, nextMonth).flatten()
+                cachedMonthUtilities = monthUtilities
             )
         }
     }

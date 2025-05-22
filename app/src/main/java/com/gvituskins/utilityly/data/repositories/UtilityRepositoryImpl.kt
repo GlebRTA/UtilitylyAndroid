@@ -12,6 +12,8 @@ import com.gvituskins.utilityly.data.mappers.toUtilityEntity
 import com.gvituskins.utilityly.data.preferences.DataStoreUtil
 import com.gvituskins.utilityly.domain.models.utilities.Utility
 import com.gvituskins.utilityly.domain.repositories.UtilityRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -27,7 +29,11 @@ class UtilityRepositoryImpl @Inject constructor(
 ) : UtilityRepository {
 
     override suspend fun getUtilityById(id: Int): Utility {
-        return utilityDao.getById(id, preferences.getCurrentLocationId()).let { utilityDb ->
+        return utilityDao.getById(id, preferences.getCurrentLocationId()).toUtility()
+    }
+
+    private suspend fun UtilityEntity.toUtility(): Utility {
+        return this.let { utilityDb ->
             val categoryParameters = categoryDao.getCategoryParameters(utilityDb.categoryId)
 
             val paramsWithValues = categoryParameters.parameters.map { categoryParameter ->
@@ -55,37 +61,73 @@ class UtilityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAllUtilitiesByYear(year: Int): List<Utility> {
-        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
-            .first()
-            .filter { it.dueDate.year == year }
+        val start = LocalDate.of(year, 1, 1)
+        val end = LocalDate.of(year, 12, 31)
+
+        return utilityDao.getAllUtilitiesBetween(
+            locationId = preferences.getCurrentLocationId(),
+            startDate = start,
+            endDate = end
+        )
             .toUtilities()
     }
 
     override suspend fun getAllUtilitiesByMonth(month: Int, year: Int): List<Utility> {
-        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
-            .first()
-            .filter {
-                it.dueDate.year == year && it.dueDate.monthValue == month
-            }
+        val (start, end) = getStartAndEndOfMonth(year = year, month = month)
+        return utilityDao.getAllUtilitiesBetween(
+            locationId = preferences.getCurrentLocationId(),
+            startDate = start,
+            endDate = end
+        )
             .toUtilities()
+    }
+
+    private fun getStartAndEndOfMonth(year: Int, month: Int): Pair<LocalDate, LocalDate> {
+        val start = LocalDate.of(year, month, 1)
+        val end = start.withDayOfMonth(start.lengthOfMonth())
+        return start to end
     }
 
     override suspend fun getAllUtilitiesByDay(day: Int, month: Int, year: Int): List<Utility> {
-        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
-            .first()
-            .filter {
-                it.dueDate.year == year && it.dueDate.monthValue == month && it.dueDate.dayOfMonth == day
-            }
+        val date = LocalDate.of(year, month, day)
+        return utilityDao.getAllUtilitiesBetween(
+            locationId = preferences.getCurrentLocationId(),
+            startDate = date,
+            endDate = date
+        )
             .toUtilities()
     }
 
-    private suspend fun List<UtilityEntity>.toUtilities(): List<Utility> {
-        return map { utilityEntity ->
-            utilityEntity.toUtility(
-                categoryWithParameters = categoryDao.getCategoryParameters(utilityEntity.categoryId),
-                company = utilityEntity.companyId?.let { companyDao.getCompanyById(it) },
-                location = locationDao.getLocationById(preferences.getCurrentLocationId())
-            )
+    private suspend fun List<UtilityEntity>.toUtilities(): List<Utility> = coroutineScope {
+        val locationDeferred = async {
+            locationDao.getLocationById(preferences.getCurrentLocationId())
+        }
+
+        val categoryIds = map { it.categoryId }.toSet()
+        val companyIds = mapNotNull { it.companyId }.toSet()
+
+        val categoriesMap = categoryIds
+            .associateWith { categoryId ->
+                async { categoryDao.getCategoryParameters(categoryId) }
+            }
+            .mapValues { it.value.await() }
+
+        val companiesMap = companyIds
+            .associateWith { companyId ->
+                async { companyDao.getCompanyById(companyId) }
+            }
+            .mapValues { it.value.await() }
+
+        val location = locationDeferred.await()
+
+        mapNotNull { utilityEntity ->
+            categoriesMap[utilityEntity.categoryId]?.let {
+                utilityEntity.toUtility(
+                    categoryWithParameters = it,
+                    company = utilityEntity.companyId?.let { companiesMap[it] },
+                    location = location
+                )
+            }
         }
     }
 
@@ -151,28 +193,18 @@ class UtilityRepositoryImpl @Inject constructor(
         categoryId: Int,
         date: LocalDate
     ): Utility? {
-        return utilityDao.getLastPaidUtilityByCategory(categoryId, preferences.getCurrentLocationId())
-            ?.find { it.dueDate <= date && it.id != utilityId }
-            ?.let { utilityDb ->
-                getUtilityById(utilityDb.id)
-            }
+        return utilityDao.getLastPaidUtilityByCategoryBeforeDate(
+            categoryId = categoryId,
+            locationId = preferences.getCurrentLocationId(),
+            date = date,
+            utilityId = utilityId
+        )?.toUtility()
     }
 
     override suspend fun getAllAvailableYears(): List<Int> {
-        val years = mutableSetOf<Int>()
-        getAllUtilities().first().forEach {
-            years.add(it.dueDate.year)
-        }
-        return years.toList()
-    }
-
-    override suspend fun addParameterValue(value: String, utilityId: Int, categoryId: Int) {
-        utilityDao.addParameterValue(
-            ParameterValueEntity(
-                categoryParameterId = categoryId,
-                value = value,
-                utilityId = utilityId
-            )
-        )
+        return utilityDao.getAllUtilities(preferences.getCurrentLocationId())
+            .first()
+            .map { it.dueDate.year }
+            .distinct()
     }
 }

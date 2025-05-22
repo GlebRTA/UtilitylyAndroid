@@ -10,12 +10,20 @@ import androidx.room.Update
 import com.gvituskins.utilityly.data.db.entities.ParameterValueEntity
 import com.gvituskins.utilityly.data.db.entities.UtilityEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface UtilityDao {
 
     @Query("SELECT * FROM utility WHERE locationId = :locationId ORDER BY dueDate DESC")
     fun getAllUtilities(locationId: Int): Flow<List<UtilityEntity>>
+
+    @Query("SELECT * FROM utility WHERE locationId = :locationId AND dueDate BETWEEN :startDate AND :endDate")
+    suspend fun getAllUtilitiesBetween(
+        locationId: Int,
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): List<UtilityEntity>
 
     @Query("SELECT * FROM utility WHERE id == :id AND locationId = :locationId")
     suspend fun getById(id: Int, locationId: Int): UtilityEntity
@@ -32,8 +40,24 @@ interface UtilityDao {
     @Query("DELETE FROM utility WHERE id = :utilityId")
     suspend fun deleteById(utilityId: Int)
 
-    @Query("SELECT * FROM utility WHERE categoryId = :categoryId AND locationId = :locationId AND paidStatus = 'PAID' ORDER BY dueDate DESC")
-    suspend fun getLastPaidUtilityByCategory(categoryId: Int, locationId: Int): List<UtilityEntity>?
+    @Query(
+        """
+    SELECT * FROM utility
+    WHERE categoryId = :categoryId
+      AND locationId = :locationId
+      AND paidStatus = 'PAID'
+      AND dueDate <= :date
+      AND id != :utilityId
+    ORDER BY dueDate DESC
+    LIMIT 1
+"""
+    )
+    suspend fun getLastPaidUtilityByCategoryBeforeDate(
+        categoryId: Int,
+        locationId: Int,
+        date: LocalDate,
+        utilityId: Int,
+    ): UtilityEntity?
 
     @Query("SELECT * FROM parameter_value WHERE utilityId = :utilityId AND categoryParameterId = :categoryParamId")
     suspend fun getParametersValue(utilityId: Int, categoryParamId: Int): ParameterValueEntity?

@@ -1,5 +1,6 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -58,7 +59,7 @@ fun Day(
             color = if (day.position == DayPosition.MonthDate) trueColor else trueColor.copy(alpha = 0.4f)
         )
 
-        if (utilities.isNotEmpty()) {
+        AnimatedVisibility(visible = utilities.isNotEmpty()) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
