@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.DeveloperMode
 import androidx.compose.material.icons.filled.LocationCity
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.HorizontalDivider
@@ -29,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.BuildConfig
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.enums.ThemeType
+import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.sections.SettingsOpenableSection
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
@@ -114,6 +116,33 @@ fun MoreScreen(
             HorizontalDivider()
 
             if (BuildConfig.DEBUG) {
+                VerticalSpacer(UlyTheme.spacing.xxLarge)
+
+                HorizontalDivider()
+                ListItem(
+                    headlineContent = { Text(text = "Fill Locations, Companies, Categories (ONLY DEV)") },
+                    modifier = Modifier.clickable { viewModel.fillBaseStagingData() },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Filled.DeveloperMode,
+                            contentDescription = null,
+                        )
+                    },
+                )
+                HorizontalDivider()
+
+                ListItem(
+                    headlineContent = { Text(text = "Add random utilities (ONLY DEV)") },
+                    modifier = Modifier.clickable { viewModel.addUtilitiesStagingData() },
+                    leadingContent = {
+                        Icon(
+                            imageVector = Icons.Filled.DeveloperMode,
+                            contentDescription = null,
+                        )
+                    },
+                )
+                HorizontalDivider()
+
                 Text(
                     text = "Version: ${BuildConfig.VERSION_NAME} build ${BuildConfig.VERSION_CODE}",
                     modifier = Modifier.padding(UlyTheme.spacing.small),
