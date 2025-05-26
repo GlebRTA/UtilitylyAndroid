@@ -144,7 +144,6 @@ fun UtilitiesCalendarScreen(
                                         .fillMaxWidth()
                                         .padding(horizontal = UlyTheme.spacing.small)
                                         .clickable { onUtilityClicked(utility.id) }
-                                        .animateItem()
                                 )
                             }
                         }

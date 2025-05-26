@@ -53,9 +53,11 @@ fun UtilitiesScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            navigateToAddUtility(
+                            val initDate = if (pagerState.currentPage == UtilitiesPagerScreens.CALENDAR.ordinal) {
                                 calendarViewModel.uiState.value.selectedDay?.date?.toEpochDay()
-                            )
+                            } else null
+
+                            navigateToAddUtility(initDate)
                         }
                     ) {
                         Icon(
