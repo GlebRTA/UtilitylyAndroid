@@ -50,7 +50,7 @@ class UtilityRepositoryImpl @Inject constructor(
                 category = categoryParameters.category,
                 parametersWithValues = paramsWithValues,
                 company = utilityDb.companyId?.let { companyDao.getCompanyById(it) },
-                location = locationDao.getLocationById(preferences.getCurrentLocationId())
+                location = locationDao.getLocationById(utilityDb.locationId) ?: throw Exception("There is no location with id")
             )
         }
     }
@@ -118,7 +118,7 @@ class UtilityRepositoryImpl @Inject constructor(
             }
             .mapValues { it.value.await() }
 
-        val location = locationDeferred.await()
+        val location = locationDeferred.await() ?: return@coroutineScope listOf()
 
         mapNotNull { utilityEntity ->
             categoriesMap[utilityEntity.categoryId]?.let {

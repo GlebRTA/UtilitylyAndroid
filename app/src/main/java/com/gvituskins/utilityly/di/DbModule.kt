@@ -45,13 +45,13 @@ object DbModule {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)
                         CoroutineScope(Dispatchers.IO).launch {
-                            locationDao.get().addLocation(
+                            val locationId = locationDao.get().addLocation(
                                 Location(
-                                    id = 1,
+                                    id = 0,
                                     name = applicationContext.getString(R.string.init_location_name)
                                 ).toLocationEntity()
                             )
-                            prefs.changeLocationId(1)
+                            prefs.changeLocationId(locationId.toInt())
                         }
                     }
                 }

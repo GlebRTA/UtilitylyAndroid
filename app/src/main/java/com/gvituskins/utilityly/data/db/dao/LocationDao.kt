@@ -16,10 +16,10 @@ interface LocationDao {
     fun getAllLocations(): Flow<List<LocationEntity>>
 
     @Query("SELECT * FROM location WHERE id = :id")
-    suspend fun getLocationById(id: Int): LocationEntity
+    suspend fun getLocationById(id: Int): LocationEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addLocation(location: LocationEntity)
+    suspend fun addLocation(location: LocationEntity): Long
 
     @Update
     suspend fun updateLocation(location: LocationEntity)
