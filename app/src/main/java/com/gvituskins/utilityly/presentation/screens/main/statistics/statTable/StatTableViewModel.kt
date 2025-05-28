@@ -38,7 +38,7 @@ class StatTableViewModel @Inject constructor(
     private suspend fun initYears() {
         val years = utilityRepository.getAllAvailableYears()
         yearState.updateOptions(years)
-        if (yearState.value == null) {
+        if (yearState.value == null || years.isEmpty()) {
             yearState.updateValue(years.getOrNull(0))
         }
     }

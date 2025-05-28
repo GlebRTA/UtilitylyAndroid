@@ -46,14 +46,20 @@ class StatCategoryViewModel @Inject constructor(
     private suspend fun updateStatistics() {
         val years = utilityRepository.getAllAvailableYears()
         uiState.value.yearState.updateOptions(years)
-        if (uiState.value.yearState.value == null) {
+        if (uiState.value.yearState.value == null || years.isEmpty()) {
             uiState.value.yearState.updateValue(years.getOrNull(0))
         }
         updateChartInfo()
     }
 
     fun updateChartInfo() {
-        val currentYear = uiState.value.yearState.value ?: return
+        val currentYear = uiState.value.yearState.value
+        if (currentYear == null) {
+            _uiState.update { currentUiState ->
+                currentUiState.copy(tableRows = listOf())
+            }
+            return
+        }
 
         viewModelScope.launch {
             val categories = categoryRepository.getAllCategories().first()

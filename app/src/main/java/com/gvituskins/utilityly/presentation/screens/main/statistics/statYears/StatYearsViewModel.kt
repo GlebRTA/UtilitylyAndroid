@@ -29,7 +29,7 @@ class StatYearsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(StatYearsState())
     val uiState = _uiState.asStateFlow()
 
-    private lateinit var allAvailableYears: List<Int>
+    private var allAvailableYears: List<Int> = listOf()
 
     init {
         categoryRepository.getAllCategories()
@@ -45,7 +45,15 @@ class StatYearsViewModel @Inject constructor(
 
         viewModelScope.launch {
             utilityRepository.getAllUtilities()
-                .onEach { updateChartWithSavedYears() }
+                .onEach {
+                    val newAllAvailableYears = utilityRepository.getAllAvailableYears()
+                    if (allAvailableYears == newAllAvailableYears) {
+                        updateChartWithSavedYears()
+                    } else {
+                        _uiState.update { StatYearsState() }
+                        updateStatistics(categoryRepository.getAllCategories().first())
+                    }
+                }
                 .launchIn(viewModelScope)
         }
     }
@@ -54,7 +62,7 @@ class StatYearsViewModel @Inject constructor(
         allAvailableYears = utilityRepository.getAllAvailableYears()
 
         uiState.value.categoryState.updateOptions(categories)
-        if (uiState.value.categoryState.value == null) {
+        if (uiState.value.categoryState.value == null || categories.isEmpty()) {
             uiState.value.categoryState.updateValue(categories.getOrNull(0))
         }
         _uiState.update { currentUiState ->
