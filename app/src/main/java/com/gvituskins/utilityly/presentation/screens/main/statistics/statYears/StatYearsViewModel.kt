@@ -33,14 +33,11 @@ class StatYearsViewModel @Inject constructor(
 
     init {
         categoryRepository.getAllCategories()
-            .onEach { categories -> updateStatistics(categories) }
+            .onEach { categories -> initStatistics(categories) }
             .launchIn(viewModelScope)
 
         preferences.locationId()
-            .onEach {
-                _uiState.update { StatYearsState() }
-                updateStatistics(categoryRepository.getAllCategories().first())
-            }
+            .onEach { initStatistics(categoryRepository.getAllCategories().first()) }
             .launchIn(viewModelScope)
 
         viewModelScope.launch {
@@ -50,15 +47,18 @@ class StatYearsViewModel @Inject constructor(
                     if (allAvailableYears == newAllAvailableYears) {
                         updateChartWithSavedYears()
                     } else {
-                        _uiState.update { StatYearsState() }
-                        updateStatistics(categoryRepository.getAllCategories().first())
+                        initStatistics(categoryRepository.getAllCategories().first())
                     }
                 }
                 .launchIn(viewModelScope)
         }
     }
 
-    private suspend fun updateStatistics(categories: List<Category>) {
+    private suspend fun initStatistics(categories: List<Category>, restoreState: Boolean = true) {
+        if (restoreState) {
+            _uiState.update { StatYearsState() }
+        }
+
         allAvailableYears = utilityRepository.getAllAvailableYears()
 
         uiState.value.categoryState.updateOptions(categories)
