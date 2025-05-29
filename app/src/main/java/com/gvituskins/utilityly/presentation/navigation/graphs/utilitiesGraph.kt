@@ -2,10 +2,10 @@ package com.gvituskins.utilityly.presentation.navigation.graphs
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.gvituskins.utilityly.presentation.navigation.BaseNavGraph
 import com.gvituskins.utilityly.presentation.navigation.routeComposable
+import com.gvituskins.utilityly.presentation.navigation.ulyComposable
 import com.gvituskins.utilityly.presentation.screens.main.utilities.UtilitiesScreen
 import com.gvituskins.utilityly.presentation.screens.main.utilities.manageUtility.ManageUtilityScreen
 import com.gvituskins.utilityly.presentation.screens.main.utilities.utilityDetails.UtilityDetailsScreen
@@ -25,13 +25,13 @@ fun NavGraphBuilder.utilitiesGraph(navController: NavController) {
             )
         }
 
-        composable<UtilitiesNavGraph.UtilityDetails> {
+        ulyComposable<UtilitiesNavGraph.UtilityDetails> {
             UtilityDetailsScreen(
                 navigateBack = { navController.navigateUp() }
             )
         }
 
-        composable<UtilitiesNavGraph.ManageUtility> {
+        ulyComposable<UtilitiesNavGraph.ManageUtility> {
             ManageUtilityScreen(
                 navigateBack = { navController.navigateUp() },
                 navigateToAddCategory = { navController.navigate(CategoriesNavGraph.ManageCategory(null)) },

@@ -1,5 +1,6 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.calendar.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,16 +18,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gvituskins.utilityly.presentation.LocalAnimatedContentScopeScope
+import com.gvituskins.utilityly.presentation.LocalSharedTransitionScope
 import com.gvituskins.utilityly.presentation.components.CategoryColorBox
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyOutlinedButton
 import com.gvituskins.utilityly.presentation.components.CheckedIcon
+import com.gvituskins.utilityly.presentation.core.utils.SharedTransitionKeys
 import com.gvituskins.utilityly.presentation.theme.UlyTheme
 import com.gvituskins.utilityly.presentation.theme.UtilitylyTheme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun UtilityListCard(
+    id: Int,
     name: String,
     amount: String,
     isPaid: Boolean,
@@ -65,16 +71,27 @@ fun UtilityListCard(
                         color = color
                     )
                     HorizontalSpacer(UlyTheme.spacing.small)
+                    with(LocalSharedTransitionScope.current) {
+                        Text(
+                            text = name,
+                            modifier = Modifier.sharedBounds(
+                                sharedContentState = rememberSharedContentState(SharedTransitionKeys.utilityDetailsCategory(id)),
+                                animatedVisibilityScope = LocalAnimatedContentScopeScope.current,
+                            ),
+                            style = UlyTheme.typography.titleLarge,
+                        )
+                    }
+                }
+                with(LocalSharedTransitionScope.current) {
                     Text(
-                        text = name,
+                        text = amount,
+                        modifier = Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(SharedTransitionKeys.utilityDetailsAmount(id)),
+                            animatedVisibilityScope = LocalAnimatedContentScopeScope.current,
+                        ),
                         style = UlyTheme.typography.titleLarge
                     )
                 }
-
-                Text(
-                    text = amount,
-                    style = UlyTheme.typography.titleLarge
-                )
             }
 
             VerticalSpacer(UlyTheme.spacing.large)
@@ -106,6 +123,7 @@ fun UtilityListCard(
 private fun UtilityListCardPreview() {
     UtilitylyTheme {
         UtilityListCard(
+            id = 0,
             name = "Water",
             amount = "10.00$",
             isPaid = false,

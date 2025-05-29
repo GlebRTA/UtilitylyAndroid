@@ -1,5 +1,6 @@
 package com.gvituskins.utilityly.presentation.screens.main.utilities.utilityDetails
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -47,6 +48,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gvituskins.utilityly.R
 import com.gvituskins.utilityly.domain.models.categories.CategoryParameter
+import com.gvituskins.utilityly.presentation.LocalAnimatedContentScopeScope
+import com.gvituskins.utilityly.presentation.LocalSharedTransitionScope
 import com.gvituskins.utilityly.presentation.components.HorizontalSpacer
 import com.gvituskins.utilityly.presentation.components.VerticalSpacer
 import com.gvituskins.utilityly.presentation.components.buttons.UlyFilledTonalButton
@@ -54,6 +57,7 @@ import com.gvituskins.utilityly.presentation.components.containers.UlyScaffold
 import com.gvituskins.utilityly.presentation.components.dialogs.UlyAlertDialog
 import com.gvituskins.utilityly.presentation.components.inputItems.TextInputItem
 import com.gvituskins.utilityly.presentation.components.topAppBars.UlyDefaultTopAppBar
+import com.gvituskins.utilityly.presentation.core.utils.SharedTransitionKeys
 import com.gvituskins.utilityly.presentation.core.utils.UiConstants
 import com.gvituskins.utilityly.presentation.core.utils.collectAsOneTimeEvent
 import com.gvituskins.utilityly.presentation.core.utils.roundToStr
@@ -105,6 +109,7 @@ fun UtilityDetailsScreen(
                 .padding(UlyTheme.spacing.medium)
         ) {
             TitleCard(
+                id = uiState.utility?.id ?: -1,
                 title = "${uiState.utility?.location?.name ?: ""} ${uiState.utility?.category?.name ?: ""}",
                 month = uiState.utility?.dueDate?.format(monthFormatter) ?: "-",
                 due = uiState.utility?.dueDate?.let { dueDate ->
@@ -231,8 +236,10 @@ private fun TableRow(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun TitleCard(
+    id: Int,
     title: String,
     month: String,
     due: String,
@@ -252,12 +259,18 @@ private fun TitleCard(
             .padding(UlyTheme.spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = title,
-            style = UlyTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic
-        )
+        with(LocalSharedTransitionScope.current) {
+            Text(
+                text = title,
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(SharedTransitionKeys.utilityDetailsCategory(id)),
+                    animatedVisibilityScope = LocalAnimatedContentScopeScope.current,
+                ),
+                style = UlyTheme.typography.displaySmall,
+                fontWeight = FontWeight.Bold,
+                fontStyle = FontStyle.Italic
+            )
+        }
 
         VerticalSpacer(UlyTheme.spacing.large)
 
@@ -291,12 +304,18 @@ private fun TitleCard(
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
-            Text(
-                text = amount,
-                style = UlyTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Italic
-            )
+            with(LocalSharedTransitionScope.current) {
+                Text(
+                    text = amount,
+                    modifier = Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(SharedTransitionKeys.utilityDetailsAmount(id)),
+                        animatedVisibilityScope = LocalAnimatedContentScopeScope.current,
+                    ),
+                    style = UlyTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Italic
+                )
+            }
         }
 
         VerticalSpacer(UlyTheme.spacing.xLarge)

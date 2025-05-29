@@ -135,6 +135,7 @@ fun UtilitiesCalendarScreen(
                         ) {
                             items(items = uiState.dayUtilities, key = { it.id }) { utility ->
                                 UtilityListCard(
+                                    id = utility.id,
                                     name = utility.category.name,
                                     amount = "${UiConstants.CURRENCY_SIGN}${utility.amount}",
                                     isPaid = utility.paidStatus.isPaid,

@@ -92,6 +92,7 @@ fun UtilitiesGridScreen(
 
             items(items = uiState.utilities, key = { it.id }) { utility ->
                 UtilityGridCard(
+                    id = utility.id,
                     amount = "${UiConstants.CURRENCY_SIGN}${utility.amount}",
                     category = utility.category.name,
                     isPaid = utility.paidStatus.isPaid,
@@ -100,7 +101,6 @@ fun UtilitiesGridScreen(
                     modifier = Modifier
                         .padding(UlyTheme.spacing.small)
                         .clickable { onUtilityClicked(utility.id) }
-                        .animateItem()
                 )
             }
         }
